@@ -1,0 +1,11 @@
+in a large system we often separate businiess logic with object logic
+    businiess logic: when to push notification, who to push, how to push ----- these are businiess logic
+    object logic: WHEN AND WHAT Object to create, where to create, these are code related thinking
+
+Factory Design pattern says, we will create a separate class, responsibility of this class will be to create object
+    we will have a client, and client will ask factory to find out the object, factory will return that object
+
+3 Factory Patter:
+    1) simple Factory (Design principal not a pattern)
+    2) Factory method (Design pattern)
+    3) Abstract Factory method (Design Patteren)

@@ -1,0 +1,7 @@
+Dipendency Inversion Principal: it says High and low level module should not intereact directly, there will be an interface or abstraction between them
+
+example: 03. Project 1
+there are 2 interface Document and DocumentElement. DocumentElement has 1 methods. Two class TextElement and imageElement implements DocumentElement and override method from DocumentElement interface.
+and there is anothor class Document, now Document can not intereact directly with textElement or imageElement, it will only interact with DocumentElement
+ 
+[code reference: 03. projecct 1]

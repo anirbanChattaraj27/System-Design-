@@ -1,0 +1,19 @@
+
+this is extended version of facotry method.
+
+Diagram: image_part1
+upto prev version, we were using KingBurger and SinghBurger they were only creating 1 product that is Burger
+Now if we extend this to other products like garlicBread, 
+    - so here it is responsible to create more than 1 product ---->it is called abstracct facotry method
+
+SinghBurger and KingBurger now can create Burger and garlicBread
+    so facotry interface will have classes SinghBurger and KingBurger
+        and SinghBurger has methods -> basicBurger and basicGarlicBread || standeredBurger and standeredGarlicBread || premiumBurger and premiumGarlicBread ----> these are concrete methods
+        and KingBurger has methods --> BasicWheateBurger and basicWheateGarlicBread || standeredWheateBurger and standeredWheateGarlicBread || premiumWheatBurger and premiumWheatGarlicBread ---> these are concrete methods
+
+
+
+
+abstracct facotry method: provides an interface for creating families of related objects without specifying there concrete classes
+it means, in 1 factory we can have multiple product and also there could be multiple producs of same type
+          SinghBurger (factory) can make burger (basicBurger, standeredBurger, premiumBurger) and garlic bread (basicGarlicBread, standeredGarlicBread, premiumGarlicBread) 

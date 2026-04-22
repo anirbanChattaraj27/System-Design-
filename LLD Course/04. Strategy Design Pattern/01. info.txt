@@ -1,0 +1,90 @@
+QS.) WHY Inheritance is so BAD ....?
+
+Diagram: refer image_part1
+    Suppose there is parent class Robot which has methods walk, talk, projection. (projection will change robot to robot but walk talk will be common in every robot)
+    - and child classes inherited Robot class and companionR, WorkerR these 2 classes will @Override projection method from Robot class. so projection method will keep on chaning, dependes upn new child class
+    - NOW, let say there is another robot sparrowR whcich also inherits Robot class and this class will have 1 different methods like fly() method, so along with walk, talk and projection there is another method fly.
+
+Diagram: refer image_part2
+    NOW, there are 2 new robot comes which also have this fly method so I have to repeate fly() method for multiple types, and this breaks DRY(Do Not Repeate Yourself) principal. 
+        - And if I put this fly method inside Robot class then other classes will also extends fly method but I want this fly method only to specific robots not all, so I will change the code structure
+        - AND, I will create another child class called flyableR and now I can define the fly() method and in SparrowR robot i will just call projection method
+        - NOW, I can extend n number new robots which can fly and inherits that from flyableR
+
+
+Diagram: refer image_part3
+    NOW, imagine there is another robot comes which can fly but it will fly using JET, so it is fly only but different type of fly.
+        - SO, 1 option is like i can @override the fly method from flyableR and can add additional features like jet fly, 
+        - BUT.... what if 10 robot comes again so in that scenario I will have to call that fly() nethod 10 times and reapeate the same code so again  it will not follow DRY principal
+
+
+Diagram: refer image_part4
+    - NOW this hirerchy will keep going for infinite times, and this diagram will become too much complicated
+
+
+that is why we can not use inheritance
+
+***************SOLUTION TO Inheritance is NOT more Inheritance**************
+
+
+*******************************************************************************************************************
+
+PROBLEMs with Inheritance:
+    1) did not get code re-use much
+    2) to add new feature, lot of changes were made
+    3) break Open-Close-Princiap (OCP)
+
+
+SOLUTION to above probelm: 
+Strategy Design Pattern: it Defines a family of Algorithm, put them into separate classes, so that they can be change at runtime
+
+*******************************************************************************************************************
+
+
+Diagram: refer image_part5
+    what design patterns say is some part of code will change continuesly and some part of code remains constant, so we have to always have to separate our DYNAMIC code with the STATIC code which doesnt get change
+    here in Robot class talk, walk, fly is changing continuesly but projection remains same every time
+
+    - to solve this problem, I can remove walk, talk, fly from the robot class, and create separate interfaces, and I will use them using robot class
+    I will create fly, talk, walk methods using the interfaces 
+    and I will store the references of that interfaces in thr Robot class
+
+        Now I can create numorus number of robots with different features and to create it I do not have to change  Robot class
+
+        - In this image_part5, here 1 is client and other classes are called strategy(defination of strategy pattern says, it Defines a family of Algorithm, put them into separate classes, so that they can be change at runtime)
+
+
+Diagram: refer image_part6
+    QS) after all of this solution still I am using inheritance for projection, can I change it to Interface...?
+        - YES, I can change it to a differnt interface, like projectable interface and it will have a method called projection
+
+Diagram: image_part7_StandardUML
+    inside client class I have strategy and execute method.
+    - So, just call run method from the execute method, and it will go to Strategy class and from there it will go to conccreate class and it will call a concreate method1 or method2 so on 
+
+
+image_part8_example1:
+    sorting class has differnt interfaces like Quicksort, mergesort(these are strategies)
+    and I will have concreate class which has methods like NQS(normal Quick Sort), RQS(randomized Quick Sort), NMS(Normal merge Sort), IPMS(In-Place Merge sort)
+
+
+
+
+
+
+
+
+
+/* 
+                            " What is Design Patterns "
+
+ *  Design patterns are pre built patterns which is used in all Applications, and there are code pattersnwhich already build and u have to follow those method \
+
+ *  Total 23 design patterns are there, and they all tell 1 common thing,
+    there is always block of code which never changes that is STATIC PART
+    and some parts are there which always changes, it DYNAMIC PART
+
+ *  ---- SO, ur task will be u have to remove/extract that part of code from DYNAMIC PART with the STATIC part (static part where that Dynamic part is linked) and u have to store that in a different class.
+ *          SO that, it will DYNAMIC part will not effect the code in long term in STATIC code bcz it is not changing freqently. 
+
+*/

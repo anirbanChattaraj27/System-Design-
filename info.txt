@@ -1,0 +1,8 @@
+design patterns are pre built patterns which is used in all Applications, and there are code pattersnwhich already build and u have to follow those method \
+
+total 23 design patterns are there, and they all tell 1 common thing,
+    there is always block of code which never changes that is STATIC PART
+    and some parts are there which always changes, it DYNAMIC PART
+
+    ---- SO, ur task will be u have to remove/extract that part of code from DYNAMIC PART with the STATIC part (static part where that Dynamic part is linked) and u have to store that in a different class.
+            SO that, it will DYNAMIC part will not effect the code in long term in STATIC code bcz it is not changing freqently. 

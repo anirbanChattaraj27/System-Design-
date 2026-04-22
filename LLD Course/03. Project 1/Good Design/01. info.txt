@@ -1,0 +1,7 @@
+QS.) DocumentEditor has several methods like addText, addImage etc so how can it follows Single Responsibility Principal....?
+ANS: it follows and it doesnt follows as well.
+    in this case it has more than 1 reason to know why this get change, suppose if I change some method from other classes then I will have to change from Docu class, so multiple dipendecies are there
+    in DocumentEditor I am not handling any logic I am delegating everthing in other classes so I can say it is following SRP 
+
+QS.) to solve the above problem I I have drawn another UML.
+    here I have created separate class for DocumentRender and it will call Document class(basically this is model class)

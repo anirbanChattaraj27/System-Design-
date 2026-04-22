@@ -1,0 +1,10 @@
+Liskov: let say there 2 classes. DocumentElement(interface) and Document(class)
+DocumentElement has a abstract method and now I will create 2 different classes and these 2 class will implements DocumentElement and override that abstact method. name of the 2 classes are textElement and imageElement
+now, in Document class there is an ArrayList of DocumentElement type
+        in this arrayList I can pass imageElement or textElement, Document ka kuch lena dena nhi hai isse chahe main img or text kuch v pass karu
+        so textElement and imageElement are easily replaceble with its parent class DocumentElement
+
+LISKOV says sub-Classes should be replaceble with its parent-Class. 
+
+
+[code reference: 03. projecct 1]

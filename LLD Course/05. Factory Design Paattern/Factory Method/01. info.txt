@@ -1,0 +1,25 @@
+facotry method: defines an interface for creating objects but allows subclasses to decide which class to instantiate.
+
+Diagram: image_part1 (this iamge is the prev image from simple facotry)
+    now let say, we have different factory methods under facotry class.... then what?
+
+
+Diagram: image_part2
+    here we have created another abstracct class / interface of BurgerFactory. here we have a method createBurger().
+        and here we have created 2 classes SinghBurger and KingBurger.
+
+        SinghBurger uses basicBurger, standeredBurger, premiumBurger. 
+        KingBurger uses BasicWheatBurger, standeredWheateBurger, premiumWheatBurger ----> [these are part of Burger abstracct class / interface]
+
+    Now, Dynamically it will decide, I am calling whih burger factory(SinghBurger or KingBurger)
+
+    when client will create the object of the BurgrFactory object, it will create like this---->
+        BurgerFactory bf = new SinghBurger(createBurger);
+        BurgerFactory bf = new KingBurger(createBurger);
+
+        when SinghBurger will be called, it will call ---> basicBurger, standeredBurger, premiumBurger.
+        when KingBurger will be called, it will call ----> BasicWheatBurger, standeredWheateBurger, premiumWheatBurger.
+
+Diagram: image_part3_standeredUML
+    here factory and product will not link directly, no has-a relationship. 
+    here factory will have its own concrete method and this method will directly access ---> concrete methods of product abstracct class/ Interface

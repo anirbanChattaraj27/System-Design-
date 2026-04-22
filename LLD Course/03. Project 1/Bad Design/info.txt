@@ -1,0 +1,2 @@
+here in this example I am creating a class that contains all the methods and variable names,
+But this ia a example of a Bad Design. so in a single class I have added all of them

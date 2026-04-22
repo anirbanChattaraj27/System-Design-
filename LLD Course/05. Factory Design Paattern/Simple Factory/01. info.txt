@@ -1,0 +1,23 @@
+simple Factory: A factory class that decides which concrete class to instantiate
+
+Diagram: image_part1
+we have a class Burger{...}.
+and it has only 1 Abstract method prepare()
+
+we have 3 types of burger class: basicBurger💫, standeredBurger💫💫, premiumBurger.💫💫💫
+so these 3 burger class will have a prepare method which they @Override 
+
+now I will create a client class BurgrFactory
+    this class will have 1 method createBurger(String type parameter) --> in that parametr we can give basic, standered or premium.
+        this method will return burger type object. 
+            SO, we can say, BurgrFactory has-a burger -----> this relationship is called Composition
+
+    if String type == basic then return basicBurger from Burger class💫
+    if String type == standered then return standeredBurger from Burger class💫💫
+    if String type == premium then return premiumBurger from Burger class💫💫💫
+
+
+Diagram: image_part2
+Burger is a product that is an abstracct class / interface
+and it has few concrete methods:  basicBurger, standeredBurger, premiumBurger.
+and we have a factory, and factory always have a product--> has-a relationship and it return concrete product
