@@ -1,0 +1,1 @@
+Singleton: A class that does not have multiple object. a class should have only 1 object.
