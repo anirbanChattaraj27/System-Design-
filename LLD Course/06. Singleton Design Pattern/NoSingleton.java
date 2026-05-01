@@ -11,3 +11,7 @@ public class NoSingleton {
         System.out.println(s1 == s2);
     }
 }
+
+// S2 and S1 are different object so it should print false.
+// so here we can create infinity object
+// so if we make it private we can not create object

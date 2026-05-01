@@ -1,1 +1,7 @@
 Singleton: A class that does not have multiple object. a class should have only 1 object.
+
+// NOTE:
+we have 2 types of memory: heap and stack
+stack: it stores premitive data type like int char bool
+heap: here non-premitive data type are stores, like object of class
+
