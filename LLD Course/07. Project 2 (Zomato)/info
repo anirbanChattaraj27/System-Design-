@@ -1,0 +1,9 @@
+functional:
+    product related qs, which entities wil be there, how they will interact with each other etc business logic
+    
+non-functional:
+    scalablity of application, focusing on multi threading, etc basically HLD related
+
+
+QS to ask in interview:
+    user ---> restaurents ---> menu ---> order ---> cart ---> delivery / pickup ---> payment (assume payment is 3rd party, bcz payment itself is a another LLD qs) ---> notification to user that order is placed

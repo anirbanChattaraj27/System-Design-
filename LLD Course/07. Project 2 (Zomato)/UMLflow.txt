@@ -1,0 +1,131 @@
+PLACING ORDER LLD:
+
+MODEL Directory:
+    this is simple class, which has getters and setters. It has set of varibles, which can make setter and getter. we can represent model class directly in DB in form of tables 
+
+    Class Restaurent: 
+        int id
+        String name
+        String address
+        list<MenuItem>
+
+    class MenuItem:
+        int Code
+        String name
+        double price
+
+Restaurent has-a MenuItem (one-to-many relationship) ---> this is a composition relationship. ---> MenuItem can not exist without Restaurent --> use dimond shape to connect classes
+ 
+
+
+Manager Directory: (Singleton)
+
+    RestaurentManager:
+        here we perform CRUD(create-read-update-delete) operation on Restaurent. bcz there will be multiple Restaurent on zomato, and Restaurent keep adding and removing
+        List<Restaurent>
+        CRUD operation
+        SearchByLocation (loc)
+
+RestaurentManager has-a Restaurent (one-to-many relationship) ---> this is Aggregation. ---> Restaurent can exist without RestaurentManager ---> Dimond shape to connect classes.
+
+
+
+MODEL Directory:
+
+    class User:
+        int id
+        String name
+        String address
+        Cart cart
+    
+    class Cart:
+        Restaurent res
+        List <MenuItems> item
+        int totalPrice
+        addToCart item
+        clear ();
+        isEmpty ();
+
+        Cart has Restaurent (one-to-one)
+        Cart has MenuItem (one-to-many)
+
+User and Cart are (one-to-one relationship) ---> this is composition  ----> Cart can not exist without user
+
+
+    Abstract class Order:
+        int id
+        Restaurent res
+        List<MenuItem> items
+        User user
+        PaymentStrategy ps
+        GetType() ----> abstract method
+
+order has-a User ---> simple Association ---> they exist independently
+order has-a Restaurent
+Order has-a MenuItem
+Order has-a PaymentStrategy
+
+        class DeliveryOrder:
+            @Override GetType
+
+        class PickupOrder:
+            @Override GetType
+
+
+
+PAYEMENT LLD:
+
+Strategy Directory:
+
+    PaymentStrategy interface:
+        pay() ---> abstract method
+
+    Netbanking:
+        @Override pay()
+
+    UPI:
+        @Override pay()
+
+    Credit card / Debit card:
+        @Override pay()
+    
+
+
+
+ORDER FACTORY Directory:
+
+    this will use to create Orders
+    Here we will use FACTORY Design Pattern
+
+    interface class OrderFactory:
+        createOrder() ---> abstract method
+
+    now we will create classes that will @Override this interface...
+
+    class NowOrder:
+        @Override createOrder
+    class ScheduleOrder:
+        @Override createOrder
+
+
+
+ORDER MANAGER Directory:
+    just like RestaurentManager I can create OrderManager which can manage orders
+    i used RestaurentManager to create and manage, though I can use separate class like Order Factory, but in this case I dint use
+
+    class OrderManager: Singleton
+        List<Order> order
+        addOrder order()
+
+
+
+class NotificationService:
+    assume it is a 3rd party service. we will need to call this service
+
+    notify()
+
+NotificationService has-a Order
+
+
+
+there is class Tomato who will interact with all the above classes, it will take the request from client and deligate to other classes

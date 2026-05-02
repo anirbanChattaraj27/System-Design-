@@ -5,3 +5,8 @@ we have 2 types of memory: heap and stack
 stack: it stores premitive data type like int char bool
 heap: here non-premitive data type are stores, like object of class
 
+
+real life usage:
+    1. Logging usage
+    2. Database connection
+    3. Configuaration manager
