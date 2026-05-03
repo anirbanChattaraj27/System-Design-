@@ -23,7 +23,7 @@ Manager Directory: (Singleton)
     RestaurentManager:
         here we perform CRUD(create-read-update-delete) operation on Restaurent. bcz there will be multiple Restaurent on zomato, and Restaurent keep adding and removing
         List<Restaurent>
-        CRUD operation
+        CRUD operation 
         SearchByLocation (loc)
 
 RestaurentManager has-a Restaurent (one-to-many relationship) ---> this is Aggregation. ---> Restaurent can exist without RestaurentManager ---> Dimond shape to connect classes.
