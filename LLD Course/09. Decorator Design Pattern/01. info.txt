@@ -1,0 +1,48 @@
+suppose I have a object, and I have to give additional details to that object at runtime
+
+example: let say I am calling a method doSomething() through that object, and object has to return I did something new || I did something crazy etc ----> this msg has change at runtime means dynamically
+
+
+
+Problems with Inheritance:
+
+suppose there is Mario game.
+
+in game, Mario has ability to increase Height, gunshot, starEating
+
+so here if we use Inheritance and call multiple methods and in future if I call those methods, it will be so much complicated to handle. 
+
+SO, using Inheritance it will increase the hirarchy, that is why Inheritance is bad, we already seen that in strategy Design Pattern
+
+
+SO.... using Decorator pattern, we will change this method from calling at compileTime, it will call this dynamically at runtime
+
+
+
+Decorator Pattern:
+I have object1, when obj1 calls doSomething() method, obj1 replies "I did something"......
+    NOW, I want to enhance this dynamically and it replies something else... "I did something amezing"
+
+lets wrap obj1 with Decorator1, now when I will call doSomething() method, first Decorator1 will call it, then obj1 will call it.
+    NOW, obj1 will reply "I did somthing" Decorator1 will reply with enhancement "I did something amezing"
+    NOW, if I add another Decorator and Decorator2 and call it before Decorator1, then 1st doSomething() will call Decorator2 then it will call Decorator1 then it will call obj1, and obj1 replies back to Decorator1 "I did something", Decorator1 replies Decorator2 "I did something amezing" and Decorator2 replies "I did something very amezing"
+        - it can go one infinite times
+
+BUT....
+WHAT IS Decorator ?
+
+Basically I am Decorating base obj1 with another ob
+I am also adding has-a relationship in Decorator pattern, to change any property dynamically
+
+
+IS-A Relationship (Inheritance):
+    The IS-A relationship represents a hierarchy where a subclass "is a type of" its superclass.
+        1. Purpose: Used for specialization and code reuse. The subclass inherits all public and protected properties and behaviors of the parent.
+        2. Example: A SavingsAccount IS-A BankAccount. It shares all basic banking functions but may add specific features like interest calculation.
+        3. When to use: Use inheritance only when there is a natural hierarchical relationship where the subclass can be used anywhere the parent is expected in Liskov Substitution Principle
+
+HAS-A Relationship (Composition & Aggregation):
+    The HAS-A relationship represents a "part-whole" association where one object acts as a component of another. 
+    It is further divided into two types:
+        1. Composition (Strong): The part cannot exist without the whole. For example, a House HAS-A Room. If the house is destroyed, the room is also destroyed.
+        2. Aggregation (Weak): The part can exist independently. For example, a Department HAS-A Professor. If the department closes, the professor still exists as an independent entity.

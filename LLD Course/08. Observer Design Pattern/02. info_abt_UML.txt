@@ -1,0 +1,24 @@
+Observable to observer 1 to many bcz (multiple observer)
+IObservable and IObserver means: Interface
+
+IObservable:
+    1. addObserver (Observable add observers into list/map)
+    2. remove
+    3. notify(): notify will loop through in the list, and tell one by one all observers that its value has changed.
+
+
+IObserver:
+    1. update(): this is like, when notify will call observer then it needs to update its value
+
+
+ConcreteObervable:
+    this class will @Override all interfaces from IObservable
+    addObserver() method will add one by one in in the list
+    removeObserve() will remove from list, if someone unsbscribe, then will not get notification.
+    notify will loop through in the list, and it will call update() method for every list element
+
+
+ConcreteObserver:
+
+
+here we are breaking Single Responsibility Principal, but sometimes it is fine to break something, bcz here subscribe, unsbscribe methods will never gonna change

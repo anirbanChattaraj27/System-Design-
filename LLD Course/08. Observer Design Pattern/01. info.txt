@@ -1,0 +1,15 @@
+basic defination: when someone post video on youtube , if I subscribe I will get notification.... how this notification mechanism works ?
+
+proper defination: defines a ONE-to_MANY relationship b/w objects, so that when one object changes state, all of its dependents are notified and updated automatically.
+
+
+
+let say, when YT has no videos then it in state 1, and it has 4 subscribers. so when youtube posts a video it will go from state 1 to state 2. and it will notify all its subscribers who are waiting for state change
+
+so think like 1 channel and n subscribers so ONE-to-MANY relationship
+think of it, channel = Observable |&&| subscribers = observer
+so it is the responible of Observable, when its state will be changed, it should notify all observers
+
+so channel have to keep a data structure like map or list or array, where it will maintain all its observers
+so whenever a observer subscribe Observable, Observable store its data into List
+so whenever its state will get changed, it will update its observers

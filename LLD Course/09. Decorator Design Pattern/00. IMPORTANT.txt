@@ -1,0 +1,31 @@
+class Base{
+    public void run(){
+        print("I am running");
+    }
+}
+
+class Child extends Base{
+    @Override
+    public void run(){
+        print("I am not running");
+    }
+}
+
+public class main(){
+
+    int time = sc.nextInt();
+    
+    if(time > 12){
+        Base b = new Base(); ------------> I am calling dynamically Base class, so base class method will print
+        b.run();
+    }
+
+    else{
+        Base b = new Child(); ------------> I am calling dynamically Child class, so child class method will print
+        b.run();
+    }
+}
+
+o/p: 
+I am running
+I am not running
