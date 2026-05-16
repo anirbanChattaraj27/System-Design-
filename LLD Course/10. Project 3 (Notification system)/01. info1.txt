@@ -1,0 +1,33 @@
+Question: 
+    plug and play model
+    extendible: sms, email, pop-up (future improvements like whatsapp notification)
+    notification: dynamically I should add features, headers, footers, signatures
+    store all notification / logging feature
+        - ASK INTERVIEWER to explain about functional and non-functional requirement
+
+at first I am creating 
+    INotification interface:
+        getContent();
+    
+    SimpleNotification extends INotification
+        String text;
+        getContent() return text; // so basically I am returning text from the getContent method
+
+    so in future I can use other notification like image / HTML page / etc notification and can override INotification
+
+
+NEXT PROBLEM:
+
+    notification should extend dynamically.... and Decorator pattern is best for it
+    so I will create a class INotificationDecorator
+        now it will have 2 relationship--->
+            1) has-a ----> creating an object of a INotification bcz of "has-a": 
+            2) is-a -----> INotificationDecorator also inherits the INotification
+
+        
+    NOW I will create concrete classes, which will dynamically gives result
+        1) TimestampDecorator
+        2) SignatureDecorator
+        3) I can add more classes dynamically as per requirement
+            these 2 are concrete classes which has INotification object as well as it has some new featers, i.e.: it can show the timestamp and it can show the signatures(logo)
+        

@@ -1,0 +1,34 @@
+Now I will use Observable Design pattern (DP)
+so basically I will create a notificationService that push notification in observable, this observable has multiple observers, which are waiting to get the notification
+
+first I will create interface of Observable
+    IObervable:
+        List<Observers> ob;
+        add (Observer ob) ---> adding new observers
+        remove(Observer ob) --> removing observer
+        notify()--> this will notify all observers in list, that new notification came
+
+    NotificationObservable implements IObervable ---> concrete class
+        INotification-----> creating obj of Inotification so that I can call this for SetNotification and GetNotification
+        @Override
+        add() 
+        remove()
+        notify() ---> this will loop throgh the obersers list and call its update method (observer design pattern)
+        GetNotification()--> this will read the notifications 
+        SetNotification()--> this will set the notification
+    
+
+    here we have IOberver interface and we have only 1 method
+
+    IObserver interface:
+        update();
+
+    Logger concrete class:
+        update(){...}
+
+    NotificationEngine concrete class:
+        update(){...}
+        
+        here I will create strategy for different notificaltion like email, sms, pop-up strategy
+    
+    

@@ -1,0 +1,14 @@
+IMPORTANT: previously in info1 we were sending content in the notification
+            BUT, here we are pushing notitfication either through SMS / popoup / Email
+create INotificationStrategy:
+    SendNotification (String)
+
+we will create concrete class:
+    EmailStrategy class
+
+    SmsStrategy class
+
+    PopupStrategy class
+
+
+If Client wants, he wants notification from sms, email, popup for that I have to pass a List in NotificationEngine

@@ -1,0 +1,16 @@
+I will create a service for Notification ----> SIngleton class ---> we should not create multiple obj of notificationService
+
+class notificationService
+    SendNotification(Notification n){...}
+    List<Notification> ----> maintaing a list of all notificaltion so that we can maintaina history of all notificaltion
+    this will take a notification and send it to observable 
+
+this will send notification from info1.txt to observable and observable send it to observers 
+
+info1----> creating notificaltion
+info2 and info3----> is for sending notification
+notificationService is briddge between these 2
+
+we use: Observer, strategy, Decorator Design pattern
+
+
