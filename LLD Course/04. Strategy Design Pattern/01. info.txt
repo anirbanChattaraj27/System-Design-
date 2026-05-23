@@ -2,8 +2,8 @@ QS.) WHY Inheritance is so BAD ....?
 
 Diagram: refer image_part1
     Suppose there is parent class Robot which has methods walk, talk, projection. (projection will change robot to robot but walk talk will be common in every robot)
-    - and child classes inherited Robot class and companionR, WorkerR these 2 classes will @Override projection method from Robot class. so projection method will keep on chaning, dependes upn new child class
-    - NOW, let say there is another robot sparrowR whcich also inherits Robot class and this class will have 1 different methods like fly() method, so along with walk, talk and projection there is another method fly.
+        - and child classes inherited Robot class and companionR, WorkerR these 2 classes will @Override projection method from Robot class. so projection method will keep on chaning, dependes upn new child class
+        - NOW, let say there is another robot sparrowR whcich also inherits Robot class and this class will have 1 different methods like fly() method, so along with walk, talk and projection there is another method fly.
 
 Diagram: refer image_part2
     NOW, there are 2 new robot comes which also have this fly method so I have to repeate fly() method for multiple types, and this breaks DRY(Do Not Repeate Yourself) principal. 
