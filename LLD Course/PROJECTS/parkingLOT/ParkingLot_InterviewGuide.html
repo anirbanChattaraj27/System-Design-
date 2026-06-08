@@ -1,0 +1,859 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Parking Lot LLD — Complete 60-Min Interview Guide</title>
+<link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;600&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+:root {
+  --bg: #0d1117; --bg2: #161b22; --bg3: #21262d;
+  --border: rgba(255,255,255,0.08); --border2: rgba(255,255,255,0.14);
+  --text: #e6edf3; --text2: #8b949e; --text3: #6e7681;
+  --purple: #a78bfa; --purple-bg: rgba(167,139,250,0.1); --purple-border: rgba(167,139,250,0.3);
+  --teal: #34d399; --teal-bg: rgba(52,211,153,0.08); --teal-border: rgba(52,211,153,0.25);
+  --amber: #fbbf24; --amber-bg: rgba(251,191,36,0.08); --amber-border: rgba(251,191,36,0.25);
+  --coral: #fb923c; --coral-bg: rgba(251,146,60,0.08); --coral-border: rgba(251,146,60,0.25);
+  --blue: #60a5fa; --blue-bg: rgba(96,165,250,0.08); --blue-border: rgba(96,165,250,0.25);
+  --red: #f87171; --green: #4ade80;
+  --kw: #ff7b72; --ty: #79c0ff; --st: #a5d6a7; --cm: #484f58; --an: #e3b341; --mt: #d2a8ff;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth}
+body{background:var(--bg);color:var(--text);font-family:'Inter',sans-serif;font-size:15px;line-height:1.7}
+
+/* ── NAV ── */
+.nav{position:sticky;top:0;z-index:100;background:rgba(13,17,23,0.95);backdrop-filter:blur(8px);border-bottom:1px solid var(--border);padding:0 24px;display:flex;align-items:center;gap:4px;overflow-x:auto;white-space:nowrap}
+.nav a{display:inline-flex;align-items:center;gap:6px;padding:12px 10px;font-size:12px;font-weight:500;color:var(--text2);text-decoration:none;border-bottom:2px solid transparent;transition:color .15s,border-color .15s}
+.nav a:hover,.nav a.active{color:var(--text);border-bottom-color:var(--purple)}
+.nav-time{margin-left:auto;padding:8px 12px;background:var(--purple-bg);border:1px solid var(--purple-border);border-radius:6px;font-size:11px;color:var(--purple);font-weight:600;white-space:nowrap}
+
+/* ── HERO ── */
+.hero{background:linear-gradient(135deg,#1a1040 0%,#0d1117 50%,#0a1628 100%);padding:56px 40px 48px;border-bottom:1px solid var(--border)}
+.hero-tag{display:inline-flex;align-items:center;gap:6px;background:var(--purple-bg);border:1px solid var(--purple-border);border-radius:20px;padding:5px 14px;font-size:11px;font-weight:600;color:var(--purple);letter-spacing:.5px;margin-bottom:20px}
+.hero h1{font-size:36px;font-weight:700;color:#fff;line-height:1.15;margin-bottom:12px}
+.hero p{color:var(--text2);font-size:16px;max-width:620px;margin-bottom:24px}
+.hero-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;max-width:640px}
+.hero-stat{background:var(--bg2);border:1px solid var(--border);border-radius:10px;padding:14px 16px}
+.hero-stat .n{font-size:22px;font-weight:700;color:var(--purple)}
+.hero-stat .l{font-size:12px;color:var(--text2);margin-top:2px}
+
+/* ── SECTION ── */
+.section{max-width:920px;margin:0 auto;padding:48px 24px}
+.section-header{display:flex;align-items:center;gap:12px;margin-bottom:28px}
+.section-badge{width:32px;height:32px;border-radius:8px;background:var(--purple-bg);border:1px solid var(--purple-border);display:flex;align-items:center;justify-content:center;font-size:13px;font-weight:700;color:var(--purple);flex-shrink:0}
+.section-header h2{font-size:20px;font-weight:600;color:#fff}
+.section-header .time-tag{margin-left:auto;font-size:11px;font-weight:600;padding:4px 10px;border-radius:12px;white-space:nowrap}
+.time-green{background:rgba(74,222,128,0.1);color:var(--green);border:1px solid rgba(74,222,128,0.2)}
+.time-blue{background:var(--blue-bg);color:var(--blue);border:1px solid var(--blue-border)}
+.time-amber{background:var(--amber-bg);color:var(--amber);border:1px solid var(--amber-border)}
+.time-coral{background:var(--coral-bg);color:var(--coral);border:1px solid var(--coral-border)}
+.time-purple{background:var(--purple-bg);color:var(--purple);border:1px solid var(--purple-border)}
+hr.div{border:none;border-top:1px solid var(--border);margin:0}
+
+/* ── TIMELINE ── */
+.timeline{position:relative;padding-left:28px}
+.timeline::before{content:'';position:absolute;left:9px;top:8px;bottom:8px;width:1px;background:var(--border2)}
+.tl-item{position:relative;margin-bottom:24px}
+.tl-item:last-child{margin-bottom:0}
+.tl-dot{position:absolute;left:-24px;top:4px;width:18px;height:18px;border-radius:50%;border:2px solid var(--purple);background:var(--bg);display:flex;align-items:center;justify-content:center}
+.tl-dot-inner{width:6px;height:6px;border-radius:50%;background:var(--purple)}
+.tl-head{font-size:14px;font-weight:600;color:#fff;margin-bottom:4px;display:flex;align-items:center;gap:8px}
+.tl-body{font-size:13.5px;color:var(--text2);line-height:1.6}
+.tl-body code{font-family:'JetBrains Mono',monospace;font-size:12px;background:var(--bg3);padding:1px 5px;border-radius:3px;color:var(--ty)}
+
+/* ── CALLOUT ── */
+.callout{border-radius:10px;padding:14px 18px;margin:16px 0;border-left:3px solid;font-size:13.5px;line-height:1.6}
+.callout-purple{background:var(--purple-bg);border-color:var(--purple)}
+.callout-teal{background:var(--teal-bg);border-color:var(--teal)}
+.callout-amber{background:var(--amber-bg);border-color:var(--amber)}
+.callout-coral{background:var(--coral-bg);border-color:var(--coral)}
+.callout-blue{background:var(--blue-bg);border-color:var(--blue)}
+.callout strong{color:#fff}
+.callout code{font-family:'JetBrains Mono',monospace;font-size:11.5px;background:rgba(255,255,255,0.08);padding:1px 5px;border-radius:3px}
+
+/* ── DIALOGUE BOX ── */
+.dialogue{margin:20px 0}
+.msg{display:flex;gap:10px;margin-bottom:12px;align-items:flex-start}
+.msg-avatar{width:30px;height:30px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:700;flex-shrink:0;margin-top:2px}
+.av-i{background:rgba(251,146,60,0.2);color:var(--coral)}
+.av-you{background:var(--purple-bg);color:var(--purple)}
+.msg-bubble{padding:10px 14px;border-radius:10px;font-size:13.5px;line-height:1.6;max-width:90%}
+.bubble-i{background:var(--bg3);border:1px solid var(--border);color:var(--text)}
+.bubble-you{background:var(--purple-bg);border:1px solid var(--purple-border);color:var(--text)}
+.msg-label{font-size:11px;color:var(--text3);margin-bottom:4px;font-weight:500}
+.thought{font-style:italic;font-size:12px;color:var(--text3);margin-left:40px;margin-bottom:12px;padding:6px 12px;border-left:2px solid var(--border2)}
+
+/* ── CODE CARD ── */
+.code-card{background:var(--bg2);border:1px solid var(--border);border-radius:12px;overflow:hidden;margin:16px 0}
+.code-header{display:flex;align-items:center;justify-content:space-between;padding:10px 16px;border-bottom:1px solid var(--border);background:var(--bg3)}
+.code-fname{font-family:'JetBrains Mono',monospace;font-size:12px;color:var(--amber);font-weight:600}
+.code-meta{font-size:11px;color:var(--text3);display:flex;align-items:center;gap:10px}
+.code-tag{padding:2px 8px;border-radius:4px;font-size:10px;font-weight:600;letter-spacing:.3px}
+.tag-solid{background:rgba(74,222,128,0.12);color:var(--green);border:1px solid rgba(74,222,128,0.2)}
+.tag-pattern{background:var(--blue-bg);color:var(--blue);border:1px solid var(--blue-border)}
+pre{margin:0;padding:18px 20px;overflow-x:auto;font-family:'JetBrains Mono',monospace;font-size:12.5px;line-height:1.85;tab-size:4}
+.kw{color:var(--kw);font-weight:600}.ty{color:var(--ty)}.st{color:var(--st)}.cm{color:var(--cm);font-style:italic}.an{color:var(--an)}.mt{color:var(--mt)}.fd{color:#e6edf3}.nm{color:#f97316}
+
+/* ── QUICK ER ── */
+.er-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:10px;margin:16px 0}
+.er-card{background:var(--bg2);border:1px solid var(--border);border-radius:8px;overflow:hidden}
+.er-head{padding:8px 12px;font-size:12px;font-weight:600;border-bottom:1px solid var(--border)}
+.er-head.purple{background:var(--purple-bg);color:var(--purple)}
+.er-head.teal{background:var(--teal-bg);color:var(--teal)}
+.er-head.amber{background:var(--amber-bg);color:var(--amber)}
+.er-head.coral{background:var(--coral-bg);color:var(--coral)}
+.er-head.blue{background:var(--blue-bg);color:var(--blue)}
+.er-row{padding:5px 12px;font-size:11.5px;color:var(--text2);border-bottom:1px solid rgba(255,255,255,0.04);font-family:'JetBrains Mono',monospace}
+.er-row:last-child{border-bottom:none}
+.er-pk{color:var(--amber)}
+.er-fk{color:var(--blue)}
+.er-rel{display:flex;align-items:center;justify-content:center;gap:8px;padding:10px;font-size:11.5px;color:var(--text2);text-align:center}
+.rel-line{flex:1;height:1px;background:var(--border2)}
+
+/* ── SOLID BADGES ── */
+.solid-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin:16px 0}
+.solid-card{background:var(--bg2);border:1px solid var(--border);border-radius:8px;padding:14px}
+.solid-letter{font-size:22px;font-weight:700;color:var(--purple);margin-bottom:4px}
+.solid-name{font-size:12px;font-weight:600;color:#fff;margin-bottom:6px}
+.solid-desc{font-size:12px;color:var(--text2);line-height:1.5}
+.solid-where{margin-top:8px;font-size:11px;color:var(--teal);background:var(--teal-bg);border:1px solid var(--teal-border);padding:4px 8px;border-radius:4px;display:inline-block}
+
+/* ── PATTERN CARDS ── */
+.pattern-card{background:var(--bg2);border:1px solid var(--border);border-radius:10px;padding:16px 18px;margin-bottom:14px}
+.pattern-head{display:flex;align-items:center;gap:10px;margin-bottom:8px}
+.pattern-icon{width:32px;height:32px;border-radius:8px;background:var(--blue-bg);border:1px solid var(--blue-border);display:flex;align-items:center;justify-content:center;font-size:14px;font-weight:700;color:var(--blue)}
+.pattern-name{font-size:14px;font-weight:600;color:#fff}
+.pattern-why{font-size:13px;color:var(--text2);margin-bottom:8px}
+.pattern-where{font-size:12px;color:var(--amber);background:var(--amber-bg);border:1px solid var(--amber-border);padding:4px 10px;border-radius:4px;display:inline-block}
+
+/* ── CLASS ORDER TABLE ── */
+.order-table{width:100%;border-collapse:collapse;font-size:13px;margin:16px 0}
+.order-table th{text-align:left;padding:8px 14px;font-size:11px;font-weight:600;color:var(--text3);text-transform:uppercase;letter-spacing:.5px;border-bottom:1px solid var(--border)}
+.order-table td{padding:10px 14px;border-bottom:1px solid rgba(255,255,255,0.04);color:var(--text2)}
+.order-table tr:last-child td{border-bottom:none}
+.order-table td:first-child{color:#fff;font-weight:500;font-family:'JetBrains Mono',monospace;font-size:12px}
+.order-num{display:inline-flex;align-items:center;justify-content:center;width:20px;height:20px;border-radius:50%;background:var(--purple-bg);border:1px solid var(--purple-border);font-size:10px;font-weight:700;color:var(--purple);margin-right:8px;flex-shrink:0}
+
+/* ── TIPS ── */
+.tip-row{display:flex;gap:8px;margin-bottom:10px;font-size:13.5px}
+.tip-icon{flex-shrink:0;margin-top:3px;font-size:15px}
+.check{color:var(--green)}.cross{color:var(--red)}.star{color:var(--amber)}
+
+/* ── PROGRESS BAR ── */
+.progress-container{margin:20px 0}
+.progress-row{display:flex;align-items:center;gap:12px;margin-bottom:10px}
+.progress-label{width:110px;font-size:12px;font-weight:500;color:var(--text2);flex-shrink:0}
+.progress-bar{flex:1;height:6px;background:var(--bg3);border-radius:3px;overflow:hidden}
+.progress-fill{height:100%;border-radius:3px;transition:width .3s}
+.progress-time{width:50px;font-size:11px;color:var(--text3);text-align:right;flex-shrink:0}
+
+/* ── RESPONSIVE ── */
+@media(max-width:600px){
+  .hero{padding:32px 20px}.hero h1{font-size:26px}.hero-grid{grid-template-columns:1fr 1fr}
+  .solid-grid{grid-template-columns:1fr}.section{padding:32px 16px}
+  pre{font-size:11px;padding:14px}.nav a{padding:10px 8px;font-size:11px}
+}
+</style>
+</head>
+<body>
+
+<!-- NAV -->
+<nav class="nav">
+  <a href="#overview">Overview</a>
+  <a href="#phase1">Phase 1: Requirements</a>
+  <a href="#phase2">Phase 2: Design</a>
+  <a href="#phase3">Phase 3: Code</a>
+  <a href="#solid">SOLID</a>
+  <a href="#patterns">Patterns</a>
+  <a href="#tips">Tips</a>
+  <span class="nav-time">60 min total</span>
+</nav>
+
+<!-- HERO -->
+<div class="hero">
+  <div class="hero-tag">SDE-1 LLD Interview Playbook</div>
+  <h1>Parking Lot System<br>Complete 60-Minute Guide</h1>
+  <p>Exactly how to talk, think, draw, and code in a real interview. Every minute mapped out.</p>
+  <div class="hero-grid">
+    <div class="hero-stat"><div class="n">10m</div><div class="l">Requirements</div></div>
+    <div class="hero-stat"><div class="n">10m</div><div class="l">Design + ER</div></div>
+    <div class="hero-stat"><div class="n">35m</div><div class="l">Coding</div></div>
+    <div class="hero-stat"><div class="n">5m</div><div class="l">Review + Q&A</div></div>
+  </div>
+</div>
+
+<!-- ── SECTION 0: OVERVIEW ── -->
+<div id="overview" style="max-width:920px;margin:0 auto;padding:48px 24px 0">
+  <div class="section-header">
+    <div class="section-badge">0</div>
+    <h2>The Mental Model — what are they actually testing?</h2>
+  </div>
+  <div class="callout callout-purple">
+    <strong>Interviewer's secret checklist:</strong> Can you break a problem into classes? Do you know OOP? Can you apply basic patterns? Can you write clean, readable code under pressure? Can you <em>communicate</em> your thinking? The code itself is secondary to the thinking.
+  </div>
+  <div class="progress-container">
+    <div class="progress-row"><div class="progress-label">Requirements</div><div class="progress-bar"><div class="progress-fill" style="width:17%;background:#a78bfa"></div></div><div class="progress-time">0–10 min</div></div>
+    <div class="progress-row"><div class="progress-label">Entities</div><div class="progress-bar"><div class="progress-fill" style="width:10%;background:#34d399"></div></div><div class="progress-time">10–16 min</div></div>
+    <div class="progress-row"><div class="progress-label">ER Diagram</div><div class="progress-bar"><div class="progress-fill" style="width:7%;background:#60a5fa"></div></div><div class="progress-time">16–20 min</div></div>
+    <div class="progress-row"><div class="progress-label">Coding</div><div class="progress-bar"><div class="progress-fill" style="width:58%;background:#fb923c"></div></div><div class="progress-time">20–55 min</div></div>
+    <div class="progress-row"><div class="progress-label">Review</div><div class="progress-bar"><div class="progress-fill" style="width:8%;background:#fbbf24"></div></div><div class="progress-time">55–60 min</div></div>
+  </div>
+</div>
+
+<hr class="div">
+
+<!-- ── PHASE 1: REQUIREMENTS ── -->
+<div id="phase1" class="section">
+  <div class="section-header">
+    <div class="section-badge">1</div>
+    <h2>Phase 1 — Gathering Requirements</h2>
+    <span class="time-tag time-green">0 – 10 min</span>
+  </div>
+
+  <div class="callout callout-teal">
+    <strong>Never start coding directly.</strong> The very first thing you say should be a question. This shows experience. Junior devs jump to code. Senior devs ask questions first.
+  </div>
+
+  <p style="color:var(--text2);font-size:14px;margin-bottom:16px">Here is exactly how the first 10 minutes should sound — word for word:</p>
+
+  <div class="dialogue">
+    <div class="msg"><div class="msg-avatar av-i">I</div><div><div class="msg-label">Interviewer</div><div class="msg-bubble bubble-i">"Design a Parking Lot system."</div></div></div>
+
+    <div class="msg"><div class="msg-avatar av-you">You</div><div><div class="msg-label">You (pause 5 seconds, think out loud)</div><div class="msg-bubble bubble-you">"Sure! Before I start designing, I want to make sure I understand the scope. Can I ask a few quick questions?"</div></div></div>
+    <div class="thought">← This one sentence alone impresses 80% of interviewers. Never skip it.</div>
+
+    <div class="msg"><div class="msg-avatar av-i">I</div><div><div class="msg-label">Interviewer</div><div class="msg-bubble bubble-i">"Go ahead."</div></div></div>
+
+    <div class="msg"><div class="msg-avatar av-you">You</div><div><div class="msg-label">You — Question 1 (Scale)</div><div class="msg-bubble bubble-you">"Is this a single parking lot or a chain of parking lots? And roughly how many floors and spots are we thinking?"</div></div></div>
+    <div class="thought">← This tells you if you need a ParkingLotChain class or just one ParkingLot.</div>
+
+    <div class="msg"><div class="msg-avatar av-i">I</div><div><div class="msg-label">Interviewer</div><div class="msg-bubble bubble-i">"Single lot, let's say 3–5 floors with 50–100 spots each."</div></div></div>
+
+    <div class="msg"><div class="msg-avatar av-you">You</div><div><div class="msg-label">You — Question 2 (Vehicle types)</div><div class="msg-bubble bubble-you">"What types of vehicles should we support? Bikes, cars, trucks? And should different vehicle types have different spot sizes?"</div></div></div>
+    <div class="thought">← This leads to enums + spot-type matching logic. Shows you already think in classes.</div>
+
+    <div class="msg"><div class="msg-avatar av-i">I</div><div><div class="msg-label">Interviewer</div><div class="msg-bubble bubble-i">"Yes — two-wheelers, compact cars, and large vehicles. Spots should match the vehicle type."</div></div></div>
+
+    <div class="msg"><div class="msg-avatar av-you">You</div><div><div class="msg-label">You — Question 3 (Entry/Exit flow)</div><div class="msg-bubble bubble-you">"When a vehicle enters, do we issue a ticket? And on exit, do we use that ticket to free the spot? Any payment system needed?"</div></div></div>
+    <div class="thought">← Defines the park() and unpark() flow. "Payment out of scope for now" keeps you focused.</div>
+
+    <div class="msg"><div class="msg-avatar av-i">I</div><div><div class="msg-label">Interviewer</div><div class="msg-bubble bubble-i">"Yes, issue a ticket. Payment is out of scope."</div></div></div>
+
+    <div class="msg"><div class="msg-avatar av-you">You</div><div><div class="msg-label">You — Summarise (critical step!)</div><div class="msg-bubble bubble-you">"Perfect. So let me summarise: I'll design a single multi-floor parking lot. It supports 3 vehicle types — two-wheeler, compact, and large. Spots match vehicle types. A ticket is issued on entry and used to free the spot on exit. No payment system. Sound right?"</div></div></div>
+    <div class="thought">← Summarising prevents mid-coding surprises. Also shows communication skills.</div>
+
+    <div class="msg"><div class="msg-avatar av-i">I</div><div><div class="msg-label">Interviewer</div><div class="msg-bubble bubble-i">"Exactly right. Go ahead."</div></div></div>
+  </div>
+
+  <div class="callout callout-amber">
+    <strong>The 3 questions you must always ask in any LLD problem:</strong><br>
+    1. <strong>Scale</strong> — single instance or multiple? → affects Singleton vs Factory<br>
+    2. <strong>Types</strong> — what kinds of things exist? → leads to enums + inheritance<br>
+    3. <strong>Core flow</strong> — what are the 2–3 main operations? → becomes your main methods
+  </div>
+</div>
+
+<hr class="div">
+
+<!-- ── PHASE 2: DESIGN ── -->
+<div id="phase2" class="section">
+  <div class="section-header">
+    <div class="section-badge">2</div>
+    <h2>Phase 2 — Identify Entities & Quick ER Diagram</h2>
+    <span class="time-tag time-blue">10 – 20 min</span>
+  </div>
+
+  <div class="callout callout-blue">
+    <strong>The trick to finding classes fast:</strong> Underline every <em>noun</em> in your requirements summary. Each noun is a candidate class. Then cross out the ones that are just properties of another class.
+  </div>
+
+  <div class="timeline">
+    <div class="tl-item">
+      <div class="tl-dot"><div class="tl-dot-inner"></div></div>
+      <div class="tl-head">Step 1 — Extract nouns (2 min, say this out loud)</div>
+      <div class="tl-body">Say: <em>"Let me identify the main entities. I see: Parking Lot, Floor, Spot, Vehicle, Ticket. Vehicle has types — Bike, Car, Truck. Spot has a type and a status. These all become classes."</em></div>
+    </div>
+    <div class="tl-item">
+      <div class="tl-dot"><div class="tl-dot-inner"></div></div>
+      <div class="tl-head">Step 2 — Find relationships (2 min)</div>
+      <div class="tl-body">Ask yourself: <em>has-a</em> or <em>is-a</em>?<br>
+        — <code>ParkingLot</code> has-a list of <code>ParkingFloor</code> (composition)<br>
+        — <code>ParkingFloor</code> has-a list of <code>ParkingSpot</code> (composition)<br>
+        — <code>Car</code> is-a <code>Vehicle</code> (inheritance)<br>
+        — <code>ParkingTicket</code> has-a <code>Vehicle</code> + has-a <code>ParkingSpot</code> (association)
+      </div>
+    </div>
+    <div class="tl-item">
+      <div class="tl-dot"><div class="tl-dot-inner"></div></div>
+      <div class="tl-head">Step 3 — Draw the ER diagram — fast shortcut method (4 min)</div>
+      <div class="tl-body">Don't draw a full UML diagram with all fields. Just draw boxes + lines + cardinality. Say: "I'll quickly sketch the relationships."</div>
+    </div>
+  </div>
+
+  <p style="color:var(--text2);font-size:13px;margin:16px 0 12px">Quick ER — draw this in 4 minutes on whiteboard. Each box = class name + 2–3 key fields only:</p>
+
+  <div class="er-grid">
+    <div class="er-card">
+      <div class="er-head purple">ParkingLot</div>
+      <div class="er-row"><span class="er-pk">name: String</span></div>
+      <div class="er-row">floors: List</div>
+      <div class="er-row">activeTickets: Map</div>
+    </div>
+    <div class="er-card">
+      <div class="er-head teal">ParkingFloor</div>
+      <div class="er-row"><span class="er-pk">floorNo: int</span></div>
+      <div class="er-row">spots: List</div>
+      <div class="er-row">getAvailableSpot()</div>
+    </div>
+    <div class="er-card">
+      <div class="er-head teal">ParkingSpot</div>
+      <div class="er-row"><span class="er-pk">spotNo: String</span></div>
+      <div class="er-row">type: SpotType</div>
+      <div class="er-row">status: SpotStatus</div>
+    </div>
+    <div class="er-card">
+      <div class="er-head coral">Vehicle (abstract)</div>
+      <div class="er-row"><span class="er-pk">licensePlate</span></div>
+      <div class="er-row">type: VehicleType</div>
+      <div class="er-row">Car / Bike / Truck ↓</div>
+    </div>
+    <div class="er-card">
+      <div class="er-head amber">ParkingTicket</div>
+      <div class="er-row"><span class="er-pk">ticketId: UUID</span></div>
+      <div class="er-row"><span class="er-fk">vehicle: Vehicle</span></div>
+      <div class="er-row"><span class="er-fk">spot: ParkingSpot</span></div>
+    </div>
+    <div class="er-card">
+      <div class="er-head blue">Enums</div>
+      <div class="er-row">VehicleType</div>
+      <div class="er-row">SpotType</div>
+      <div class="er-row">SpotStatus</div>
+    </div>
+  </div>
+
+  <div style="background:var(--bg2);border:1px solid var(--border);border-radius:10px;padding:16px 18px;margin:16px 0">
+    <div style="font-size:13px;font-weight:600;color:#fff;margin-bottom:12px">Relationships to draw as arrows:</div>
+    <div class="er-rel"><span style="color:var(--purple)">ParkingLot</span><div class="rel-line"></div><span style="color:var(--text3);font-size:11px">1 has MANY</span><div class="rel-line"></div><span style="color:var(--teal)">ParkingFloor</span></div>
+    <div class="er-rel"><span style="color:var(--teal)">ParkingFloor</span><div class="rel-line"></div><span style="color:var(--text3);font-size:11px">1 has MANY</span><div class="rel-line"></div><span style="color:var(--teal)">ParkingSpot</span></div>
+    <div class="er-rel"><span style="color:var(--coral)">Car/Bike/Truck</span><div class="rel-line"></div><span style="color:var(--text3);font-size:11px">extends</span><div class="rel-line"></div><span style="color:var(--coral)">Vehicle</span></div>
+    <div class="er-rel"><span style="color:var(--amber)">ParkingTicket</span><div class="rel-line"></div><span style="color:var(--text3);font-size:11px">links to</span><div class="rel-line"></div><span style="color:var(--teal)">ParkingSpot + Vehicle</span></div>
+  </div>
+
+  <div class="callout callout-teal">
+    <strong>What to say when drawing the ER:</strong> "I'm keeping this light — just class names and key relationships. I'll flesh out the fields in code." This sets expectation that you won't spend 20 minutes on a diagram.
+  </div>
+
+  <div class="callout callout-amber">
+    <strong>Decide class writing order before touching the keyboard.</strong> Say: "I'll write bottom-up — enums first, then entities with no dependencies, then classes that depend on them, then the main ParkingLot class last." This shows planning.
+  </div>
+
+  <table class="order-table">
+    <thead><tr><th>Order</th><th>Class</th><th>Why this order</th></tr></thead>
+    <tbody>
+      <tr><td><span class="order-num">1</span>Enums</td><td style="color:var(--text2)">VehicleType, SpotType, SpotStatus</td><td style="color:var(--text2)">No dependencies. Foundation layer.</td></tr>
+      <tr><td><span class="order-num">2</span>Vehicle</td><td style="color:var(--text2)">Abstract class + Car, Bike, Truck</td><td style="color:var(--text2)">Uses enums. No other class deps.</td></tr>
+      <tr><td><span class="order-num">3</span>ParkingSpot</td><td style="color:var(--text2)">Uses SpotType, SpotStatus, Vehicle</td><td style="color:var(--text2)">Core entity. ParkingFloor needs it.</td></tr>
+      <tr><td><span class="order-num">4</span>ParkingTicket</td><td style="color:var(--text2)">Uses Vehicle + ParkingSpot</td><td style="color:var(--text2)">Receipt object. No logic of its own.</td></tr>
+      <tr><td><span class="order-num">5</span>ParkingFloor</td><td style="color:var(--text2)">Uses ParkingSpot</td><td style="color:var(--text2)">Container for spots.</td></tr>
+      <tr><td><span class="order-num">6</span>ParkingLot</td><td style="color:var(--text2)">Uses everything</td><td style="color:var(--text2)">Main class. Orchestrator. Write last.</td></tr>
+      <tr><td><span class="order-num">7</span>Main</td><td style="color:var(--text2)">Demo / test</td><td style="color:var(--text2)">Always demo your code at the end.</td></tr>
+    </tbody>
+  </table>
+</div>
+
+<hr class="div">
+
+<!-- ── PHASE 3: CODE ── -->
+<div id="phase3" class="section">
+  <div class="section-header">
+    <div class="section-badge">3</div>
+    <h2>Phase 3 — The Complete Code</h2>
+    <span class="time-tag time-coral">20 – 55 min</span>
+  </div>
+
+  <div class="callout callout-coral">
+    <strong>Say this before you start typing:</strong> "I'll write the code in the order I just described — enums first, then Vehicle, then Spot, and so on. I'll talk through my decisions as I go." This keeps the interviewer engaged and shows communication.
+  </div>
+
+  <!-- ENUMS -->
+  <div class="code-card">
+    <div class="code-header"><span class="code-fname">VehicleType.java · SpotType.java · SpotStatus.java</span><div class="code-meta"><span class="code-tag tag-solid">Foundation layer — write in 2 min</span></div></div>
+    <pre><span class="cm">// Enums first — always. Prevents magic strings like "CAR" or "COMPACT".</span>
+<span class="cm">// Type-safe, autocomplete-friendly, impossible to typo.</span>
+<span class="cm">// SOLID: Open/Closed — add a new type without changing existing logic.</span>
+
+<span class="kw">public enum</span> <span class="ty">VehicleType</span> { TWO_WHEELER, COMPACT, LARGE }
+
+<span class="kw">public enum</span> <span class="ty">SpotType</span>   { TWO_WHEELER, COMPACT, LARGE }
+
+<span class="kw">public enum</span> <span class="ty">SpotStatus</span> { AVAILABLE, OCCUPIED }</pre>
+  </div>
+
+  <!-- VEHICLE -->
+  <div class="code-card">
+    <div class="code-header"><span class="code-fname">Vehicle.java + Car.java + Bike.java + Truck.java</span><div class="code-meta"><span class="code-tag tag-solid">Single Responsibility + OCP</span><span class="code-tag tag-pattern">Inheritance</span></div></div>
+    <pre><span class="cm">// ── SOLID: Single Responsibility ──────────────────────────────────────────</span>
+<span class="cm">// Vehicle knows ONLY about vehicle identity. No parking logic here.</span>
+<span class="cm">// ── SOLID: Open/Closed ────────────────────────────────────────────────────</span>
+<span class="cm">// Adding a new vehicle type (e.g. Bus) = new subclass. No changes to Vehicle.</span>
+
+<span class="kw">public abstract class</span> <span class="ty">Vehicle</span> {
+    <span class="kw">private final</span> <span class="ty">String</span> licensePlate;     <span class="cm">// final = immutable after creation</span>
+    <span class="kw">private final</span> <span class="ty">VehicleType</span> vehicleType;
+
+    <span class="kw">public</span> <span class="mt">Vehicle</span>(<span class="ty">String</span> licensePlate, <span class="ty">VehicleType</span> vehicleType) {
+        <span class="kw">this</span>.licensePlate = licensePlate;
+        <span class="kw">this</span>.vehicleType = vehicleType;
+    }
+
+    <span class="kw">public</span> <span class="ty">String</span> <span class="mt">getLicensePlate</span>()  { <span class="kw">return</span> licensePlate; }
+    <span class="kw">public</span> <span class="ty">VehicleType</span> <span class="mt">getVehicleType</span>() { <span class="kw">return</span> vehicleType; }
+}
+
+<span class="cm">// Each subclass is 3 lines. That's the power of inheritance done right.</span>
+<span class="kw">public class</span> <span class="ty">Car</span>   <span class="kw">extends</span> <span class="ty">Vehicle</span> { <span class="kw">public</span> <span class="mt">Car</span>(<span class="ty">String</span> p)   { <span class="kw">super</span>(p, <span class="ty">VehicleType</span>.COMPACT);     } }
+<span class="kw">public class</span> <span class="ty">Bike</span>  <span class="kw">extends</span> <span class="ty">Vehicle</span> { <span class="kw">public</span> <span class="mt">Bike</span>(<span class="ty">String</span> p)  { <span class="kw">super</span>(p, <span class="ty">VehicleType</span>.TWO_WHEELER);  } }
+<span class="kw">public class</span> <span class="ty">Truck</span> <span class="kw">extends</span> <span class="ty">Vehicle</span> { <span class="kw">public</span> <span class="mt">Truck</span>(<span class="ty">String</span> p) { <span class="kw">super</span>(p, <span class="ty">VehicleType</span>.LARGE);        } }</pre>
+  </div>
+
+  <!-- PARKING SPOT -->
+  <div class="code-card">
+    <div class="code-header"><span class="code-fname">ParkingSpot.java</span><div class="code-meta"><span class="code-tag tag-solid">SRP — manages its own state</span></div></div>
+    <pre><span class="cm">// ── SOLID: Single Responsibility ──────────────────────────────────────────</span>
+<span class="cm">// ParkingSpot manages only its own state — available/occupied, vehicle ref.</span>
+<span class="cm">// It does NOT decide which vehicle to accept. That's ParkingFloor's job.</span>
+<span class="cm">// ── SOLID: Encapsulation ──────────────────────────────────────────────────</span>
+<span class="cm">// All fields private. State changes only through parkVehicle()/removeVehicle().</span>
+
+<span class="kw">public class</span> <span class="ty">ParkingSpot</span> {
+
+    <span class="kw">private final</span> <span class="ty">String</span>     spotNumber;
+    <span class="kw">private final</span> <span class="ty">SpotType</span>   spotType;
+    <span class="kw">private</span>       <span class="ty">SpotStatus</span> status;
+    <span class="kw">private</span>       <span class="ty">Vehicle</span>    parkedVehicle;
+
+    <span class="kw">public</span> <span class="mt">ParkingSpot</span>(<span class="ty">String</span> spotNumber, <span class="ty">SpotType</span> spotType) {
+        <span class="kw">this</span>.spotNumber = spotNumber;
+        <span class="kw">this</span>.spotType   = spotType;
+        <span class="kw">this</span>.status     = <span class="ty">SpotStatus</span>.AVAILABLE;
+        <span class="kw">this</span>.parkedVehicle = <span class="kw">null</span>;
+    }
+
+    <span class="cm">// Key insight: SpotType.COMPACT.name() == VehicleType.COMPACT.name()</span>
+    <span class="cm">// Same enum names = no switch/if needed. Clean matching in one line.</span>
+    <span class="kw">public boolean</span> <span class="mt">isAvailableForVehicle</span>(<span class="ty">Vehicle</span> vehicle) {
+        <span class="kw">return</span> status == <span class="ty">SpotStatus</span>.AVAILABLE
+            && spotType.name().equals(vehicle.getVehicleType().name());
+    }
+
+    <span class="kw">public void</span> <span class="mt">parkVehicle</span>(<span class="ty">Vehicle</span> vehicle) {
+        <span class="kw">this</span>.parkedVehicle = vehicle;
+        <span class="kw">this</span>.status        = <span class="ty">SpotStatus</span>.OCCUPIED;
+    }
+
+    <span class="kw">public void</span> <span class="mt">removeVehicle</span>() {
+        <span class="kw">this</span>.parkedVehicle = <span class="kw">null</span>;
+        <span class="kw">this</span>.status        = <span class="ty">SpotStatus</span>.AVAILABLE;
+    }
+
+    <span class="kw">public</span> <span class="ty">String</span>     <span class="mt">getSpotNumber</span>()    { <span class="kw">return</span> spotNumber; }
+    <span class="kw">public</span> <span class="ty">SpotType</span>   <span class="mt">getSpotType</span>()     { <span class="kw">return</span> spotType; }
+    <span class="kw">public</span> <span class="ty">SpotStatus</span> <span class="mt">getStatus</span>()       { <span class="kw">return</span> status; }
+    <span class="kw">public</span> <span class="ty">Vehicle</span>    <span class="mt">getParkedVehicle</span>() { <span class="kw">return</span> parkedVehicle; }
+    <span class="kw">public boolean</span>    <span class="mt">isEmpty</span>()          { <span class="kw">return</span> status == <span class="ty">SpotStatus</span>.AVAILABLE; }
+}</pre>
+  </div>
+
+  <!-- TICKET -->
+  <div class="code-card">
+    <div class="code-header"><span class="code-fname">ParkingTicket.java</span><div class="code-meta"><span class="code-tag tag-solid">SRP — pure data object</span></div></div>
+    <pre><span class="kw">import</span> java.time.LocalDateTime;
+<span class="kw">import</span> java.util.UUID;
+
+<span class="cm">// ── SOLID: Single Responsibility ──────────────────────────────────────────</span>
+<span class="cm">// Ticket is a VALUE OBJECT. It just holds data. No business logic.</span>
+<span class="cm">// If we add pricing later, we add a FeeCalculator class — we don't touch this.</span>
+
+<span class="kw">public class</span> <span class="ty">ParkingTicket</span> {
+
+    <span class="kw">private final</span> <span class="ty">String</span>        ticketId;
+    <span class="kw">private final</span> <span class="ty">Vehicle</span>       vehicle;
+    <span class="kw">private final</span> <span class="ty">ParkingSpot</span>   allocatedSpot;
+    <span class="kw">private final</span> <span class="ty">LocalDateTime</span> entryTime;
+
+    <span class="kw">public</span> <span class="mt">ParkingTicket</span>(<span class="ty">Vehicle</span> vehicle, <span class="ty">ParkingSpot</span> allocatedSpot) {
+        <span class="kw">this</span>.ticketId      = <span class="ty">UUID</span>.randomUUID().toString();
+        <span class="kw">this</span>.vehicle       = vehicle;
+        <span class="kw">this</span>.allocatedSpot = allocatedSpot;
+        <span class="kw">this</span>.entryTime     = <span class="ty">LocalDateTime</span>.now();
+    }
+
+    <span class="kw">public</span> <span class="ty">String</span>        <span class="mt">getTicketId</span>()      { <span class="kw">return</span> ticketId; }
+    <span class="kw">public</span> <span class="ty">Vehicle</span>       <span class="mt">getVehicle</span>()       { <span class="kw">return</span> vehicle; }
+    <span class="kw">public</span> <span class="ty">ParkingSpot</span>   <span class="mt">getAllocatedSpot</span>() { <span class="kw">return</span> allocatedSpot; }
+    <span class="kw">public</span> <span class="ty">LocalDateTime</span> <span class="mt">getEntryTime</span>()    { <span class="kw">return</span> entryTime; }
+}</pre>
+  </div>
+
+  <!-- FLOOR -->
+  <div class="code-card">
+    <div class="code-header"><span class="code-fname">ParkingFloor.java</span><div class="code-meta"><span class="code-tag tag-solid">SRP + OCP</span></div></div>
+    <pre><span class="kw">import</span> java.util.*;
+
+<span class="cm">// ── SOLID: Single Responsibility ──────────────────────────────────────────</span>
+<span class="cm">// ParkingFloor manages spots on ONE floor. Does not touch other floors.</span>
+<span class="cm">// ── SOLID: Open/Closed ────────────────────────────────────────────────────</span>
+<span class="cm">// To add a "VIP floor" — extend ParkingFloor, don't modify it.</span>
+
+<span class="kw">public class</span> <span class="ty">ParkingFloor</span> {
+
+    <span class="kw">private final</span> <span class="ty">int</span>               floorNumber;
+    <span class="kw">private final</span> <span class="ty">List</span>&lt;<span class="ty">ParkingSpot</span>&gt; spots;
+
+    <span class="kw">public</span> <span class="mt">ParkingFloor</span>(<span class="ty">int</span> floorNumber) {
+        <span class="kw">this</span>.floorNumber = floorNumber;
+        <span class="kw">this</span>.spots       = <span class="kw">new</span> <span class="ty">ArrayList</span>&lt;&gt;();
+    }
+
+    <span class="kw">public void</span> <span class="mt">addSpot</span>(<span class="ty">ParkingSpot</span> spot) { spots.add(spot); }
+
+    <span class="cm">// Returns first available matching spot, or null if floor is full</span>
+    <span class="kw">public</span> <span class="ty">ParkingSpot</span> <span class="mt">getAvailableSpot</span>(<span class="ty">Vehicle</span> vehicle) {
+        <span class="kw">return</span> spots.stream()
+                    .filter(s -&gt; s.isAvailableForVehicle(vehicle))
+                    .findFirst()
+                    .orElse(<span class="kw">null</span>);
+    }
+
+    <span class="kw">public int</span>                   <span class="mt">getFloorNumber</span>() { <span class="kw">return</span> floorNumber; }
+    <span class="kw">public</span> <span class="ty">List</span>&lt;<span class="ty">ParkingSpot</span>&gt; <span class="mt">getSpots</span>()       { <span class="kw">return</span> spots; }
+}</pre>
+  </div>
+
+  <!-- PARKING LOT -->
+  <div class="code-card">
+    <div class="code-header"><span class="code-fname">ParkingLot.java</span><div class="code-meta"><span class="code-tag tag-pattern">Singleton Pattern</span><span class="code-tag tag-solid">SRP + DIP</span></div></div>
+    <pre><span class="kw">import</span> java.util.*;
+
+<span class="cm">// ── Design Pattern: SINGLETON ─────────────────────────────────────────────</span>
+<span class="cm">// There is exactly ONE parking lot. Singleton guarantees this.</span>
+<span class="cm">// If you could call new ParkingLot() twice, both would think they own all spots.</span>
+<span class="cm">// 'synchronized' makes it thread-safe — mention this to the interviewer!</span>
+<span class="cm">// ── SOLID: Dependency Inversion ───────────────────────────────────────────</span>
+<span class="cm">// ParkingLot depends on ParkingFloor abstraction, not concrete spot logic.</span>
+
+<span class="kw">public class</span> <span class="ty">ParkingLot</span> {
+
+    <span class="cm">// ── Singleton: step 1 — private static holder ─────────────────</span>
+    <span class="kw">private static volatile</span> <span class="ty">ParkingLot</span> instance;
+    <span class="cm">// volatile = ensures visibility across threads (double-checked locking)</span>
+
+    <span class="cm">// ── Singleton: step 2 — private constructor ────────────────────</span>
+    <span class="kw">private</span> <span class="mt">ParkingLot</span>() {
+        floors        = <span class="kw">new</span> <span class="ty">ArrayList</span>&lt;&gt;();
+        activeTickets = <span class="kw">new</span> <span class="ty">HashMap</span>&lt;&gt;();
+    }
+
+    <span class="cm">// ── Singleton: step 3 — public accessor with double-checked lock ─</span>
+    <span class="kw">public static</span> <span class="ty">ParkingLot</span> <span class="mt">getInstance</span>() {
+        <span class="kw">if</span> (instance == <span class="kw">null</span>) {                         <span class="cm">// first check (no lock)</span>
+            <span class="kw">synchronized</span> (<span class="ty">ParkingLot</span>.<span class="kw">class</span>) {
+                <span class="kw">if</span> (instance == <span class="kw">null</span>) {                  <span class="cm">// second check (with lock)</span>
+                    instance = <span class="kw">new</span> <span class="ty">ParkingLot</span>();
+                }
+            }
+        }
+        <span class="kw">return</span> instance;
+    }
+
+    <span class="kw">private</span> <span class="ty">List</span>&lt;<span class="ty">ParkingFloor</span>&gt;        floors;
+    <span class="kw">private</span> <span class="ty">Map</span>&lt;<span class="ty">String</span>, <span class="ty">ParkingTicket</span>&gt; activeTickets;  <span class="cm">// ticketId → ticket</span>
+
+    <span class="kw">public void</span> <span class="mt">addFloor</span>(<span class="ty">ParkingFloor</span> floor) { floors.add(floor); }
+
+    <span class="cm">// ── PARK: entry flow ──────────────────────────────────────────────</span>
+    <span class="cm">// 1. Scan floors for an available matching spot</span>
+    <span class="cm">// 2. Park vehicle, create ticket, store in map</span>
+    <span class="cm">// 3. Return ticket (null = lot is full for this type)</span>
+    <span class="kw">public</span> <span class="ty">ParkingTicket</span> <span class="mt">park</span>(<span class="ty">Vehicle</span> vehicle) {
+        <span class="kw">for</span> (<span class="ty">ParkingFloor</span> floor : floors) {
+            <span class="ty">ParkingSpot</span> spot = floor.getAvailableSpot(vehicle);
+            <span class="kw">if</span> (spot != <span class="kw">null</span>) {
+                spot.parkVehicle(vehicle);
+                <span class="ty">ParkingTicket</span> ticket = <span class="kw">new</span> <span class="ty">ParkingTicket</span>(vehicle, spot);
+                activeTickets.put(ticket.getTicketId(), ticket);
+                <span class="ty">System</span>.out.printf(<span class="st">"[PARKED]  %s → Spot %s (Floor %d)%n"</span>,
+                    vehicle.getLicensePlate(), spot.getSpotNumber(), floor.getFloorNumber());
+                <span class="kw">return</span> ticket;
+            }
+        }
+        <span class="ty">System</span>.out.printf(<span class="st">"[FULL]    No spot for %s (%s)%n"</span>,
+            vehicle.getLicensePlate(), vehicle.getVehicleType());
+        <span class="kw">return null</span>;
+    }
+
+    <span class="cm">// ── UNPARK: exit flow ─────────────────────────────────────────────</span>
+    <span class="cm">// 1. Look up ticket by ID</span>
+    <span class="cm">// 2. Free the spot, remove ticket from map</span>
+    <span class="kw">public boolean</span> <span class="mt">unpark</span>(<span class="ty">String</span> ticketId) {
+        <span class="ty">ParkingTicket</span> ticket = activeTickets.get(ticketId);
+        <span class="kw">if</span> (ticket == <span class="kw">null</span>) {
+            <span class="ty">System</span>.out.println(<span class="st">"[ERROR]   Invalid ticket: "</span> + ticketId);
+            <span class="kw">return false</span>;
+        }
+        ticket.getAllocatedSpot().removeVehicle();
+        activeTickets.remove(ticketId);
+        <span class="ty">System</span>.out.printf(<span class="st">"[EXITED]  %s freed spot %s%n"</span>,
+            ticket.getVehicle().getLicensePlate(),
+            ticket.getAllocatedSpot().getSpotNumber());
+        <span class="kw">return true</span>;
+    }
+
+    <span class="kw">public void</span> <span class="mt">displayStatus</span>() {
+        <span class="ty">System</span>.out.println(<span class="st">"\n╔══ Parking Lot Status ══╗"</span>);
+        <span class="kw">for</span> (<span class="ty">ParkingFloor</span> f : floors) {
+            <span class="ty">System</span>.out.println(<span class="st">"  Floor "</span> + f.getFloorNumber() + <span class="st">":"</span>);
+            <span class="kw">for</span> (<span class="ty">ParkingSpot</span> s : f.getSpots()) {
+                <span class="ty">String</span> icon = s.isEmpty() ? <span class="st">"○"</span> : <span class="st">"●"</span>;
+                <span class="ty">System</span>.out.printf(<span class="st">"    %s %s (%s)%n"</span>, icon, s.getSpotNumber(), s.getSpotType());
+            }
+        }
+        <span class="ty">System</span>.out.println(<span class="st">"╚════════════════════════╝\n"</span>);
+    }
+}</pre>
+  </div>
+
+  <!-- MAIN -->
+  <div class="code-card">
+    <div class="code-header"><span class="code-fname">Main.java</span><div class="code-meta"><span class="code-tag tag-solid">Always demo — 5 min</span></div></div>
+    <pre><span class="kw">public class</span> <span class="ty">Main</span> {
+    <span class="kw">public static void</span> <span class="mt">main</span>(<span class="ty">String</span>[] args) {
+
+        <span class="cm">// Singleton — only one instance possible</span>
+        <span class="ty">ParkingLot</span> lot = <span class="ty">ParkingLot</span>.getInstance();
+
+        <span class="cm">// Setup floors</span>
+        <span class="ty">ParkingFloor</span> f1 = <span class="kw">new</span> <span class="ty">ParkingFloor</span>(<span class="nm">1</span>);
+        f1.addSpot(<span class="kw">new</span> <span class="ty">ParkingSpot</span>(<span class="st">"F1-S01"</span>, <span class="ty">SpotType</span>.TWO_WHEELER));
+        f1.addSpot(<span class="kw">new</span> <span class="ty">ParkingSpot</span>(<span class="st">"F1-S02"</span>, <span class="ty">SpotType</span>.COMPACT));
+        f1.addSpot(<span class="kw">new</span> <span class="ty">ParkingSpot</span>(<span class="st">"F1-S03"</span>, <span class="ty">SpotType</span>.COMPACT));
+        f1.addSpot(<span class="kw">new</span> <span class="ty">ParkingSpot</span>(<span class="st">"F1-S04"</span>, <span class="ty">SpotType</span>.LARGE));
+
+        <span class="ty">ParkingFloor</span> f2 = <span class="kw">new</span> <span class="ty">ParkingFloor</span>(<span class="nm">2</span>);
+        f2.addSpot(<span class="kw">new</span> <span class="ty">ParkingSpot</span>(<span class="st">"F2-S01"</span>, <span class="ty">SpotType</span>.COMPACT));
+        f2.addSpot(<span class="kw">new</span> <span class="ty">ParkingSpot</span>(<span class="st">"F2-S02"</span>, <span class="ty">SpotType</span>.LARGE));
+
+        lot.addFloor(f1); lot.addFloor(f2);
+        lot.displayStatus();
+
+        <span class="cm">// Park vehicles</span>
+        <span class="ty">ParkingTicket</span> t1 = lot.park(<span class="kw">new</span> <span class="ty">Bike</span>(<span class="st">"KA-BIKE-01"</span>));   <span class="cm">// → F1-S01</span>
+        <span class="ty">ParkingTicket</span> t2 = lot.park(<span class="kw">new</span> <span class="ty">Car</span>(<span class="st">"KA-CAR-01"</span>));    <span class="cm">// → F1-S02</span>
+        <span class="ty">ParkingTicket</span> t3 = lot.park(<span class="kw">new</span> <span class="ty">Car</span>(<span class="st">"KA-CAR-02"</span>));    <span class="cm">// → F1-S03</span>
+        <span class="ty">ParkingTicket</span> t4 = lot.park(<span class="kw">new</span> <span class="ty">Truck</span>(<span class="st">"KA-TRK-01"</span>));  <span class="cm">// → F1-S04</span>
+        lot.displayStatus();
+
+        <span class="cm">// Unpark a car — spot should free up</span>
+        <span class="kw">if</span> (t2 != <span class="kw">null</span>) lot.unpark(t2.getTicketId());
+
+        <span class="cm">// New car takes the freed spot</span>
+        lot.park(<span class="kw">new</span> <span class="ty">Car</span>(<span class="st">"KA-CAR-03"</span>));  <span class="cm">// → F1-S02 again</span>
+        lot.displayStatus();
+    }
+}</pre>
+  </div>
+</div>
+
+<hr class="div">
+
+<!-- ── SOLID PRINCIPLES ── -->
+<div id="solid" class="section">
+  <div class="section-header">
+    <div class="section-badge" style="background:var(--teal-bg);border-color:var(--teal-border);color:var(--teal)">S</div>
+    <h2>SOLID Principles — where exactly in the code</h2>
+  </div>
+
+  <div class="callout callout-teal">
+    <strong>How to bring this up in an interview:</strong> While writing each class, say "I'm applying Single Responsibility here — this class does only one thing." Don't wait until the end. Sprinkle it throughout.
+  </div>
+
+  <div class="solid-grid">
+    <div class="solid-card">
+      <div class="solid-letter">S</div>
+      <div class="solid-name">Single Responsibility</div>
+      <div class="solid-desc">Every class has exactly one reason to change.</div>
+      <div class="solid-where">ParkingSpot — only manages spot state. ParkingFloor — only manages spots on one floor. ParkingTicket — only holds ticket data. ParkingLot — only orchestrates.</div>
+    </div>
+    <div class="solid-card">
+      <div class="solid-letter">O</div>
+      <div class="solid-name">Open / Closed</div>
+      <div class="solid-desc">Open for extension, closed for modification.</div>
+      <div class="solid-where">New vehicle type (Bus) → new class Bus extends Vehicle. Zero changes to existing code. New spot type → add to enum only.</div>
+    </div>
+    <div class="solid-card">
+      <div class="solid-letter">L</div>
+      <div class="solid-name">Liskov Substitution</div>
+      <div class="solid-desc">Subclass can replace superclass without breaking anything.</div>
+      <div class="solid-where">park(Vehicle vehicle) accepts Car, Bike, or Truck. All behave as Vehicle. You can swap any subtype without changing ParkingLot.</div>
+    </div>
+    <div class="solid-card">
+      <div class="solid-letter">I</div>
+      <div class="solid-name">Interface Segregation</div>
+      <div class="solid-desc">Don't force classes to implement methods they don't need.</div>
+      <div class="solid-where">If we added interfaces: Parkable, Ticketable, Displayable — each class implements only what it needs. (Can mention this as an extension.)</div>
+    </div>
+    <div class="solid-card" style="grid-column: 1/-1">
+      <div class="solid-letter">D</div>
+      <div class="solid-name">Dependency Inversion</div>
+      <div class="solid-desc">High-level modules should not depend on low-level modules. Both should depend on abstractions.</div>
+      <div class="solid-where">ParkingLot.park() takes Vehicle (abstract), not Car or Bike directly. ParkingFloor.getAvailableSpot() works with any Vehicle. If we used an IVehicle interface, this would be even more explicit.</div>
+    </div>
+  </div>
+</div>
+
+<hr class="div">
+
+<!-- ── DESIGN PATTERNS ── -->
+<div id="patterns" class="section">
+  <div class="section-header">
+    <div class="section-badge" style="background:var(--blue-bg);border-color:var(--blue-border);color:var(--blue)">P</div>
+    <h2>Design Patterns — what's used and why</h2>
+  </div>
+
+  <div class="pattern-card">
+    <div class="pattern-head">
+      <div class="pattern-icon">1</div>
+      <div class="pattern-name">Singleton Pattern</div>
+    </div>
+    <div class="pattern-why">There must be only ONE parking lot. Creating multiple instances would cause conflicts — two instances would both think they can assign the same spot. Singleton prevents this. The <code>synchronized</code> keyword makes it safe when multiple threads (entry gates) hit it simultaneously.</div>
+    <div class="pattern-where">Used in: ParkingLot.getInstance()</div>
+  </div>
+
+  <div class="pattern-card">
+    <div class="pattern-head">
+      <div class="pattern-icon">2</div>
+      <div class="pattern-name">Factory Pattern (extension)</div>
+    </div>
+    <div class="pattern-why">Right now, callers write <code>new Car("KA-01")</code>. If we added a <code>VehicleFactory.create(VehicleType, plate)</code>, callers don't need to know which subclass to instantiate. This is where you tell the interviewer: "As an extension, I'd add a VehicleFactory so callers aren't coupled to concrete types."</div>
+    <div class="pattern-where">Extension point: create VehicleFactory class</div>
+  </div>
+
+  <div class="code-card">
+    <div class="code-header"><span class="code-fname">VehicleFactory.java — extension for bonus points</span><div class="code-meta"><span class="code-tag tag-pattern">Factory Pattern</span></div></div>
+    <pre><span class="cm">// ── Design Pattern: FACTORY ───────────────────────────────────────────────</span>
+<span class="cm">// Caller says WHAT they want (type + plate), not HOW to create it.</span>
+<span class="cm">// To add Bus: add case LARGE → return new Bus(plate). Zero other changes.</span>
+
+<span class="kw">public class</span> <span class="ty">VehicleFactory</span> {
+    <span class="kw">public static</span> <span class="ty">Vehicle</span> <span class="mt">create</span>(<span class="ty">VehicleType</span> type, <span class="ty">String</span> plate) {
+        <span class="kw">switch</span> (type) {
+            <span class="kw">case</span> COMPACT:     <span class="kw">return new</span> <span class="ty">Car</span>(plate);
+            <span class="kw">case</span> TWO_WHEELER: <span class="kw">return new</span> <span class="ty">Bike</span>(plate);
+            <span class="kw">case</span> LARGE:       <span class="kw">return new</span> <span class="ty">Truck</span>(plate);
+            <span class="kw">default</span>: <span class="kw">throw new</span> <span class="ty">IllegalArgumentException</span>(<span class="st">"Unknown type: "</span> + type);
+        }
+    }
+}
+<span class="cm">// Usage: Vehicle v = VehicleFactory.create(VehicleType.COMPACT, "KA-01");</span></pre>
+  </div>
+
+  <div class="pattern-card">
+    <div class="pattern-head">
+      <div class="pattern-icon">3</div>
+      <div class="pattern-name">Strategy Pattern (extension)</div>
+    </div>
+    <div class="pattern-why">When the interviewer asks "how would you add pricing?" — say: "I'd use Strategy Pattern. Define a <code>PricingStrategy</code> interface with a <code>calculateFee(ticket)</code> method. Then have <code>HourlyPricing</code>, <code>FlatRatePricing</code>, <code>WeekendPricing</code> as implementations. ParkingLot gets a strategy injected — zero code changes to park/unpark logic."</div>
+    <div class="pattern-where">Extension point: PricingStrategy interface</div>
+  </div>
+
+  <div class="code-card">
+    <div class="code-header"><span class="code-fname">PricingStrategy.java — bonus answer for "how to add pricing?"</span><div class="code-meta"><span class="code-tag tag-pattern">Strategy Pattern</span></div></div>
+    <pre><span class="cm">// ── Design Pattern: STRATEGY ──────────────────────────────────────────────</span>
+<span class="cm">// Define a family of algorithms (pricing models), encapsulate each one,</span>
+<span class="cm">// make them interchangeable. ParkingLot doesn't care HOW fee is calculated.</span>
+
+<span class="kw">public interface</span> <span class="ty">PricingStrategy</span> {
+    <span class="kw">double</span> <span class="mt">calculateFee</span>(<span class="ty">ParkingTicket</span> ticket);
+}
+
+<span class="kw">public class</span> <span class="ty">HourlyPricing</span> <span class="kw">implements</span> <span class="ty">PricingStrategy</span> {
+    <span class="kw">private final double</span> ratePerHour;
+    <span class="kw">public</span> <span class="mt">HourlyPricing</span>(<span class="kw">double</span> ratePerHour) { <span class="kw">this</span>.ratePerHour = ratePerHour; }
+
+    <span class="an">@Override</span>
+    <span class="kw">public double</span> <span class="mt">calculateFee</span>(<span class="ty">ParkingTicket</span> ticket) {
+        <span class="ty">Duration</span> d = <span class="ty">Duration</span>.between(ticket.getEntryTime(), <span class="ty">LocalDateTime</span>.now());
+        <span class="kw">long</span> hours = <span class="ty">Math</span>.max(<span class="nm">1</span>, d.toHours());  <span class="cm">// minimum 1 hour</span>
+        <span class="kw">return</span> hours * ratePerHour;
+    }
+}
+<span class="cm">// Usage: ParkingLot gets a PricingStrategy injected via constructor.</span>
+<span class="cm">// Swap HourlyPricing → FlatRatePricing without touching park/unpark.</span></pre>
+  </div>
+</div>
+
+<hr class="div">
+
+<!-- ── INTERVIEW TIPS ── -->
+<div id="tips" class="section">
+  <div class="section-header">
+    <div class="section-badge" style="background:var(--amber-bg);border-color:var(--amber-border);color:var(--amber)">!</div>
+    <h2>Interview Tips — what separates good from great</h2>
+  </div>
+
+  <div style="display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-bottom:24px">
+    <div>
+      <div style="font-size:13px;font-weight:600;color:var(--green);margin-bottom:10px">Things to DO</div>
+      <div class="tip-row"><span class="tip-icon check">✓</span><span style="color:var(--text2);font-size:13.5px">Summarise requirements before designing</span></div>
+      <div class="tip-row"><span class="tip-icon check">✓</span><span style="color:var(--text2);font-size:13.5px">Say which pattern/principle you're applying as you write</span></div>
+      <div class="tip-row"><span class="tip-icon check">✓</span><span style="color:var(--text2);font-size:13.5px">Write enums before any class</span></div>
+      <div class="tip-row"><span class="tip-icon check">✓</span><span style="color:var(--text2);font-size:13.5px">Use <code>final</code> on fields that shouldn't change</span></div>
+      <div class="tip-row"><span class="tip-icon check">✓</span><span style="color:var(--text2);font-size:13.5px">Handle null returns explicitly</span></div>
+      <div class="tip-row"><span class="tip-icon check">✓</span><span style="color:var(--text2);font-size:13.5px">Always write a demo Main class</span></div>
+      <div class="tip-row"><span class="tip-icon check">✓</span><span style="color:var(--text2);font-size:13.5px">Mention extensions: pricing, concurrency, factory</span></div>
+    </div>
+    <div>
+      <div style="font-size:13px;font-weight:600;color:var(--red);margin-bottom:10px">Things to AVOID</div>
+      <div class="tip-row"><span class="tip-icon cross">✗</span><span style="color:var(--text2);font-size:13.5px">Jumping to code without asking questions</span></div>
+      <div class="tip-row"><span class="tip-icon cross">✗</span><span style="color:var(--text2);font-size:13.5px">Spending 20+ minutes on the diagram</span></div>
+      <div class="tip-row"><span class="tip-icon cross">✗</span><span style="color:var(--text2);font-size:13.5px">Using String "CAR", "BIKE" instead of enums</span></div>
+      <div class="tip-row"><span class="tip-icon cross">✗</span><span style="color:var(--text2);font-size:13.5px">Public fields everywhere (no encapsulation)</span></div>
+      <div class="tip-row"><span class="tip-icon cross">✗</span><span style="color:var(--text2);font-size:13.5px">One giant class with all logic</span></div>
+      <div class="tip-row"><span class="tip-icon cross">✗</span><span style="color:var(--text2);font-size:13.5px">Staying silent while coding</span></div>
+      <div class="tip-row"><span class="tip-icon cross">✗</span><span style="color:var(--text2);font-size:13.5px">Not testing your own code at the end</span></div>
+    </div>
+  </div>
+
+  <div class="callout callout-purple">
+    <strong>Bonus questions to prepare for:</strong><br>
+    <strong>"How would you add pricing?"</strong> → Strategy Pattern. PricingStrategy interface, HourlyPricing implements it. ParkingLot gets strategy injected.<br>
+    <strong>"How would you handle 100 entry gates simultaneously?"</strong> → synchronized on park/unpark, or ReentrantLock per floor for better concurrency.<br>
+    <strong>"How would you find the nearest available spot?"</strong> → Change getAvailableSpot to sort by spot number or distance metric.<br>
+    <strong>"How would you make it distributed?"</strong> → Replace HashMap with Redis, add distributed lock, expose as REST API.
+  </div>
+
+  <div class="callout callout-amber">
+    <strong>Next LLD problems to practice (in order):</strong><br>
+    1. Elevator System — similar structure, adds direction/state machine logic<br>
+    2. Library Management — introduces date-based logic and reservations<br>
+    3. BookMyShow — seats, shows, many-to-many relationships<br>
+    4. Snake and Ladder — good for game state + design patterns<br>
+    5. ATM Machine — state pattern in depth
+  </div>
+</div>
+
+<script>
+const sections = document.querySelectorAll('[id]');
+const navLinks = document.querySelectorAll('.nav a');
+const observer = new IntersectionObserver(entries => {
+  entries.forEach(e => {
+    if(e.isIntersecting) {
+      navLinks.forEach(a => a.classList.toggle('active', a.getAttribute('href') === '#'+e.target.id));
+    }
+  });
+}, {rootMargin:'-20% 0px -70% 0px'});
+sections.forEach(s => observer.observe(s));
+</script>
+</body>
+</html>

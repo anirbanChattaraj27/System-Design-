@@ -1,0 +1,12 @@
+adapter is like u can think of midiator between 2 interface
+
+imagine:
+    u r using indian adapter and u visit USA, there indian adpater will not work, 
+    u need international adapter which u can put in USA plug and put ur adapter in 
+    international adapter. so international adapter is midiator here.
+
+imagine: u have type c charger and adapter is USB type, now how will u use it..? u need a converter
+
+NOW....
+    think there is 2 interface and both are complete different, and u need another interface 
+    which can connect these 2 interface.... THAT is Adapter interface
