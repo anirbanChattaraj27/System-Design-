@@ -1,0 +1,827 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Logging Framework LLD — Complete 60-Min Interview Guide</title>
+<link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;600&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+:root {
+  --bg: #0d1117; --bg2: #161b22; --bg3: #21262d;
+  --border: rgba(255,255,255,0.08); --border2: rgba(255,255,255,0.14);
+  --text: #e6edf3; --text2: #8b949e; --text3: #6e7681;
+  --purple: #a78bfa; --purple-bg: rgba(167,139,250,0.1); --purple-border: rgba(167,139,250,0.3);
+  --teal: #34d399; --teal-bg: rgba(52,211,153,0.08); --teal-border: rgba(52,211,153,0.25);
+  --amber: #fbbf24; --amber-bg: rgba(251,191,36,0.08); --amber-border: rgba(251,191,36,0.25);
+  --coral: #fb923c; --coral-bg: rgba(251,146,60,0.08); --coral-border: rgba(251,146,60,0.25);
+  --blue: #60a5fa; --blue-bg: rgba(96,165,250,0.08); --blue-border: rgba(96,165,250,0.25);
+  --red: #f87171; --green: #4ade80;
+  --kw: #ff7b72; --ty: #79c0ff; --st: #a5d6a7; --cm: #484f58; --an: #e3b341; --mt: #d2a8ff;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth}
+body{background:var(--bg);color:var(--text);font-family:'Inter',sans-serif;font-size:15px;line-height:1.7}
+
+.nav{position:sticky;top:0;z-index:100;background:rgba(13,17,23,0.95);backdrop-filter:blur(8px);border-bottom:1px solid var(--border);padding:0 24px;display:flex;align-items:center;gap:4px;overflow-x:auto;white-space:nowrap}
+.nav a{display:inline-flex;align-items:center;gap:6px;padding:12px 10px;font-size:12px;font-weight:500;color:var(--text2);text-decoration:none;border-bottom:2px solid transparent;transition:color .15s,border-color .15s}
+.nav a:hover,.nav a.active{color:var(--text);border-bottom-color:var(--purple)}
+.nav-time{margin-left:auto;padding:8px 12px;background:var(--purple-bg);border:1px solid var(--purple-border);border-radius:6px;font-size:11px;color:var(--purple);font-weight:600;white-space:nowrap}
+
+.hero{background:linear-gradient(135deg,#1a1040 0%,#0d1117 50%,#0a1628 100%);padding:56px 40px 48px;border-bottom:1px solid var(--border)}
+.hero-tag{display:inline-flex;align-items:center;gap:6px;background:var(--purple-bg);border:1px solid var(--purple-border);border-radius:20px;padding:5px 14px;font-size:11px;font-weight:600;color:var(--purple);letter-spacing:.5px;margin-bottom:20px}
+.hero h1{font-size:36px;font-weight:700;color:#fff;line-height:1.15;margin-bottom:12px}
+.hero p{color:var(--text2);font-size:16px;max-width:620px;margin-bottom:24px}
+.hero-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;max-width:640px}
+.hero-stat{background:var(--bg2);border:1px solid var(--border);border-radius:10px;padding:14px 16px}
+.hero-stat .n{font-size:22px;font-weight:700;color:var(--purple)}
+.hero-stat .l{font-size:12px;color:var(--text2);margin-top:2px}
+
+.section{max-width:920px;margin:0 auto;padding:48px 24px}
+.section-header{display:flex;align-items:center;gap:12px;margin-bottom:28px}
+.section-badge{width:32px;height:32px;border-radius:8px;background:var(--purple-bg);border:1px solid var(--purple-border);display:flex;align-items:center;justify-content:center;font-size:13px;font-weight:700;color:var(--purple);flex-shrink:0}
+.section-header h2{font-size:20px;font-weight:600;color:#fff}
+.section-header .time-tag{margin-left:auto;font-size:11px;font-weight:600;padding:4px 10px;border-radius:12px;white-space:nowrap}
+.time-green{background:rgba(74,222,128,0.1);color:var(--green);border:1px solid rgba(74,222,128,0.2)}
+.time-blue{background:var(--blue-bg);color:var(--blue);border:1px solid var(--blue-border)}
+.time-amber{background:var(--amber-bg);color:var(--amber);border:1px solid var(--amber-border)}
+.time-coral{background:var(--coral-bg);color:var(--coral);border:1px solid var(--coral-border)}
+.time-purple{background:var(--purple-bg);color:var(--purple);border:1px solid var(--purple-border)}
+hr.div{border:none;border-top:1px solid var(--border);margin:0}
+
+.timeline{position:relative;padding-left:28px}
+.timeline::before{content:'';position:absolute;left:9px;top:8px;bottom:8px;width:1px;background:var(--border2)}
+.tl-item{position:relative;margin-bottom:24px}
+.tl-item:last-child{margin-bottom:0}
+.tl-dot{position:absolute;left:-24px;top:4px;width:18px;height:18px;border-radius:50%;border:2px solid var(--purple);background:var(--bg);display:flex;align-items:center;justify-content:center}
+.tl-dot-inner{width:6px;height:6px;border-radius:50%;background:var(--purple)}
+.tl-head{font-size:14px;font-weight:600;color:#fff;margin-bottom:4px;display:flex;align-items:center;gap:8px}
+.tl-body{font-size:13.5px;color:var(--text2);line-height:1.6}
+.tl-body code{font-family:'JetBrains Mono',monospace;font-size:12px;background:var(--bg3);padding:1px 5px;border-radius:3px;color:var(--ty)}
+
+.callout{border-radius:10px;padding:14px 18px;margin:16px 0;border-left:3px solid;font-size:13.5px;line-height:1.6}
+.callout-purple{background:var(--purple-bg);border-color:var(--purple)}
+.callout-teal{background:var(--teal-bg);border-color:var(--teal)}
+.callout-amber{background:var(--amber-bg);border-color:var(--amber)}
+.callout-coral{background:var(--coral-bg);border-color:var(--coral)}
+.callout-blue{background:var(--blue-bg);border-color:var(--blue)}
+.callout strong{color:#fff}
+.callout code{font-family:'JetBrains Mono',monospace;font-size:11.5px;background:rgba(255,255,255,0.08);padding:1px 5px;border-radius:3px}
+
+.dialogue{margin:20px 0}
+.msg{display:flex;gap:10px;margin-bottom:12px;align-items:flex-start}
+.msg-avatar{width:30px;height:30px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:700;flex-shrink:0;margin-top:2px}
+.av-i{background:rgba(251,146,60,0.2);color:var(--coral)}
+.av-you{background:var(--purple-bg);color:var(--purple)}
+.msg-bubble{padding:10px 14px;border-radius:10px;font-size:13.5px;line-height:1.6;max-width:90%}
+.bubble-i{background:var(--bg3);border:1px solid var(--border);color:var(--text)}
+.bubble-you{background:var(--purple-bg);border:1px solid var(--purple-border);color:var(--text)}
+.msg-label{font-size:11px;color:var(--text3);margin-bottom:4px;font-weight:500}
+.thought{font-style:italic;font-size:12px;color:var(--text3);margin-left:40px;margin-bottom:12px;padding:6px 12px;border-left:2px solid var(--border2)}
+
+.code-card{background:var(--bg2);border:1px solid var(--border);border-radius:12px;overflow:hidden;margin:16px 0}
+.code-header{display:flex;align-items:center;justify-content:space-between;padding:10px 16px;border-bottom:1px solid var(--border);background:var(--bg3)}
+.code-fname{font-family:'JetBrains Mono',monospace;font-size:12px;color:var(--amber);font-weight:600}
+.code-meta{font-size:11px;color:var(--text3);display:flex;align-items:center;gap:10px}
+.code-tag{padding:2px 8px;border-radius:4px;font-size:10px;font-weight:600;letter-spacing:.3px}
+.tag-solid{background:rgba(74,222,128,0.12);color:var(--green);border:1px solid rgba(74,222,128,0.2)}
+.tag-pattern{background:var(--blue-bg);color:var(--blue);border:1px solid var(--blue-border)}
+pre{margin:0;padding:18px 20px;overflow-x:auto;font-family:'JetBrains Mono',monospace;font-size:12.5px;line-height:1.85;tab-size:4}
+.kw{color:var(--kw);font-weight:600}.ty{color:var(--ty)}.st{color:var(--st)}.cm{color:var(--cm);font-style:italic}.an{color:var(--an)}.mt{color:var(--mt)}.fd{color:#e6edf3}.nm{color:#f97316}
+
+.er-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:10px;margin:16px 0}
+.er-card{background:var(--bg2);border:1px solid var(--border);border-radius:8px;overflow:hidden}
+.er-head{padding:8px 12px;font-size:12px;font-weight:600;border-bottom:1px solid var(--border)}
+.er-head.purple{background:var(--purple-bg);color:var(--purple)}
+.er-head.teal{background:var(--teal-bg);color:var(--teal)}
+.er-head.amber{background:var(--amber-bg);color:var(--amber)}
+.er-head.coral{background:var(--coral-bg);color:var(--coral)}
+.er-head.blue{background:var(--blue-bg);color:var(--blue)}
+.er-row{padding:5px 12px;font-size:11.5px;color:var(--text2);border-bottom:1px solid rgba(255,255,255,0.04);font-family:'JetBrains Mono',monospace}
+.er-row:last-child{border-bottom:none}
+.er-pk{color:var(--amber)}
+.er-fk{color:var(--blue)}
+.er-rel{display:flex;align-items:center;justify-content:center;gap:8px;padding:10px;font-size:11.5px;color:var(--text2);text-align:center}
+.rel-line{flex:1;height:1px;background:var(--border2)}
+
+.solid-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin:16px 0}
+.solid-card{background:var(--bg2);border:1px solid var(--border);border-radius:8px;padding:14px}
+.solid-letter{font-size:22px;font-weight:700;color:var(--purple);margin-bottom:4px}
+.solid-name{font-size:12px;font-weight:600;color:#fff;margin-bottom:6px}
+.solid-desc{font-size:12px;color:var(--text2);line-height:1.5}
+.solid-where{margin-top:8px;font-size:11px;color:var(--teal);background:var(--teal-bg);border:1px solid var(--teal-border);padding:4px 8px;border-radius:4px;display:inline-block}
+
+.pattern-card{background:var(--bg2);border:1px solid var(--border);border-radius:10px;padding:16px 18px;margin-bottom:14px}
+.pattern-head{display:flex;align-items:center;gap:10px;margin-bottom:8px}
+.pattern-icon{width:32px;height:32px;border-radius:8px;background:var(--blue-bg);border:1px solid var(--blue-border);display:flex;align-items:center;justify-content:center;font-size:14px;font-weight:700;color:var(--blue)}
+.pattern-name{font-size:14px;font-weight:600;color:#fff}
+.pattern-why{font-size:13px;color:var(--text2);margin-bottom:8px}
+.pattern-where{font-size:12px;color:var(--amber);background:var(--amber-bg);border:1px solid var(--amber-border);padding:4px 10px;border-radius:4px;display:inline-block}
+
+.order-table{width:100%;border-collapse:collapse;font-size:13px;margin:16px 0}
+.order-table th{text-align:left;padding:8px 14px;font-size:11px;font-weight:600;color:var(--text3);text-transform:uppercase;letter-spacing:.5px;border-bottom:1px solid var(--border)}
+.order-table td{padding:10px 14px;border-bottom:1px solid rgba(255,255,255,0.04);color:var(--text2)}
+.order-table tr:last-child td{border-bottom:none}
+.order-table td:first-child{color:#fff;font-weight:500;font-family:'JetBrains Mono',monospace;font-size:12px}
+.order-num{display:inline-flex;align-items:center;justify-content:center;width:20px;height:20px;border-radius:50%;background:var(--purple-bg);border:1px solid var(--purple-border);font-size:10px;font-weight:700;color:var(--purple);margin-right:8px;flex-shrink:0}
+
+.tip-row{display:flex;gap:8px;margin-bottom:10px;font-size:13.5px}
+.tip-icon{flex-shrink:0;margin-top:3px;font-size:15px}
+.check{color:var(--green)}.cross{color:var(--red)}.star{color:var(--amber)}
+
+.progress-container{margin:20px 0}
+.progress-row{display:flex;align-items:center;gap:12px;margin-bottom:10px}
+.progress-label{width:110px;font-size:12px;font-weight:500;color:var(--text2);flex-shrink:0}
+.progress-bar{flex:1;height:6px;background:var(--bg3);border-radius:3px;overflow:hidden}
+.progress-fill{height:100%;border-radius:3px;transition:width .3s}
+.progress-time{width:50px;font-size:11px;color:var(--text3);text-align:right;flex-shrink:0}
+
+.algo-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:12px;margin:16px 0}
+.algo-card{background:var(--bg2);border:1px solid var(--border);border-radius:10px;padding:14px 16px}
+.algo-card.active{border-color:var(--teal-border);background:var(--teal-bg)}
+.algo-name{font-size:13px;font-weight:600;color:#fff;margin-bottom:6px}
+.algo-desc{font-size:12px;color:var(--text2);line-height:1.5;margin-bottom:8px}
+.algo-tag{font-size:10px;font-weight:600;padding:2px 8px;border-radius:4px;display:inline-block}
+.algo-tag.pick{background:var(--teal-bg);color:var(--teal);border:1px solid var(--teal-border)}
+.algo-tag.alt{background:var(--bg3);color:var(--text3);border:1px solid var(--border)}
+
+@media(max-width:600px){
+  .hero{padding:32px 20px}.hero h1{font-size:26px}.hero-grid{grid-template-columns:1fr 1fr}
+  .solid-grid{grid-template-columns:1fr}.section{padding:32px 16px}
+  pre{font-size:11px;padding:14px}.nav a{padding:10px 8px;font-size:11px}
+}
+</style>
+</head>
+<body>
+
+<nav class="nav">
+  <a href="#overview">Overview</a>
+  <a href="#problem">The Problem</a>
+  <a href="#phase1">Phase 1: Requirements</a>
+  <a href="#phase2">Phase 2: Design</a>
+  <a href="#phase3">Phase 3: Code</a>
+  <a href="#solid">SOLID</a>
+  <a href="#patterns">Patterns</a>
+  <a href="#tips">Tips</a>
+  <span class="nav-time">60 min total</span>
+</nav>
+
+<div class="hero">
+  <div class="hero-tag">SDE-1 LLD Interview Playbook</div>
+  <h1>Logging Framework<br>Complete 60-Minute Guide</h1>
+  <p>A favourite "build a mini Log4j" question — it's pure SOLID + patterns with almost no domain knowledge needed. Here's exactly how to think, talk, draw, and code it.</p>
+  <div class="hero-grid">
+    <div class="hero-stat"><div class="n">10m</div><div class="l">Requirements</div></div>
+    <div class="hero-stat"><div class="n">10m</div><div class="l">Design + Diagram</div></div>
+    <div class="hero-stat"><div class="n">35m</div><div class="l">Coding</div></div>
+    <div class="hero-stat"><div class="n">5m</div><div class="l">Review + Q&A</div></div>
+  </div>
+</div>
+
+<!-- ── PROBLEM DEPTH ── -->
+<div id="problem" class="section" style="padding-bottom:0">
+  <div class="section-header">
+    <div class="section-badge">★</div>
+    <h2>Understanding the problem in depth — first</h2>
+  </div>
+
+  <div class="callout callout-purple">
+    <strong>What is a Logging Framework, really?</strong> It's a system where application code calls <code>logger.info("message")</code> or <code>logger.error("message")</code>, and the framework decides: (1) is this message important enough to record right now (based on configured level), and (2) where should it go — console, file, database, all of them?
+  </div>
+
+  <div class="callout callout-blue">
+    <strong>Why this question is popular for SDE-1:</strong> Unlike Parking Lot, there's almost ZERO "real world" entity modeling — it's 90% design patterns. This is the interviewer's favourite way to test "do you actually know Strategy, Singleton, Factory, Chain of Responsibility, or do you just say the names?"
+  </div>
+
+  <p style="color:var(--text2);font-size:13px;margin:16px 0 8px">The 2 core "axes of variation" — identify these first, everything else follows:</p>
+  <div class="algo-grid">
+    <div class="algo-card active">
+      <div class="algo-name">WHERE logs go <span class="algo-tag pick">Appender — Strategy</span></div>
+      <div class="algo-desc">Console, File, Database, Remote server. Each is a different "sink". Must be pluggable and combinable (log to console AND file at once).</div>
+    </div>
+    <div class="algo-card active">
+      <div class="algo-name">WHICH logs get through <span class="algo-tag pick">LogLevel filtering</span></div>
+      <div class="algo-desc">DEBUG < INFO < WARN < ERROR < FATAL. If logger's configured level is WARN, then INFO and DEBUG messages are silently dropped.</div>
+    </div>
+    <div class="algo-card">
+      <div class="algo-name">HOW logs look <span class="algo-tag alt">Formatter — Strategy</span></div>
+      <div class="algo-desc">Plain text "[INFO] 2026-06-13 message" vs JSON {"level":"INFO",...}. Optional but shows depth if mentioned.</div>
+    </div>
+    <div class="algo-card">
+      <div class="algo-name">Level routing chain <span class="algo-tag alt">Chain of Responsibility</span></div>
+      <div class="algo-desc">Classic Log4j-style: a chain of level-handlers, each deciding to handle or pass along. Mention as "textbook alternative design" — interviewers love when you know this exists even if you don't implement it.</div>
+    </div>
+  </div>
+
+  <div class="callout callout-amber">
+    <strong>The approach we'll build:</strong> A simple, clean design — <code>Logger</code> (Singleton) holds a minimum log level + a list of <code>LogAppender</code> (Strategy). When <code>log(level, msg)</code> is called, check the level, then loop through all appenders and write. This is simpler than full Chain of Responsibility but covers 90% of what's asked — and we'll mention CoR as the "more advanced" alternative when asked.
+  </div>
+</div>
+
+<hr class="div" style="margin-top:32px">
+
+<!-- ── SECTION 0: OVERVIEW ── -->
+<div id="overview" style="max-width:920px;margin:0 auto;padding:48px 24px 0">
+  <div class="section-header">
+    <div class="section-badge">0</div>
+    <h2>The Mental Model — what are they actually testing?</h2>
+  </div>
+  <div class="callout callout-purple">
+    <strong>Interviewer's secret checklist:</strong> Can you separate "what to log" from "where it goes" from "how it looks"? Do you know Strategy vs Chain of Responsibility and when each applies? Can you make it extensible (new appender = no changes elsewhere)? Is your Logger thread-safe?
+  </div>
+  <div class="progress-container">
+    <div class="progress-row"><div class="progress-label">Requirements</div><div class="progress-bar"><div class="progress-fill" style="width:17%;background:#a78bfa"></div></div><div class="progress-time">0–10 min</div></div>
+    <div class="progress-row"><div class="progress-label">Entities</div><div class="progress-bar"><div class="progress-fill" style="width:10%;background:#34d399"></div></div><div class="progress-time">10–16 min</div></div>
+    <div class="progress-row"><div class="progress-label">Diagram</div><div class="progress-bar"><div class="progress-fill" style="width:7%;background:#60a5fa"></div></div><div class="progress-time">16–20 min</div></div>
+    <div class="progress-row"><div class="progress-label">Coding</div><div class="progress-bar"><div class="progress-fill" style="width:58%;background:#fb923c"></div></div><div class="progress-time">20–55 min</div></div>
+    <div class="progress-row"><div class="progress-label">Review</div><div class="progress-bar"><div class="progress-fill" style="width:8%;background:#fbbf24"></div></div><div class="progress-time">55–60 min</div></div>
+  </div>
+</div>
+
+<hr class="div">
+
+<!-- ── PHASE 1: REQUIREMENTS ── -->
+<div id="phase1" class="section">
+  <div class="section-header">
+    <div class="section-badge">1</div>
+    <h2>Phase 1 — Gathering Requirements</h2>
+    <span class="time-tag time-green">0 – 10 min</span>
+  </div>
+
+  <div class="callout callout-teal">
+    <strong>This problem has the "fewest" requirements but the MOST design depth.</strong> The questions here are short — but your answers directly map to which patterns you'll use. Ask fast, then spend more time on design.
+  </div>
+
+  <div class="dialogue">
+    <div class="msg"><div class="msg-avatar av-i">I</div><div><div class="msg-label">Interviewer</div><div class="msg-bubble bubble-i">"Design a Logging Framework."</div></div></div>
+
+    <div class="msg"><div class="msg-avatar av-you">You</div><div><div class="msg-label">You</div><div class="msg-bubble bubble-you">"Sure! Quick clarifying questions first."</div></div></div>
+
+    <div class="msg"><div class="msg-avatar av-you">You</div><div><div class="msg-label">You — Question 1 (Log levels)</div><div class="msg-bubble bubble-you">"What log levels should we support — the standard DEBUG, INFO, WARN, ERROR, FATAL? And should the framework support setting a minimum level so lower-priority logs get filtered out?"</div></div></div>
+    <div class="thought">← Confirms you need an ordered enum (severity matters — DEBUG < INFO < ... ). This ordering is the trickiest part beginners get wrong.</div>
+
+    <div class="msg"><div class="msg-avatar av-i">I</div><div><div class="msg-label">Interviewer</div><div class="msg-bubble bubble-i">"Yes, standard 5 levels, with a configurable minimum."</div></div></div>
+
+    <div class="msg"><div class="msg-avatar av-you">You</div><div><div class="msg-label">You — Question 2 (Destinations)</div><div class="msg-bubble bubble-you">"Where should logs be written — console, file, or both at the same time? Should this be extensible to other destinations later, like a remote server or database?"</div></div></div>
+    <div class="thought">← "Both at the same time" + "extensible" = Strategy pattern with a LIST of appenders, not just one. This is the single biggest design decision.</div>
+
+    <div class="msg"><div class="msg-avatar av-i">I</div><div><div class="msg-label">Interviewer</div><div class="msg-bubble bubble-i">"Console and file for now, but design it to be extensible."</div></div></div>
+
+    <div class="msg"><div class="msg-avatar av-you">You</div><div><div class="msg-label">You — Question 3 (Format)</div><div class="msg-bubble bubble-you">"Should the log message format be fixed, like '[LEVEL] timestamp message', or should that be configurable too — e.g. plain text vs JSON?"</div></div></div>
+    <div class="thought">← If "configurable" → another Strategy (Formatter). If "fixed" → keep it simple, mention formatter as extension. Either answer is fine — just shows you're thinking modularly.</div>
+
+    <div class="msg"><div class="msg-avatar av-i">I</div><div><div class="msg-label">Interviewer</div><div class="msg-bubble bubble-i">"Fixed format is fine, but make it easy to change later."</div></div></div>
+
+    <div class="msg"><div class="msg-avatar av-you">You</div><div><div class="msg-label">You — Question 4 (Usage pattern)</div><div class="msg-bubble bubble-you">"Is there one global logger for the whole app, or should different classes/modules be able to get their own logger instance with different configs?"</div></div></div>
+    <div class="thought">← "One global" → simple Singleton. "Per-class loggers" → LoggerFactory returning named loggers (like Log4j's Logger.getLogger(MyClass.class)). Decides if Factory pattern is core or just a bonus.</div>
+
+    <div class="msg"><div class="msg-avatar av-i">I</div><div><div class="msg-label">Interviewer</div><div class="msg-bubble bubble-i">"One global logger is fine for now."</div></div></div>
+
+    <div class="msg"><div class="msg-avatar av-you">You</div><div><div class="msg-label">You — Summarise</div><div class="msg-bubble bubble-you">"Got it. So: a single global Logger (Singleton) with 5 severity levels and a configurable minimum level. It writes to multiple appenders simultaneously — Console and File initially, but pluggable for more. Message format is fixed for now but isolated behind a Formatter so it's easy to swap later. I'll design the appenders and formatter as Strategy interfaces. Sound good?"</div></div></div>
+    <div class="thought">← Notice: you've now NAMED Singleton + Strategy before writing a single line. That's the goal of this phase.</div>
+
+    <div class="msg"><div class="msg-avatar av-i">I</div><div><div class="msg-label">Interviewer</div><div class="msg-bubble bubble-i">"Perfect, go ahead."</div></div></div>
+  </div>
+
+  <div class="callout callout-amber">
+    <strong>The 4 questions to always ask for Logging Framework:</strong><br>
+    1. <strong>What levels & is minimum-level filtering needed?</strong> → ordered enum + comparison logic<br>
+    2. <strong>Single destination or multiple simultaneously?</strong> → decides if Appender is a list (Strategy) — almost always YES<br>
+    3. <strong>Fixed or configurable format?</strong> → decides if Formatter is its own Strategy or inline<br>
+    4. <strong>One global logger or per-class loggers?</strong> → decides Singleton-only vs Factory-of-loggers
+  </div>
+</div>
+
+<hr class="div">
+
+<!-- ── PHASE 2: DESIGN ── -->
+<div id="phase2" class="section">
+  <div class="section-header">
+    <div class="section-badge">2</div>
+    <h2>Phase 2 — Identify Entities & Quick Diagram</h2>
+    <span class="time-tag time-blue">10 – 20 min</span>
+  </div>
+
+  <div class="callout callout-blue">
+    <strong>Same mindset as Rate Limiter:</strong> ask "what varies vs what's fixed". Two things vary independently here — WHERE logs go (Appender) and HOW levels are ordered/filtered (LogLevel). Both become small, focused types.
+  </div>
+
+  <div class="timeline">
+    <div class="tl-item">
+      <div class="tl-dot"><div class="tl-dot-inner"></div></div>
+      <div class="tl-head">Step 1 — Identify the "varies vs fixed" split (2 min, say out loud)</div>
+      <div class="tl-body">Say: <em>"The destination of a log varies — console vs file vs future remote — so that's a <code>LogAppender</code> interface (Strategy). The level ordering is fixed but needs comparison logic, so that's an enum with ordinal-based severity. The Logger itself is the fixed orchestrator — one per app, so Singleton."</em></div>
+    </div>
+    <div class="tl-item">
+      <div class="tl-dot"><div class="tl-dot-inner"></div></div>
+      <div class="tl-head">Step 2 — List the classes (2 min)</div>
+      <div class="tl-body">
+        — <code>LogLevel</code> (enum) — DEBUG, INFO, WARN, ERROR, FATAL with ordinal severity<br>
+        — <code>LogMessage</code> — data holder (level, text, timestamp)<br>
+        — <code>LogAppender</code> (interface) — the Strategy: <code>append(LogMessage)</code><br>
+        — <code>ConsoleAppender</code>, <code>FileAppender</code> — implementations<br>
+        — <code>LogFormatter</code> (interface) — formats a LogMessage into a String<br>
+        — <code>Logger</code> — Singleton; holds minLevel + List&lt;LogAppender&gt; + formatter
+      </div>
+    </div>
+    <div class="tl-item">
+      <div class="tl-dot"><div class="tl-dot-inner"></div></div>
+      <div class="tl-head">Step 3 — Quick diagram — fastest possible (3 min)</div>
+      <div class="tl-body">Same "component diagram" approach as Rate Limiter — not an ER diagram with foreign keys, but a flow diagram: <code>Caller → Logger → [list of Appenders]</code>, with LogLevel as a filter gate before the fan-out. Say: "I'll sketch the flow, not entity relationships — this problem doesn't have a database model."</div>
+    </div>
+  </div>
+
+  <p style="color:var(--text2);font-size:13px;margin:16px 0 12px">Quick diagram — draw this in under 3 minutes:</p>
+
+  <div class="er-grid">
+    <div class="er-card">
+      <div class="er-head purple">Logger (Singleton)</div>
+      <div class="er-row">minLevel: LogLevel</div>
+      <div class="er-row">appenders: List&lt;</div>
+      <div class="er-row">&nbsp;&nbsp;LogAppender&gt;</div>
+      <div class="er-row">log(level, msg)</div>
+    </div>
+    <div class="er-card">
+      <div class="er-head amber">LogLevel</div>
+      <div class="er-row"><span class="er-pk">«enum»</span></div>
+      <div class="er-row">DEBUG=0, INFO=1</div>
+      <div class="er-row">WARN=2, ERROR=3</div>
+      <div class="er-row">FATAL=4</div>
+    </div>
+    <div class="er-card">
+      <div class="er-head blue">LogAppender</div>
+      <div class="er-row"><span class="er-pk">«interface»</span></div>
+      <div class="er-row">append(LogMessage)</div>
+    </div>
+    <div class="er-card">
+      <div class="er-head teal">ConsoleAppender</div>
+      <div class="er-row">implements ↑</div>
+      <div class="er-row">writes to System.out</div>
+    </div>
+    <div class="er-card">
+      <div class="er-head teal">FileAppender</div>
+      <div class="er-row">implements ↑</div>
+      <div class="er-row">writes to a file</div>
+    </div>
+    <div class="er-card">
+      <div class="er-head coral">LogMessage</div>
+      <div class="er-row"><span class="er-pk">level, text</span></div>
+      <div class="er-row">timestamp</div>
+      <div class="er-row">(pure data)</div>
+    </div>
+  </div>
+
+  <div style="background:var(--bg2);border:1px solid var(--border);border-radius:10px;padding:16px 18px;margin:16px 0">
+    <div style="font-size:13px;font-weight:600;color:#fff;margin-bottom:12px">Relationships / flow to draw as arrows:</div>
+    <div class="er-rel"><span style="color:var(--purple)">App code</span><div class="rel-line"></div><span style="color:var(--text3);font-size:11px">calls</span><div class="rel-line"></div><span style="color:var(--purple)">Logger.info("msg")</span></div>
+    <div class="er-rel"><span style="color:var(--purple)">Logger</span><div class="rel-line"></div><span style="color:var(--text3);font-size:11px">checks level &gt;= minLevel using</span><div class="rel-line"></div><span style="color:var(--amber)">LogLevel ordinal</span></div>
+    <div class="er-rel"><span style="color:var(--purple)">Logger</span><div class="rel-line"></div><span style="color:var(--text3);font-size:11px">fans out to ALL</span><div class="rel-line"></div><span style="color:var(--blue)">LogAppender list</span></div>
+    <div class="er-rel"><span style="color:var(--teal)">Console/FileAppender</span><div class="rel-line"></div><span style="color:var(--text3);font-size:11px">implements</span><div class="rel-line"></div><span style="color:var(--blue)">LogAppender</span></div>
+  </div>
+
+  <div class="callout callout-teal">
+    <strong>What to say while drawing:</strong> "There's no real entity-relationship here — it's a pipeline. I'll draw it left-to-right: caller → Logger (with the level check) → fans out to a list of appenders. That's the entire diagram."
+  </div>
+
+  <div class="callout callout-amber">
+    <strong>Class writing order — say this before coding:</strong> "I'll start with LogLevel since it's the foundation everything checks against. Then LogMessage — pure data. Then the LogAppender interface, then its two implementations. Logger ties it all together — written last."
+  </div>
+
+  <table class="order-table">
+    <thead><tr><th>Order</th><th>Class</th><th>Why this order</th></tr></thead>
+    <tbody>
+      <tr><td><span class="order-num">1</span>LogLevel</td><td style="color:var(--text2)">Enum with ordinal severity</td><td style="color:var(--text2)">Foundation — every other class references this for filtering.</td></tr>
+      <tr><td><span class="order-num">2</span>LogMessage</td><td style="color:var(--text2)">Data holder</td><td style="color:var(--text2)">No dependencies except LogLevel. Quick to write.</td></tr>
+      <tr><td><span class="order-num">3</span>LogAppender</td><td style="color:var(--text2)">Interface — 1 method</td><td style="color:var(--text2)">The Strategy contract. Define before implementations.</td></tr>
+      <tr><td><span class="order-num">4</span>ConsoleAppender, FileAppender</td><td style="color:var(--text2)">Implementations</td><td style="color:var(--text2)">Concrete strategies — quick, mostly boilerplate.</td></tr>
+      <tr><td><span class="order-num">5</span>LogFormatter</td><td style="color:var(--text2)">Interface + default impl</td><td style="color:var(--text2)">Small, isolated. Used by Logger and appenders.</td></tr>
+      <tr><td><span class="order-num">6</span>Logger</td><td style="color:var(--text2)">Singleton — main orchestrator</td><td style="color:var(--text2)">Depends on everything above. Write last.</td></tr>
+      <tr><td><span class="order-num">7</span>Main</td><td style="color:var(--text2)">Demo / test</td><td style="color:var(--text2)">Show filtering + multi-appender fan-out working.</td></tr>
+    </tbody>
+  </table>
+</div>
+
+<hr class="div">
+
+<!-- ── PHASE 3: CODE ── -->
+<div id="phase3" class="section">
+  <div class="section-header">
+    <div class="section-badge">3</div>
+    <h2>Phase 3 — The Complete Code</h2>
+    <span class="time-tag time-coral">20 – 55 min</span>
+  </div>
+
+  <div class="callout callout-coral">
+    <strong>Say this before typing:</strong> "I'll start with LogLevel — getting the severity ordering right up front avoids bugs later when I write the filtering check in Logger."
+  </div>
+
+  <!-- LOG LEVEL -->
+  <div class="code-card">
+    <div class="code-header"><span class="code-fname">LogLevel.java</span><div class="code-meta"><span class="code-tag tag-solid">Foundation — ordered enum</span></div></div>
+    <pre><span class="cm">// ── Why ORDER matters here ────────────────────────────────────────────────</span>
+<span class="cm">// Java enums have a built-in ordinal() based on declaration order.</span>
+<span class="cm">// DEBUG=0, INFO=1, WARN=2, ERROR=3, FATAL=4 — declared low-to-high severity.</span>
+<span class="cm">// This lets us write: if (messageLevel.ordinal() >= minLevel.ordinal())</span>
+<span class="cm">// No need for a separate "severity" field — ordinal() gives it for free.</span>
+
+<span class="kw">public enum</span> <span class="ty">LogLevel</span> {
+    DEBUG,  <span class="cm">// 0 — most verbose, dev-only details</span>
+    INFO,   <span class="cm">// 1 — general informational messages</span>
+    WARN,   <span class="cm">// 2 — something unexpected, but not broken</span>
+    ERROR,  <span class="cm">// 3 — something failed</span>
+    FATAL   <span class="cm">// 4 — application cannot continue</span>
+}</pre>
+  </div>
+
+  <!-- LOG MESSAGE -->
+  <div class="code-card">
+    <div class="code-header"><span class="code-fname">LogMessage.java</span><div class="code-meta"><span class="code-tag tag-solid">SRP — pure data holder</span></div></div>
+    <pre><span class="kw">import</span> java.time.LocalDateTime;
+
+<span class="cm">// ── SOLID: Single Responsibility ──────────────────────────────────────────</span>
+<span class="cm">// Just carries data between Logger and Appenders/Formatter. No behavior.</span>
+<span class="cm">// Immutable (all fields final) — once created, a log record never changes.</span>
+
+<span class="kw">public class</span> <span class="ty">LogMessage</span> {
+    <span class="kw">private final</span> <span class="ty">LogLevel</span> level;
+    <span class="kw">private final</span> <span class="ty">String</span> text;
+    <span class="kw">private final</span> <span class="ty">LocalDateTime</span> timestamp;
+
+    <span class="kw">public</span> <span class="mt">LogMessage</span>(<span class="ty">LogLevel</span> level, <span class="ty">String</span> text) {
+        <span class="kw">this</span>.level     = level;
+        <span class="kw">this</span>.text      = text;
+        <span class="kw">this</span>.timestamp = <span class="ty">LocalDateTime</span>.now();
+    }
+
+    <span class="kw">public</span> <span class="ty">LogLevel</span> <span class="mt">getLevel</span>()     { <span class="kw">return</span> level; }
+    <span class="kw">public</span> <span class="ty">String</span> <span class="mt">getText</span>()        { <span class="kw">return</span> text; }
+    <span class="kw">public</span> <span class="ty">LocalDateTime</span> <span class="mt">getTimestamp</span>() { <span class="kw">return</span> timestamp; }
+}</pre>
+  </div>
+
+  <!-- FORMATTER -->
+  <div class="code-card">
+    <div class="code-header"><span class="code-fname">LogFormatter.java + SimpleLogFormatter.java</span><div class="code-meta"><span class="code-tag tag-pattern">Strategy</span><span class="code-tag tag-solid">SRP + OCP</span></div></div>
+    <pre><span class="cm">// ── Design Pattern: STRATEGY (formatting) ─────────────────────────────────</span>
+<span class="cm">// HOW a message looks (plain text vs JSON) is independent of WHERE it goes.</span>
+<span class="cm">// ── SOLID: Open/Closed ────────────────────────────────────────────────────</span>
+<span class="cm">// Add JsonLogFormatter later → new class implementing this interface.</span>
+<span class="cm">// Logger and Appenders need ZERO changes.</span>
+
+<span class="kw">public interface</span> <span class="ty">LogFormatter</span> {
+    <span class="ty">String</span> <span class="mt">format</span>(<span class="ty">LogMessage</span> message);
+}
+
+<span class="cm">// Default implementation — "[LEVEL] timestamp: message"</span>
+<span class="kw">public class</span> <span class="ty">SimpleLogFormatter</span> <span class="kw">implements</span> <span class="ty">LogFormatter</span> {
+    <span class="an">@Override</span>
+    <span class="kw">public</span> <span class="ty">String</span> <span class="mt">format</span>(<span class="ty">LogMessage</span> message) {
+        <span class="kw">return</span> <span class="ty">String</span>.format(<span class="st">"[%s] %s: %s"</span>,
+            message.getLevel(),
+            message.getTimestamp(),
+            message.getText());
+    }
+}</pre>
+  </div>
+
+  <!-- APPENDER -->
+  <div class="code-card">
+    <div class="code-header"><span class="code-fname">LogAppender.java + ConsoleAppender.java + FileAppender.java</span><div class="code-meta"><span class="code-tag tag-pattern">Strategy — the core pattern</span><span class="code-tag tag-solid">SRP + ISP + OCP</span></div></div>
+    <pre><span class="cm">// ── Design Pattern: STRATEGY (the heart of this problem) ──────────────────</span>
+<span class="cm">// "Where does this log go?" varies — console, file, remote server, DB...</span>
+<span class="cm">// Each destination implements the same one-method contract.</span>
+<span class="cm">// ── SOLID: Interface Segregation ──────────────────────────────────────────</span>
+<span class="cm">// Just ONE method: append(). No appender is forced to implement unrelated stuff.</span>
+<span class="cm">// ── SOLID: Open/Closed ─────────────────────────────────────────────────────</span>
+<span class="cm">// Add DatabaseAppender or RemoteAppender → new class implementing this.</span>
+<span class="cm">// Logger code (the orchestrator) doesn't change AT ALL.</span>
+
+<span class="kw">public interface</span> <span class="ty">LogAppender</span> {
+    <span class="kw">void</span> <span class="mt">append</span>(<span class="ty">String</span> formattedMessage);
+}
+
+<span class="cm">// ── SOLID: Single Responsibility ──────────────────────────────────────────</span>
+<span class="cm">// ConsoleAppender knows ONLY how to print to System.out. Nothing else.</span>
+<span class="kw">public class</span> <span class="ty">ConsoleAppender</span> <span class="kw">implements</span> <span class="ty">LogAppender</span> {
+    <span class="an">@Override</span>
+    <span class="kw">public void</span> <span class="mt">append</span>(<span class="ty">String</span> formattedMessage) {
+        <span class="ty">System</span>.out.println(formattedMessage);
+    }
+}
+
+<span class="cm">// ── SOLID: Single Responsibility ──────────────────────────────────────────</span>
+<span class="cm">// FileAppender knows ONLY how to write to a file. Opens in append mode</span>
+<span class="cm">// so each log call adds a new line without overwriting previous logs.</span>
+<span class="kw">import</span> java.io.*;
+
+<span class="kw">public class</span> <span class="ty">FileAppender</span> <span class="kw">implements</span> <span class="ty">LogAppender</span> {
+    <span class="kw">private final</span> <span class="ty">String</span> filePath;
+
+    <span class="kw">public</span> <span class="mt">FileAppender</span>(<span class="ty">String</span> filePath) {
+        <span class="kw">this</span>.filePath = filePath;
+    }
+
+    <span class="an">@Override</span>
+    <span class="kw">public void</span> <span class="mt">append</span>(<span class="ty">String</span> formattedMessage) {
+        <span class="cm">// try-with-resources: auto-closes the writer even on exception</span>
+        <span class="kw">try</span> (<span class="ty">FileWriter</span> fw = <span class="kw">new</span> <span class="ty">FileWriter</span>(filePath, <span class="kw">true</span>);  <span class="cm">// true = append mode</span>
+             <span class="ty">PrintWriter</span> pw = <span class="kw">new</span> <span class="ty">PrintWriter</span>(fw)) {
+            pw.println(formattedMessage);
+        } <span class="kw">catch</span> (<span class="ty">IOException</span> e) {
+            <span class="ty">System</span>.err.println(<span class="st">"Failed to write log to file: "</span> + e.getMessage());
+        }
+    }
+}</pre>
+  </div>
+
+  <!-- LOGGER -->
+  <div class="code-card">
+    <div class="code-header"><span class="code-fname">Logger.java</span><div class="code-meta"><span class="code-tag tag-pattern">Singleton + Strategy usage</span><span class="code-tag tag-solid">SRP + DIP</span></div></div>
+    <pre><span class="kw">import</span> java.util.*;
+<span class="kw">import</span> java.util.concurrent.*;
+
+<span class="cm">// ── Design Pattern: SINGLETON ─────────────────────────────────────────────</span>
+<span class="cm">// One global logger configuration shared across the entire application.</span>
+<span class="cm">// ── SOLID: Single Responsibility ──────────────────────────────────────────</span>
+<span class="cm">// Logger's ONE job: (1) check level, (2) format, (3) fan out to appenders.</span>
+<span class="cm">// It does NOT know HOW to write to console/file — that's delegated.</span>
+<span class="cm">// ── SOLID: Dependency Inversion ───────────────────────────────────────────</span>
+<span class="cm">// Logger depends on LogAppender + LogFormatter interfaces — never on</span>
+<span class="cm">// ConsoleAppender or FileAppender directly.</span>
+
+<span class="kw">public class</span> <span class="ty">Logger</span> {
+
+    <span class="kw">private static volatile</span> <span class="ty">Logger</span> instance;
+
+    <span class="kw">private</span> <span class="ty">LogLevel</span> minLevel;
+    <span class="kw">private final</span> <span class="ty">List</span>&lt;<span class="ty">LogAppender</span>&gt; appenders;
+    <span class="kw">private</span> <span class="ty">LogFormatter</span> formatter;
+
+    <span class="kw">private</span> <span class="mt">Logger</span>() {
+        <span class="kw">this</span>.minLevel  = <span class="ty">LogLevel</span>.INFO;            <span class="cm">// sensible default</span>
+        <span class="kw">this</span>.appenders = <span class="kw">new</span> <span class="ty">CopyOnWriteArrayList</span>&lt;&gt;(); <span class="cm">// thread-safe iteration + add</span>
+        <span class="kw">this</span>.formatter = <span class="kw">new</span> <span class="ty">SimpleLogFormatter</span>();   <span class="cm">// default formatter</span>
+    }
+
+    <span class="kw">public static</span> <span class="ty">Logger</span> <span class="mt">getInstance</span>() {
+        <span class="kw">if</span> (instance == <span class="kw">null</span>) {
+            <span class="kw">synchronized</span> (<span class="ty">Logger</span>.<span class="kw">class</span>) {
+                <span class="kw">if</span> (instance == <span class="kw">null</span>) {
+                    instance = <span class="kw">new</span> <span class="ty">Logger</span>();
+                }
+            }
+        }
+        <span class="kw">return</span> instance;
+    }
+
+    <span class="cm">// ── Configuration methods — call once at app startup ────────────</span>
+    <span class="kw">public void</span> <span class="mt">setMinLevel</span>(<span class="ty">LogLevel</span> level)     { <span class="kw">this</span>.minLevel = level; }
+    <span class="kw">public void</span> <span class="mt">setFormatter</span>(<span class="ty">LogFormatter</span> f)    { <span class="kw">this</span>.formatter = f; }
+    <span class="kw">public void</span> <span class="mt">addAppender</span>(<span class="ty">LogAppender</span> appender) { appenders.add(appender); }
+
+    <span class="cm">// ── THE CORE METHOD ──────────────────────────────────────────────</span>
+    <span class="cm">// 1. Filter: is this message severe enough to log right now?</span>
+    <span class="cm">// 2. Format: turn LogMessage into a String</span>
+    <span class="cm">// 3. Fan-out: send the formatted string to EVERY registered appender</span>
+    <span class="kw">public void</span> <span class="mt">log</span>(<span class="ty">LogLevel</span> level, <span class="ty">String</span> text) {
+        <span class="kw">if</span> (level.ordinal() &lt; minLevel.ordinal()) {
+            <span class="kw">return</span>;  <span class="cm">// too verbose for current config — drop silently</span>
+        }
+
+        <span class="ty">LogMessage</span> message = <span class="kw">new</span> <span class="ty">LogMessage</span>(level, text);
+        <span class="ty">String</span> formatted = formatter.format(message);
+
+        <span class="kw">for</span> (<span class="ty">LogAppender</span> appender : appenders) {
+            appender.append(formatted);  <span class="cm">// each appender writes independently</span>
+        }
+    }
+
+    <span class="cm">// ── Convenience methods — what application code actually calls ──</span>
+    <span class="kw">public void</span> <span class="mt">debug</span>(<span class="ty">String</span> text) { log(<span class="ty">LogLevel</span>.DEBUG, text); }
+    <span class="kw">public void</span> <span class="mt">info</span>(<span class="ty">String</span> text)  { log(<span class="ty">LogLevel</span>.INFO,  text); }
+    <span class="kw">public void</span> <span class="mt">warn</span>(<span class="ty">String</span> text)  { log(<span class="ty">LogLevel</span>.WARN,  text); }
+    <span class="kw">public void</span> <span class="mt">error</span>(<span class="ty">String</span> text) { log(<span class="ty">LogLevel</span>.ERROR, text); }
+    <span class="kw">public void</span> <span class="mt">fatal</span>(<span class="ty">String</span> text) { log(<span class="ty">LogLevel</span>.FATAL, text); }
+}</pre>
+  </div>
+
+  <!-- MAIN -->
+  <div class="code-card">
+    <div class="code-header"><span class="code-fname">Main.java</span><div class="code-meta"><span class="code-tag tag-solid">Always demo — prove filtering + fan-out</span></div></div>
+    <pre><span class="kw">public class</span> <span class="ty">Main</span> {
+    <span class="kw">public static void</span> <span class="mt">main</span>(<span class="ty">String</span>[] args) {
+
+        <span class="ty">Logger</span> logger = <span class="ty">Logger</span>.getInstance();
+
+        <span class="cm">// Configure: log everything WARN and above, to BOTH console and file</span>
+        logger.setMinLevel(<span class="ty">LogLevel</span>.WARN);
+        logger.addAppender(<span class="kw">new</span> <span class="ty">ConsoleAppender</span>());
+        logger.addAppender(<span class="kw">new</span> <span class="ty">FileAppender</span>(<span class="st">"app.log"</span>));
+
+        <span class="cm">// DEBUG and INFO are below WARN — should be silently dropped</span>
+        logger.debug(<span class="st">"This is a debug message"</span>);   <span class="cm">// dropped</span>
+        logger.info(<span class="st">"User logged in"</span>);            <span class="cm">// dropped</span>
+
+        <span class="cm">// WARN and above — printed to console AND written to app.log</span>
+        logger.warn(<span class="st">"Disk space running low"</span>);    <span class="cm">// shown</span>
+        logger.error(<span class="st">"Failed to connect to DB"</span>);  <span class="cm">// shown</span>
+        logger.fatal(<span class="st">"Out of memory, shutting down"</span>); <span class="cm">// shown</span>
+
+        <span class="cm">// Prove Singleton: same instance everywhere</span>
+        <span class="ty">Logger</span> sameLogger = <span class="ty">Logger</span>.getInstance();
+        <span class="ty">System</span>.out.println(<span class="st">"\nSame instance? "</span> + (logger == sameLogger));
+    }
+}
+
+<span class="cm">/* Expected console output:
+[WARN] 2026-06-13T10:15:30.123: Disk space running low
+[ERROR] 2026-06-13T10:15:30.124: Failed to connect to DB
+[FATAL] 2026-06-13T10:15:30.125: Out of memory, shutting down
+
+Same instance? true
+
+(app.log file will contain the same 3 lines)
+*/</span></pre>
+  </div>
+
+  <div class="callout callout-blue">
+    <strong>Why CopyOnWriteArrayList for appenders?</strong> Appenders are added rarely (at startup) but read on EVERY log call (potentially from many threads). CopyOnWriteArrayList optimizes for "read-heavy, write-rare" — no locking needed during iteration. Mention this if asked about concurrency.
+  </div>
+</div>
+
+<hr class="div">
+
+<!-- ── SOLID PRINCIPLES ── -->
+<div id="solid" class="section">
+  <div class="section-header">
+    <div class="section-badge" style="background:var(--teal-bg);border-color:var(--teal-border);color:var(--teal)">S</div>
+    <h2>SOLID Principles — where exactly in the code</h2>
+  </div>
+
+  <div class="callout callout-teal">
+    <strong>This problem is the BEST showcase for SOLID</strong> because every class maps to exactly one principle in an obvious way. If an interviewer asks "explain SOLID with an example", this is the project to reference forever.
+  </div>
+
+  <div class="solid-grid">
+    <div class="solid-card">
+      <div class="solid-letter">S</div>
+      <div class="solid-name">Single Responsibility</div>
+      <div class="solid-desc">Every class has exactly one reason to change.</div>
+      <div class="solid-where">ConsoleAppender — only knows console I/O. FileAppender — only file I/O. SimpleLogFormatter — only formatting. Logger — only orchestration (filter + fan-out).</div>
+    </div>
+    <div class="solid-card">
+      <div class="solid-letter">O</div>
+      <div class="solid-name">Open / Closed</div>
+      <div class="solid-desc">Open for extension, closed for modification.</div>
+      <div class="solid-where">Add DatabaseAppender or RemoteAppender → new class implementing LogAppender + one addAppender() call. Logger.log() — zero changes.</div>
+    </div>
+    <div class="solid-card">
+      <div class="solid-letter">L</div>
+      <div class="solid-name">Liskov Substitution</div>
+      <div class="solid-desc">Any implementation can replace another without breaking callers.</div>
+      <div class="solid-where">Logger's for-loop calls appender.append(...) — works identically whether appender is ConsoleAppender, FileAppender, or any future appender. All are substitutable.</div>
+    </div>
+    <div class="solid-card">
+      <div class="solid-letter">I</div>
+      <div class="solid-name">Interface Segregation</div>
+      <div class="solid-desc">Don't force implementations to support unused methods.</div>
+      <div class="solid-where">LogAppender has exactly ONE method — append(). LogFormatter has exactly ONE — format(). No appender is forced to implement formatting logic, and vice versa — they're separate concerns, separate interfaces.</div>
+    </div>
+    <div class="solid-card" style="grid-column: 1/-1">
+      <div class="solid-letter">D</div>
+      <div class="solid-name">Dependency Inversion</div>
+      <div class="solid-desc">High-level modules depend on abstractions, not concrete classes.</div>
+      <div class="solid-where">Logger (high-level orchestrator) holds List&lt;LogAppender&gt; and a LogFormatter — both interfaces. It never references ConsoleAppender, FileAppender, or SimpleLogFormatter by name in its logic. Concrete types are only chosen at configuration time in Main.</div>
+    </div>
+  </div>
+</div>
+
+<hr class="div">
+
+<!-- ── DESIGN PATTERNS ── -->
+<div id="patterns" class="section">
+  <div class="section-header">
+    <div class="section-badge" style="background:var(--blue-bg);border-color:var(--blue-border);color:var(--blue)">P</div>
+    <h2>Design Patterns — what's used and why</h2>
+  </div>
+
+  <div class="pattern-card">
+    <div class="pattern-head">
+      <div class="pattern-icon">1</div>
+      <div class="pattern-name">Strategy Pattern (used TWICE — the core of this problem)</div>
+    </div>
+    <div class="pattern-why">Used twice independently: (1) <code>LogAppender</code> — "where do logs go" is interchangeable behavior. (2) <code>LogFormatter</code> — "how logs look" is also interchangeable behavior. Keeping these as TWO separate Strategy interfaces (instead of one big config object) means each varies independently — you can change format without touching appenders and vice versa. Calling out that you used Strategy twice, for two different concerns, shows real understanding (not just pattern-name-dropping).</div>
+    <div class="pattern-where">Used in: LogAppender + ConsoleAppender/FileAppender, and LogFormatter + SimpleLogFormatter</div>
+  </div>
+
+  <div class="pattern-card">
+    <div class="pattern-head">
+      <div class="pattern-icon">2</div>
+      <div class="pattern-name">Singleton Pattern</div>
+    </div>
+    <div class="pattern-why">There's exactly one logging configuration per application — one set of appenders, one minimum level. If every class created its own Logger instance, configurations (and log levels) could diverge across the app. Double-checked locking with <code>volatile</code> keeps it thread-safe.</div>
+    <div class="pattern-where">Used in: Logger.getInstance()</div>
+  </div>
+
+  <div class="pattern-card">
+    <div class="pattern-head">
+      <div class="pattern-icon">3</div>
+      <div class="pattern-name">Chain of Responsibility (mention as the "textbook alternative")</div>
+    </div>
+    <div class="pattern-why">Classic Log4j-style design uses a CHAIN of level-handlers: a DebugHandler checks "is this DEBUG? handle it, then pass to next." then InfoHandler, etc. Each handler decides independently whether to process and/or forward. <strong>When to mention:</strong> if the interviewer asks "is there another way to structure level filtering?" — say: "Yes, Chain of Responsibility — each level has its own handler object, and they're linked in a chain. I chose the simpler ordinal-comparison approach because it's less code for the same effect at this scale, but CoR scales better if each level needs drastically different processing (not just a yes/no filter)."</div>
+    <div class="pattern-where">Alternative design — not implemented, but name it if asked</div>
+  </div>
+
+  <div class="pattern-card">
+    <div class="pattern-head">
+      <div class="pattern-icon">4</div>
+      <div class="pattern-name">Factory Pattern (extension — for per-class loggers)</div>
+    </div>
+    <div class="pattern-why">If the interviewer asks "how would you support Log4j-style <code>Logger.getLogger(MyClass.class)</code> with different configs per class?" — say: "I'd add a <code>LoggerFactory</code> that maintains a Map&lt;String, Logger&gt; keyed by class/module name, creating a new configured Logger instance per key on first request (similar to the per-client pattern in a rate limiter)."</div>
+    <div class="pattern-where">Extension point: LoggerFactory.getLogger(String name)</div>
+  </div>
+
+  <div class="code-card">
+    <div class="code-header"><span class="code-fname">LoggerFactory.java — bonus answer for per-module loggers</span><div class="code-meta"><span class="code-tag tag-pattern">Factory Pattern</span></div></div>
+    <pre><span class="cm">// ── Design Pattern: FACTORY ───────────────────────────────────────────────</span>
+<span class="cm">// Returns a named logger, creating it on first request (lazy init).</span>
+<span class="cm">// Each module gets its own logger — e.g. could have its own minLevel.</span>
+
+<span class="kw">import</span> java.util.*;
+<span class="kw">import</span> java.util.concurrent.*;
+
+<span class="kw">public class</span> <span class="ty">LoggerFactory</span> {
+    <span class="kw">private static final</span> <span class="ty">Map</span>&lt;<span class="ty">String</span>, <span class="ty">Logger</span>&gt; loggers = <span class="kw">new</span> <span class="ty">ConcurrentHashMap</span>&lt;&gt;();
+
+    <span class="kw">public static</span> <span class="ty">Logger</span> <span class="mt">getLogger</span>(<span class="ty">String</span> name) {
+        <span class="kw">return</span> loggers.computeIfAbsent(name, n -&gt; <span class="ty">Logger</span>.getInstance());
+        <span class="cm">// In a fuller design, Logger constructor would no longer be a strict</span>
+        <span class="cm">// singleton — each "name" could map to its own configured instance.</span>
+    }
+}
+<span class="cm">// Usage: Logger log = LoggerFactory.getLogger("PaymentService");</span></pre>
+  </div>
+</div>
+
+<hr class="div">
+
+<!-- ── INTERVIEW TIPS ── -->
+<div id="tips" class="section">
+  <div class="section-header">
+    <div class="section-badge" style="background:var(--amber-bg);border-color:var(--amber-border);color:var(--amber)">!</div>
+    <h2>Interview Tips — what separates good from great</h2>
+  </div>
+
+  <div style="display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-bottom:24px">
+    <div>
+      <div style="font-size:13px;font-weight:600;color:var(--green);margin-bottom:10px">Things to DO</div>
+      <div class="tip-row"><span class="tip-icon check">✓</span><span style="color:var(--text2);font-size:13.5px">Get the enum ORDER right — DEBUG to FATAL, ascending severity</span></div>
+      <div class="tip-row"><span class="tip-icon check">✓</span><span style="color:var(--text2);font-size:13.5px">Use ordinal() comparison for level filtering — clean one-liner</span></div>
+      <div class="tip-row"><span class="tip-icon check">✓</span><span style="color:var(--text2);font-size:13.5px">Keep Appender and Formatter as SEPARATE Strategy interfaces</span></div>
+      <div class="tip-row"><span class="tip-icon check">✓</span><span style="color:var(--text2);font-size:13.5px">Demo with multiple appenders active at once (console + file)</span></div>
+      <div class="tip-row"><span class="tip-icon check">✓</span><span style="color:var(--text2);font-size:13.5px">Mention Chain of Responsibility as the "textbook" alternative</span></div>
+      <div class="tip-row"><span class="tip-icon check">✓</span><span style="color:var(--text2);font-size:13.5px">Use try-with-resources for file I/O — shows Java fluency</span></div>
+    </div>
+    <div>
+      <div style="font-size:13px;font-weight:600;color:var(--red);margin-bottom:10px">Things to AVOID</div>
+      <div class="tip-row"><span class="tip-icon cross">✗</span><span style="color:var(--text2);font-size:13.5px">Hardcoding if/else chains for level checks instead of ordinal()</span></div>
+      <div class="tip-row"><span class="tip-icon cross">✗</span><span style="color:var(--text2);font-size:13.5px">Single appender field instead of a List (breaks "log to both")</span></div>
+      <div class="tip-row"><span class="tip-icon cross">✗</span><span style="color:var(--text2);font-size:13.5px">Mixing formatting logic INTO each appender (duplication)</span></div>
+      <div class="tip-row"><span class="tip-icon cross">✗</span><span style="color:var(--text2);font-size:13.5px">Forgetting append mode on FileWriter (overwrites old logs)</span></div>
+      <div class="tip-row"><span class="tip-icon cross">✗</span><span style="color:var(--text2);font-size:13.5px">Not closing file resources (resource leak)</span></div>
+      <div class="tip-row"><span class="tip-icon cross">✗</span><span style="color:var(--text2);font-size:13.5px">Saying "Singleton" but writing a public constructor</span></div>
+    </div>
+  </div>
+
+  <div class="callout callout-purple">
+    <strong>Bonus questions to prepare for:</strong><br>
+    <strong>"How would you make this asynchronous so logging doesn't block the main thread?"</strong> → Logger.log() pushes LogMessage onto a BlockingQueue; a separate background thread (or thread pool) consumes from the queue and calls appenders. This decouples "producing" logs from "writing" them.<br>
+    <strong>"How would you add log rotation (new file per day, max file size)?"</strong> → RollingFileAppender — wraps FileAppender, checks file size/date before each write, and renames/rotates the file when exceeded. Same LogAppender interface — no changes elsewhere.<br>
+    <strong>"What if different appenders need different minimum levels?"</strong> → Move minLevel from Logger into each Appender (each appender has its own threshold) — Logger always formats and passes the message; each appender decides whether to write it.<br>
+    <strong>"How does this relate to Chain of Responsibility?"</strong> → CoR would model each level as a handler object with a "next" pointer; the request travels down the chain until a handler processes it. Our ordinal-comparison approach achieves the same filtering with less structure — appropriate when there's no per-level custom behavior beyond "log or don't".<br>
+    <strong>"Thread safety — what if 100 threads call logger.info() simultaneously?"</strong> → CopyOnWriteArrayList for appenders (safe iteration), and each Appender's append() should itself be thread-safe (e.g. synchronized file writes, or a per-appender queue).
+  </div>
+
+  <div class="callout callout-amber">
+    <strong>Next LLD problems to practice (in order):</strong><br>
+    1. LRU Cache — similar "small interface + core algorithm" flavor<br>
+    2. Notification System — Strategy (channels) + Observer + Factory<br>
+    3. Splitwise — graph + settlement algorithm<br>
+    4. Tic-Tac-Toe / Chess — state machine heavy<br>
+    5. Vending Machine — State pattern in depth
+  </div>
+</div>
+
+<script>
+const sections = document.querySelectorAll('[id]');
+const navLinks = document.querySelectorAll('.nav a');
+const observer = new IntersectionObserver(entries => {
+  entries.forEach(e => {
+    if(e.isIntersecting) {
+      navLinks.forEach(a => a.classList.toggle('active', a.getAttribute('href') === '#'+e.target.id));
+    }
+  });
+}, {rootMargin:'-20% 0px -70% 0px'});
+sections.forEach(s => observer.observe(s));
+</script>
+</body>
+</html>

@@ -1,0 +1,5 @@
+Parking Lot
+
+Singleton — one ParkingLot instance manages all floors/spots
+Factory (extension) — VehicleFactory creates Car/Bike/Truck based on type
+Strategy (extension) — PricingStrategy for different fee calculations

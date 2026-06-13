@@ -1,0 +1,6 @@
+Logging Framework
+
+Strategy (used twice) — LogAppender (where logs go) and LogFormatter (how logs look)
+Singleton — one global Logger instance
+Chain of Responsibility (alternative, mentioned not implemented) — classic Log4j-style level handlers
+Factory (extension) — LoggerFactory for per-module loggers

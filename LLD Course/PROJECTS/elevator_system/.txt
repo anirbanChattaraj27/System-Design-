@@ -1,0 +1,6 @@
+Elevator System
+
+State Pattern — elevator states like Idle, Moving, DoorOpen
+Strategy — scheduling algorithm (nearest-elevator, SCAN, etc.)
+Observer — elevator notifies floor displays/buttons when it arrives
+Singleton — ElevatorController managing all elevators

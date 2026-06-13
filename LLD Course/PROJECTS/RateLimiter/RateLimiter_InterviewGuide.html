@@ -1,0 +1,824 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Rate Limiter LLD — Complete 60-Min Interview Guide</title>
+<link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;600&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+:root {
+  --bg: #0d1117; --bg2: #161b22; --bg3: #21262d;
+  --border: rgba(255,255,255,0.08); --border2: rgba(255,255,255,0.14);
+  --text: #e6edf3; --text2: #8b949e; --text3: #6e7681;
+  --purple: #a78bfa; --purple-bg: rgba(167,139,250,0.1); --purple-border: rgba(167,139,250,0.3);
+  --teal: #34d399; --teal-bg: rgba(52,211,153,0.08); --teal-border: rgba(52,211,153,0.25);
+  --amber: #fbbf24; --amber-bg: rgba(251,191,36,0.08); --amber-border: rgba(251,191,36,0.25);
+  --coral: #fb923c; --coral-bg: rgba(251,146,60,0.08); --coral-border: rgba(251,146,60,0.25);
+  --blue: #60a5fa; --blue-bg: rgba(96,165,250,0.08); --blue-border: rgba(96,165,250,0.25);
+  --red: #f87171; --green: #4ade80;
+  --kw: #ff7b72; --ty: #79c0ff; --st: #a5d6a7; --cm: #484f58; --an: #e3b341; --mt: #d2a8ff;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth}
+body{background:var(--bg);color:var(--text);font-family:'Inter',sans-serif;font-size:15px;line-height:1.7}
+
+.nav{position:sticky;top:0;z-index:100;background:rgba(13,17,23,0.95);backdrop-filter:blur(8px);border-bottom:1px solid var(--border);padding:0 24px;display:flex;align-items:center;gap:4px;overflow-x:auto;white-space:nowrap}
+.nav a{display:inline-flex;align-items:center;gap:6px;padding:12px 10px;font-size:12px;font-weight:500;color:var(--text2);text-decoration:none;border-bottom:2px solid transparent;transition:color .15s,border-color .15s}
+.nav a:hover,.nav a.active{color:var(--text);border-bottom-color:var(--purple)}
+.nav-time{margin-left:auto;padding:8px 12px;background:var(--purple-bg);border:1px solid var(--purple-border);border-radius:6px;font-size:11px;color:var(--purple);font-weight:600;white-space:nowrap}
+
+.hero{background:linear-gradient(135deg,#1a1040 0%,#0d1117 50%,#0a1628 100%);padding:56px 40px 48px;border-bottom:1px solid var(--border)}
+.hero-tag{display:inline-flex;align-items:center;gap:6px;background:var(--purple-bg);border:1px solid var(--purple-border);border-radius:20px;padding:5px 14px;font-size:11px;font-weight:600;color:var(--purple);letter-spacing:.5px;margin-bottom:20px}
+.hero h1{font-size:36px;font-weight:700;color:#fff;line-height:1.15;margin-bottom:12px}
+.hero p{color:var(--text2);font-size:16px;max-width:620px;margin-bottom:24px}
+.hero-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;max-width:640px}
+.hero-stat{background:var(--bg2);border:1px solid var(--border);border-radius:10px;padding:14px 16px}
+.hero-stat .n{font-size:22px;font-weight:700;color:var(--purple)}
+.hero-stat .l{font-size:12px;color:var(--text2);margin-top:2px}
+
+.section{max-width:920px;margin:0 auto;padding:48px 24px}
+.section-header{display:flex;align-items:center;gap:12px;margin-bottom:28px}
+.section-badge{width:32px;height:32px;border-radius:8px;background:var(--purple-bg);border:1px solid var(--purple-border);display:flex;align-items:center;justify-content:center;font-size:13px;font-weight:700;color:var(--purple);flex-shrink:0}
+.section-header h2{font-size:20px;font-weight:600;color:#fff}
+.section-header .time-tag{margin-left:auto;font-size:11px;font-weight:600;padding:4px 10px;border-radius:12px;white-space:nowrap}
+.time-green{background:rgba(74,222,128,0.1);color:var(--green);border:1px solid rgba(74,222,128,0.2)}
+.time-blue{background:var(--blue-bg);color:var(--blue);border:1px solid var(--blue-border)}
+.time-amber{background:var(--amber-bg);color:var(--amber);border:1px solid var(--amber-border)}
+.time-coral{background:var(--coral-bg);color:var(--coral);border:1px solid var(--coral-border)}
+.time-purple{background:var(--purple-bg);color:var(--purple);border:1px solid var(--purple-border)}
+hr.div{border:none;border-top:1px solid var(--border);margin:0}
+
+.timeline{position:relative;padding-left:28px}
+.timeline::before{content:'';position:absolute;left:9px;top:8px;bottom:8px;width:1px;background:var(--border2)}
+.tl-item{position:relative;margin-bottom:24px}
+.tl-item:last-child{margin-bottom:0}
+.tl-dot{position:absolute;left:-24px;top:4px;width:18px;height:18px;border-radius:50%;border:2px solid var(--purple);background:var(--bg);display:flex;align-items:center;justify-content:center}
+.tl-dot-inner{width:6px;height:6px;border-radius:50%;background:var(--purple)}
+.tl-head{font-size:14px;font-weight:600;color:#fff;margin-bottom:4px;display:flex;align-items:center;gap:8px}
+.tl-body{font-size:13.5px;color:var(--text2);line-height:1.6}
+.tl-body code{font-family:'JetBrains Mono',monospace;font-size:12px;background:var(--bg3);padding:1px 5px;border-radius:3px;color:var(--ty)}
+
+.callout{border-radius:10px;padding:14px 18px;margin:16px 0;border-left:3px solid;font-size:13.5px;line-height:1.6}
+.callout-purple{background:var(--purple-bg);border-color:var(--purple)}
+.callout-teal{background:var(--teal-bg);border-color:var(--teal)}
+.callout-amber{background:var(--amber-bg);border-color:var(--amber)}
+.callout-coral{background:var(--coral-bg);border-color:var(--coral)}
+.callout-blue{background:var(--blue-bg);border-color:var(--blue)}
+.callout strong{color:#fff}
+.callout code{font-family:'JetBrains Mono',monospace;font-size:11.5px;background:rgba(255,255,255,0.08);padding:1px 5px;border-radius:3px}
+
+.dialogue{margin:20px 0}
+.msg{display:flex;gap:10px;margin-bottom:12px;align-items:flex-start}
+.msg-avatar{width:30px;height:30px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:700;flex-shrink:0;margin-top:2px}
+.av-i{background:rgba(251,146,60,0.2);color:var(--coral)}
+.av-you{background:var(--purple-bg);color:var(--purple)}
+.msg-bubble{padding:10px 14px;border-radius:10px;font-size:13.5px;line-height:1.6;max-width:90%}
+.bubble-i{background:var(--bg3);border:1px solid var(--border);color:var(--text)}
+.bubble-you{background:var(--purple-bg);border:1px solid var(--purple-border);color:var(--text)}
+.msg-label{font-size:11px;color:var(--text3);margin-bottom:4px;font-weight:500}
+.thought{font-style:italic;font-size:12px;color:var(--text3);margin-left:40px;margin-bottom:12px;padding:6px 12px;border-left:2px solid var(--border2)}
+
+.code-card{background:var(--bg2);border:1px solid var(--border);border-radius:12px;overflow:hidden;margin:16px 0}
+.code-header{display:flex;align-items:center;justify-content:space-between;padding:10px 16px;border-bottom:1px solid var(--border);background:var(--bg3)}
+.code-fname{font-family:'JetBrains Mono',monospace;font-size:12px;color:var(--amber);font-weight:600}
+.code-meta{font-size:11px;color:var(--text3);display:flex;align-items:center;gap:10px}
+.code-tag{padding:2px 8px;border-radius:4px;font-size:10px;font-weight:600;letter-spacing:.3px}
+.tag-solid{background:rgba(74,222,128,0.12);color:var(--green);border:1px solid rgba(74,222,128,0.2)}
+.tag-pattern{background:var(--blue-bg);color:var(--blue);border:1px solid var(--blue-border)}
+pre{margin:0;padding:18px 20px;overflow-x:auto;font-family:'JetBrains Mono',monospace;font-size:12.5px;line-height:1.85;tab-size:4}
+.kw{color:var(--kw);font-weight:600}.ty{color:var(--ty)}.st{color:var(--st)}.cm{color:var(--cm);font-style:italic}.an{color:var(--an)}.mt{color:var(--mt)}.fd{color:#e6edf3}.nm{color:#f97316}
+
+.er-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:10px;margin:16px 0}
+.er-card{background:var(--bg2);border:1px solid var(--border);border-radius:8px;overflow:hidden}
+.er-head{padding:8px 12px;font-size:12px;font-weight:600;border-bottom:1px solid var(--border)}
+.er-head.purple{background:var(--purple-bg);color:var(--purple)}
+.er-head.teal{background:var(--teal-bg);color:var(--teal)}
+.er-head.amber{background:var(--amber-bg);color:var(--amber)}
+.er-head.coral{background:var(--coral-bg);color:var(--coral)}
+.er-head.blue{background:var(--blue-bg);color:var(--blue)}
+.er-row{padding:5px 12px;font-size:11.5px;color:var(--text2);border-bottom:1px solid rgba(255,255,255,0.04);font-family:'JetBrains Mono',monospace}
+.er-row:last-child{border-bottom:none}
+.er-pk{color:var(--amber)}
+.er-fk{color:var(--blue)}
+.er-rel{display:flex;align-items:center;justify-content:center;gap:8px;padding:10px;font-size:11.5px;color:var(--text2);text-align:center}
+.rel-line{flex:1;height:1px;background:var(--border2)}
+
+.solid-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin:16px 0}
+.solid-card{background:var(--bg2);border:1px solid var(--border);border-radius:8px;padding:14px}
+.solid-letter{font-size:22px;font-weight:700;color:var(--purple);margin-bottom:4px}
+.solid-name{font-size:12px;font-weight:600;color:#fff;margin-bottom:6px}
+.solid-desc{font-size:12px;color:var(--text2);line-height:1.5}
+.solid-where{margin-top:8px;font-size:11px;color:var(--teal);background:var(--teal-bg);border:1px solid var(--teal-border);padding:4px 8px;border-radius:4px;display:inline-block}
+
+.pattern-card{background:var(--bg2);border:1px solid var(--border);border-radius:10px;padding:16px 18px;margin-bottom:14px}
+.pattern-head{display:flex;align-items:center;gap:10px;margin-bottom:8px}
+.pattern-icon{width:32px;height:32px;border-radius:8px;background:var(--blue-bg);border:1px solid var(--blue-border);display:flex;align-items:center;justify-content:center;font-size:14px;font-weight:700;color:var(--blue)}
+.pattern-name{font-size:14px;font-weight:600;color:#fff}
+.pattern-why{font-size:13px;color:var(--text2);margin-bottom:8px}
+.pattern-where{font-size:12px;color:var(--amber);background:var(--amber-bg);border:1px solid var(--amber-border);padding:4px 10px;border-radius:4px;display:inline-block}
+
+.order-table{width:100%;border-collapse:collapse;font-size:13px;margin:16px 0}
+.order-table th{text-align:left;padding:8px 14px;font-size:11px;font-weight:600;color:var(--text3);text-transform:uppercase;letter-spacing:.5px;border-bottom:1px solid var(--border)}
+.order-table td{padding:10px 14px;border-bottom:1px solid rgba(255,255,255,0.04);color:var(--text2)}
+.order-table tr:last-child td{border-bottom:none}
+.order-table td:first-child{color:#fff;font-weight:500;font-family:'JetBrains Mono',monospace;font-size:12px}
+.order-num{display:inline-flex;align-items:center;justify-content:center;width:20px;height:20px;border-radius:50%;background:var(--purple-bg);border:1px solid var(--purple-border);font-size:10px;font-weight:700;color:var(--purple);margin-right:8px;flex-shrink:0}
+
+.tip-row{display:flex;gap:8px;margin-bottom:10px;font-size:13.5px}
+.tip-icon{flex-shrink:0;margin-top:3px;font-size:15px}
+.check{color:var(--green)}.cross{color:var(--red)}.star{color:var(--amber)}
+
+.progress-container{margin:20px 0}
+.progress-row{display:flex;align-items:center;gap:12px;margin-bottom:10px}
+.progress-label{width:110px;font-size:12px;font-weight:500;color:var(--text2);flex-shrink:0}
+.progress-bar{flex:1;height:6px;background:var(--bg3);border-radius:3px;overflow:hidden}
+.progress-fill{height:100%;border-radius:3px;transition:width .3s}
+.progress-time{width:50px;font-size:11px;color:var(--text3);text-align:right;flex-shrink:0}
+
+.algo-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:12px;margin:16px 0}
+.algo-card{background:var(--bg2);border:1px solid var(--border);border-radius:10px;padding:14px 16px}
+.algo-card.active{border-color:var(--teal-border);background:var(--teal-bg)}
+.algo-name{font-size:13px;font-weight:600;color:#fff;margin-bottom:6px}
+.algo-desc{font-size:12px;color:var(--text2);line-height:1.5;margin-bottom:8px}
+.algo-tag{font-size:10px;font-weight:600;padding:2px 8px;border-radius:4px;display:inline-block}
+.algo-tag.pick{background:var(--teal-bg);color:var(--teal);border:1px solid var(--teal-border)}
+.algo-tag.alt{background:var(--bg3);color:var(--text3);border:1px solid var(--border)}
+
+@media(max-width:600px){
+  .hero{padding:32px 20px}.hero h1{font-size:26px}.hero-grid{grid-template-columns:1fr 1fr}
+  .solid-grid{grid-template-columns:1fr}.section{padding:32px 16px}
+  pre{font-size:11px;padding:14px}.nav a{padding:10px 8px;font-size:11px}
+}
+</style>
+</head>
+<body>
+
+<nav class="nav">
+  <a href="#overview">Overview</a>
+  <a href="#problem">The Problem</a>
+  <a href="#phase1">Phase 1: Requirements</a>
+  <a href="#phase2">Phase 2: Design</a>
+  <a href="#phase3">Phase 3: Code</a>
+  <a href="#solid">SOLID</a>
+  <a href="#patterns">Patterns</a>
+  <a href="#tips">Tips</a>
+  <span class="nav-time">60 min total</span>
+</nav>
+
+<div class="hero">
+  <div class="hero-tag">SDE-1 LLD Interview Playbook</div>
+  <h1>Rate Limiter<br>Complete 60-Minute Guide</h1>
+  <p>One of the most asked LLD questions — because it's algorithm + design combined. Here's exactly how to think, talk, draw, and code it.</p>
+  <div class="hero-grid">
+    <div class="hero-stat"><div class="n">10m</div><div class="l">Requirements</div></div>
+    <div class="hero-stat"><div class="n">10m</div><div class="l">Design + Diagram</div></div>
+    <div class="hero-stat"><div class="n">35m</div><div class="l">Coding</div></div>
+    <div class="hero-stat"><div class="n">5m</div><div class="l">Review + Q&A</div></div>
+  </div>
+</div>
+
+<!-- ── PROBLEM DEPTH ── -->
+<div id="problem" class="section" style="padding-bottom:0">
+  <div class="section-header">
+    <div class="section-badge">★</div>
+    <h2>Understanding the problem in depth — first</h2>
+  </div>
+
+  <div class="callout callout-purple">
+    <strong>What is a Rate Limiter, really?</strong> It's a gatekeeper that sits in front of a resource (API, login endpoint, SMS service) and decides: "Has this client made too many requests recently? If yes, reject. If no, let it through and record this request."
+  </div>
+
+  <div class="callout callout-blue">
+    <strong>Why this question is popular for SDE-1:</strong> It tests two things at once — (1) can you design clean OOP classes, and (2) do you understand a real algorithm (token bucket / sliding window). Most candidates can do one but not both. Knowing both makes you stand out.
+  </div>
+
+  <p style="color:var(--text2);font-size:13px;margin:16px 0 8px">The 4 classic algorithms — know all 4 names, pick ONE to implement fully:</p>
+  <div class="algo-grid">
+    <div class="algo-card active">
+      <div class="algo-name">Token Bucket <span class="algo-tag pick">Pick this one</span></div>
+      <div class="algo-desc">Bucket holds tokens (capacity). Tokens refill at fixed rate. Each request consumes 1 token. No tokens = reject. Allows bursts up to capacity.</div>
+    </div>
+    <div class="algo-card">
+      <div class="algo-name">Fixed Window Counter <span class="algo-tag alt">Mention</span></div>
+      <div class="algo-desc">Count requests in a fixed time window (e.g. per minute). Reset counter when window ends. Simple but allows 2x burst at window boundaries.</div>
+    </div>
+    <div class="algo-card">
+      <div class="algo-name">Sliding Window Log <span class="algo-tag alt">Mention</span></div>
+      <div class="algo-desc">Store timestamp of every request. Count requests in last N seconds by removing old timestamps. Accurate but memory-heavy.</div>
+    </div>
+    <div class="algo-card">
+      <div class="algo-name">Leaky Bucket <span class="algo-tag alt">Mention</span></div>
+      <div class="algo-desc">Like token bucket but processes requests at a fixed output rate (queue-based). Smooths bursts instead of allowing them.</div>
+    </div>
+  </div>
+
+  <div class="callout callout-amber">
+    <strong>Why Token Bucket is the safest pick for interviews:</strong> It's the algorithm used by AWS, Stripe, and most real APIs. It's easy to explain with an analogy ("imagine a bucket that refills with tokens over time"), and the code is short — about 15 lines of core logic. This is what we'll build.
+  </div>
+</div>
+
+<hr class="div" style="margin-top:32px">
+
+<!-- ── SECTION 0: OVERVIEW ── -->
+<div id="overview" style="max-width:920px;margin:0 auto;padding:48px 24px 0">
+  <div class="section-header">
+    <div class="section-badge">0</div>
+    <h2>The Mental Model — what are they actually testing?</h2>
+  </div>
+  <div class="callout callout-purple">
+    <strong>Interviewer's secret checklist:</strong> Can you separate "the algorithm" from "the system around it"? Can you make the algorithm swappable? Do you know Strategy + Factory patterns? Can you handle concurrency (multiple threads hitting the limiter)? Can you talk through trade-offs of different algorithms?
+  </div>
+  <div class="progress-container">
+    <div class="progress-row"><div class="progress-label">Requirements</div><div class="progress-bar"><div class="progress-fill" style="width:17%;background:#a78bfa"></div></div><div class="progress-time">0–10 min</div></div>
+    <div class="progress-row"><div class="progress-label">Entities</div><div class="progress-bar"><div class="progress-fill" style="width:10%;background:#34d399"></div></div><div class="progress-time">10–16 min</div></div>
+    <div class="progress-row"><div class="progress-label">Diagram</div><div class="progress-bar"><div class="progress-fill" style="width:7%;background:#60a5fa"></div></div><div class="progress-time">16–20 min</div></div>
+    <div class="progress-row"><div class="progress-label">Coding</div><div class="progress-bar"><div class="progress-fill" style="width:58%;background:#fb923c"></div></div><div class="progress-time">20–55 min</div></div>
+    <div class="progress-row"><div class="progress-label">Review</div><div class="progress-bar"><div class="progress-fill" style="width:8%;background:#fbbf24"></div></div><div class="progress-time">55–60 min</div></div>
+  </div>
+</div>
+
+<hr class="div">
+
+<!-- ── PHASE 1: REQUIREMENTS ── -->
+<div id="phase1" class="section">
+  <div class="section-header">
+    <div class="section-badge">1</div>
+    <h2>Phase 1 — Gathering Requirements</h2>
+    <span class="time-tag time-green">0 – 10 min</span>
+  </div>
+
+  <div class="callout callout-teal">
+    <strong>Rate limiter has MORE hidden scope than parking lot.</strong> "Per user or per IP? In-memory or distributed? Which algorithm?" — these completely change your design. Asking questions here is not optional, it's critical.
+  </div>
+
+  <div class="dialogue">
+    <div class="msg"><div class="msg-avatar av-i">I</div><div><div class="msg-label">Interviewer</div><div class="msg-bubble bubble-i">"Design a Rate Limiter."</div></div></div>
+
+    <div class="msg"><div class="msg-avatar av-you">You</div><div><div class="msg-label">You</div><div class="msg-bubble bubble-you">"Sure! Let me ask a few clarifying questions to scope this properly."</div></div></div>
+
+    <div class="msg"><div class="msg-avatar av-you">You</div><div><div class="msg-label">You — Question 1 (What is being limited?)</div><div class="msg-bubble bubble-you">"What are we rate-limiting — requests per user, per API key, or per IP address? And is this for a single API endpoint or a general-purpose limiter usable across multiple endpoints?"</div></div></div>
+    <div class="thought">← Tells you the "key" you'll use in your map: clientId, IP, or API key. Also tells you if you need a generic, reusable design.</div>
+
+    <div class="msg"><div class="msg-avatar av-i">I</div><div><div class="msg-label">Interviewer</div><div class="msg-bubble bubble-i">"Per user, and it should be reusable for any API endpoint."</div></div></div>
+
+    <div class="msg"><div class="msg-avatar av-you">You</div><div><div class="msg-label">You — Question 2 (Algorithm / limits)</div><div class="msg-bubble bubble-you">"What's the limiting rule — e.g. 'X requests per Y seconds'? And should we allow short bursts of traffic, or strictly enforce a steady rate?"</div></div></div>
+    <div class="thought">← "Allow bursts" → Token Bucket. "Strict steady rate" → Leaky Bucket / Sliding Window. This single answer decides your algorithm.</div>
+
+    <div class="msg"><div class="msg-avatar av-i">I</div><div><div class="msg-label">Interviewer</div><div class="msg-bubble bubble-i">"Let's say 5 requests per second per user, bursts are fine."</div></div></div>
+
+    <div class="msg"><div class="msg-avatar av-you">You</div><div><div class="msg-label">You — Question 3 (Scale / storage)</div><div class="msg-bubble bubble-you">"Is this running on a single server (in-memory state is fine), or distributed across multiple servers (would need shared storage like Redis)? I'll assume single-server in-memory for now and mention how to extend it."</div></div></div>
+    <div class="thought">← Shows you understand real-world scaling without over-engineering the core answer. "Assume X, but here's how to extend" is a senior-level move.</div>
+
+    <div class="msg"><div class="msg-avatar av-i">I</div><div><div class="msg-label">Interviewer</div><div class="msg-bubble bubble-i">"Single server is fine for now."</div></div></div>
+
+    <div class="msg"><div class="msg-avatar av-you">You</div><div><div class="msg-label">You — Question 4 (Rejection behaviour)</div><div class="msg-bubble bubble-you">"When a request exceeds the limit, do we just return true/false (allow/deny), or do we need to return additional info like retry-after time?"</div></div></div>
+    <div class="thought">← Decides your method signature: boolean allowRequest() vs a richer RateLimitResult object.</div>
+
+    <div class="msg"><div class="msg-avatar av-i">I</div><div><div class="msg-label">Interviewer</div><div class="msg-bubble bubble-i">"Simple boolean is fine."</div></div></div>
+
+    <div class="msg"><div class="msg-avatar av-you">You</div><div><div class="msg-label">You — Summarise</div><div class="msg-bubble bubble-you">"Got it. So: a reusable, per-user rate limiter using Token Bucket algorithm — 5 tokens capacity, refilling at 5 tokens/sec. Single server, in-memory. Returns true/false on isAllowed(userId). I'll design it so the algorithm is pluggable — we could swap in Sliding Window later without changing the rest of the system. Sound good?"</div></div></div>
+    <div class="thought">← The phrase "design it so the algorithm is pluggable" is a HUGE signal — it tells the interviewer you're already thinking Strategy Pattern before writing a line of code.</div>
+
+    <div class="msg"><div class="msg-avatar av-i">I</div><div><div class="msg-label">Interviewer</div><div class="msg-bubble bubble-i">"Perfect, go ahead."</div></div></div>
+  </div>
+
+  <div class="callout callout-amber">
+    <strong>The 4 questions to always ask for Rate Limiter:</strong><br>
+    1. <strong>What's the key?</strong> (user / IP / API key) → becomes your map's key<br>
+    2. <strong>Bursts allowed?</strong> → decides algorithm (Token Bucket vs Sliding Window/Leaky Bucket)<br>
+    3. <strong>Single server or distributed?</strong> → decides storage (HashMap vs Redis) — answer "single server, but pluggable"<br>
+    4. <strong>What's returned on reject?</strong> → boolean vs detailed result object
+  </div>
+</div>
+
+<hr class="div">
+
+<!-- ── PHASE 2: DESIGN ── -->
+<div id="phase2" class="section">
+  <div class="section-header">
+    <div class="section-badge">2</div>
+    <h2>Phase 2 — Identify Entities & Quick Diagram</h2>
+    <span class="time-tag time-blue">10 – 20 min</span>
+  </div>
+
+  <div class="callout callout-blue">
+    <strong>Rate limiter has FEWER entities than typical LLD — but more interfaces.</strong> Don't think "what nouns exist in the real world" (there's no physical object here). Instead think "what VARIES, and what STAYS THE SAME". The thing that varies (the algorithm) becomes an interface.
+  </div>
+
+  <div class="timeline">
+    <div class="tl-item">
+      <div class="tl-dot"><div class="tl-dot-inner"></div></div>
+      <div class="tl-head">Step 1 — Identify the "varies vs fixed" split (2 min, say out loud)</div>
+      <div class="tl-body">Say: <em>"The core thing that can vary is the algorithm — token bucket today, sliding window tomorrow. So I'll define a <code>RateLimiterAlgorithm</code> interface with one method: <code>allowRequest()</code>. Everything else — the manager that maps users to their bucket — stays fixed."</em></div>
+    </div>
+    <div class="tl-item">
+      <div class="tl-dot"><div class="tl-dot-inner"></div></div>
+      <div class="tl-head">Step 2 — List the classes (2 min)</div>
+      <div class="tl-body">
+        — <code>RateLimiterAlgorithm</code> (interface) — the Strategy<br>
+        — <code>TokenBucketRateLimiter</code> — implements the interface<br>
+        — <code>RateLimiterConfig</code> — holds capacity + refill rate (just data)<br>
+        — <code>RateLimiter</code> — the main class, holds a Map&lt;clientId, Algorithm&gt;<br>
+        — <code>RateLimiterFactory</code> — creates the right algorithm based on config
+      </div>
+    </div>
+    <div class="tl-item">
+      <div class="tl-dot"><div class="tl-dot-inner"></div></div>
+      <div class="tl-head">Step 3 — Quick diagram — fastest possible (3 min)</div>
+      <div class="tl-body">Don't draw boxes-with-fields like a normal ER diagram. For algorithm-heavy LLDs, draw a tiny <strong>component diagram</strong>: 3 boxes max, showing the flow <code>Client → RateLimiter → Algorithm (per client)</code>. Say: "I'll keep this very lightweight — just the call flow."</div>
+    </div>
+  </div>
+
+  <p style="color:var(--text2);font-size:13px;margin:16px 0 12px">Quick diagram — draw this in under 3 minutes. This IS your "ER diagram" for this problem:</p>
+
+  <div class="er-grid">
+    <div class="er-card">
+      <div class="er-head purple">RateLimiter (main)</div>
+      <div class="er-row">limiters: Map&lt;String,</div>
+      <div class="er-row">&nbsp;&nbsp;RateLimiterAlgorithm&gt;</div>
+      <div class="er-row">isAllowed(clientId)</div>
+    </div>
+    <div class="er-card">
+      <div class="er-head blue">RateLimiterAlgorithm</div>
+      <div class="er-row"><span class="er-pk">«interface»</span></div>
+      <div class="er-row">allowRequest(): bool</div>
+    </div>
+    <div class="er-card">
+      <div class="er-head teal">TokenBucketRateLimiter</div>
+      <div class="er-row"><span class="er-pk">capacity, tokens</span></div>
+      <div class="er-row">refillRate, lastRefill</div>
+      <div class="er-row">implements ↑</div>
+    </div>
+    <div class="er-card">
+      <div class="er-head amber">RateLimiterConfig</div>
+      <div class="er-row"><span class="er-pk">capacity: int</span></div>
+      <div class="er-row">refillRate: int</div>
+      <div class="er-row">(pure data holder)</div>
+    </div>
+    <div class="er-card">
+      <div class="er-head coral">RateLimiterFactory</div>
+      <div class="er-row">createLimiter(</div>
+      <div class="er-row">&nbsp;&nbsp;type, config)</div>
+      <div class="er-row">→ Algorithm</div>
+    </div>
+  </div>
+
+  <div style="background:var(--bg2);border:1px solid var(--border);border-radius:10px;padding:16px 18px;margin:16px 0">
+    <div style="font-size:13px;font-weight:600;color:#fff;margin-bottom:12px">Relationships / flow to draw as arrows:</div>
+    <div class="er-rel"><span style="color:var(--purple)">Client request</span><div class="rel-line"></div><span style="color:var(--text3);font-size:11px">calls</span><div class="rel-line"></div><span style="color:var(--purple)">RateLimiter.isAllowed(clientId)</span></div>
+    <div class="er-rel"><span style="color:var(--purple)">RateLimiter</span><div class="rel-line"></div><span style="color:var(--text3);font-size:11px">looks up / creates</span><div class="rel-line"></div><span style="color:var(--teal)">per-client TokenBucket</span></div>
+    <div class="er-rel"><span style="color:var(--teal)">TokenBucketRateLimiter</span><div class="rel-line"></div><span style="color:var(--text3);font-size:11px">implements</span><div class="rel-line"></div><span style="color:var(--blue)">RateLimiterAlgorithm</span></div>
+    <div class="er-rel"><span style="color:var(--coral)">RateLimiterFactory</span><div class="rel-line"></div><span style="color:var(--text3);font-size:11px">creates instance using</span><div class="rel-line"></div><span style="color:var(--amber)">RateLimiterConfig</span></div>
+  </div>
+
+  <div class="callout callout-teal">
+    <strong>What to say while drawing:</strong> "Unlike entity-heavy systems, a rate limiter is mostly about ONE interface and ONE manager class. I'll draw the interface in the center, the implementation below it, and the manager above it — that's the whole picture."
+  </div>
+
+  <div class="callout callout-amber">
+    <strong>Class writing order — say this before coding:</strong> "I'll start with the <code>RateLimiterAlgorithm</code> interface since everything else depends on it. Then implement Token Bucket. Then the config and factory. Then the main RateLimiter manager class last — it ties everything together."
+  </div>
+
+  <table class="order-table">
+    <thead><tr><th>Order</th><th>Class</th><th>Why this order</th></tr></thead>
+    <tbody>
+      <tr><td><span class="order-num">1</span>RateLimiterAlgorithm</td><td style="color:var(--text2)">Interface — 1 method</td><td style="color:var(--text2)">Everything depends on this contract. Define it first.</td></tr>
+      <tr><td><span class="order-num">2</span>RateLimiterConfig</td><td style="color:var(--text2)">Plain data class</td><td style="color:var(--text2)">No dependencies. Quick to write, used by next classes.</td></tr>
+      <tr><td><span class="order-num">3</span>TokenBucketRateLimiter</td><td style="color:var(--text2)">Implements algorithm</td><td style="color:var(--text2)">Core logic — most important class. Write & test mentally here.</td></tr>
+      <tr><td><span class="order-num">4</span>RateLimiterFactory</td><td style="color:var(--text2)">Creates algorithm instances</td><td style="color:var(--text2)">Needs steps 1–3 to exist first.</td></tr>
+      <tr><td><span class="order-num">5</span>RateLimiter</td><td style="color:var(--text2)">Main manager class</td><td style="color:var(--text2)">Uses factory + algorithm. Orchestrator — write last.</td></tr>
+      <tr><td><span class="order-num">6</span>Main</td><td style="color:var(--text2)">Demo / test</td><td style="color:var(--text2)">Simulate burst + throttling to prove correctness.</td></tr>
+    </tbody>
+  </table>
+</div>
+
+<hr class="div">
+
+<!-- ── PHASE 3: CODE ── -->
+<div id="phase3" class="section">
+  <div class="section-header">
+    <div class="section-badge">3</div>
+    <h2>Phase 3 — The Complete Code</h2>
+    <span class="time-tag time-coral">20 – 55 min</span>
+  </div>
+
+  <div class="callout callout-coral">
+    <strong>Say this before typing:</strong> "I'll start with the algorithm interface — this is the heart of the Strategy pattern. Everything else plugs into it."
+  </div>
+
+  <!-- INTERFACE -->
+  <div class="code-card">
+    <div class="code-header"><span class="code-fname">RateLimiterAlgorithm.java</span><div class="code-meta"><span class="code-tag tag-pattern">Strategy Pattern — the contract</span><span class="code-tag tag-solid">ISP + DIP</span></div></div>
+    <pre><span class="cm">// ── Design Pattern: STRATEGY (this interface IS the strategy contract) ──</span>
+<span class="cm">// Any algorithm — Token Bucket, Sliding Window, Leaky Bucket — implements this.</span>
+<span class="cm">// ── SOLID: Interface Segregation ──────────────────────────────────────────</span>
+<span class="cm">// Just ONE method. No implementation is forced to support things it doesn't need.</span>
+<span class="cm">// ── SOLID: Dependency Inversion ───────────────────────────────────────────</span>
+<span class="cm">// RateLimiter (high-level) depends on THIS abstraction, not on TokenBucket directly.</span>
+
+<span class="kw">public interface</span> <span class="ty">RateLimiterAlgorithm</span> {
+    <span class="cm">// Returns true if the request is allowed right now, false if rate-limited</span>
+    <span class="kw">boolean</span> <span class="mt">allowRequest</span>();
+}</pre>
+  </div>
+
+  <!-- CONFIG -->
+  <div class="code-card">
+    <div class="code-header"><span class="code-fname">RateLimiterConfig.java</span><div class="code-meta"><span class="code-tag tag-solid">SRP — pure data holder</span></div></div>
+    <pre><span class="cm">// ── SOLID: Single Responsibility ──────────────────────────────────────────</span>
+<span class="cm">// Holds configuration ONLY. No logic. Decouples "what the limits are"</span>
+<span class="cm">// from "how the limiting algorithm works".</span>
+<span class="cm">// Using a builder-less simple class here for brevity — in production,</span>
+<span class="cm">// you'd add a Builder pattern if there were many optional fields.</span>
+
+<span class="kw">public class</span> <span class="ty">RateLimiterConfig</span> {
+    <span class="kw">private final long</span> capacity;          <span class="cm">// max tokens (burst size)</span>
+    <span class="kw">private final long</span> refillRatePerSec;  <span class="cm">// tokens added per second</span>
+
+    <span class="kw">public</span> <span class="mt">RateLimiterConfig</span>(<span class="kw">long</span> capacity, <span class="kw">long</span> refillRatePerSec) {
+        <span class="kw">this</span>.capacity         = capacity;
+        <span class="kw">this</span>.refillRatePerSec = refillRatePerSec;
+    }
+
+    <span class="kw">public long</span> <span class="mt">getCapacity</span>()         { <span class="kw">return</span> capacity; }
+    <span class="kw">public long</span> <span class="mt">getRefillRatePerSec</span>() { <span class="kw">return</span> refillRatePerSec; }
+}</pre>
+  </div>
+
+  <!-- TOKEN BUCKET -->
+  <div class="code-card">
+    <div class="code-header"><span class="code-fname">TokenBucketRateLimiter.java</span><div class="code-meta"><span class="code-tag tag-pattern">Strategy — concrete implementation</span><span class="code-tag tag-solid">SRP + OCP</span></div></div>
+    <pre><span class="cm">// ── SOLID: Single Responsibility ──────────────────────────────────────────</span>
+<span class="cm">// This class does ONE thing: implement the token-bucket algorithm for ONE client.</span>
+<span class="cm">// ── SOLID: Open/Closed ────────────────────────────────────────────────────</span>
+<span class="cm">// To add SlidingWindowRateLimiter later — new class, implements same interface.</span>
+<span class="cm">// Zero changes needed here or in RateLimiter.</span>
+<span class="cm">//</span>
+<span class="cm">// ── THE ALGORITHM (explain this out loud while writing) ───────────────────</span>
+<span class="cm">// Think of a bucket that holds up to `capacity` tokens.</span>
+<span class="cm">// Tokens refill continuously at `refillRatePerSec` tokens/second.</span>
+<span class="cm">// Each request consumes 1 token. If bucket is empty → reject.</span>
+<span class="cm">// "Lazy refill": instead of a background thread adding tokens every tick,</span>
+<span class="cm">// we calculate elapsed time on EACH request and refill accordingly.</span>
+<span class="cm">// This avoids needing a scheduler/thread — much simpler & interview-friendly.</span>
+
+<span class="kw">public class</span> <span class="ty">TokenBucketRateLimiter</span> <span class="kw">implements</span> <span class="ty">RateLimiterAlgorithm</span> {
+
+    <span class="kw">private final long</span> capacity;
+    <span class="kw">private final long</span> refillRatePerSec;
+    <span class="kw">private double</span> currentTokens;            <span class="cm">// double — allows fractional refills</span>
+    <span class="kw">private long</span> lastRefillTimestamp;        <span class="cm">// epoch millis of last refill calc</span>
+
+    <span class="kw">public</span> <span class="mt">TokenBucketRateLimiter</span>(<span class="ty">RateLimiterConfig</span> config) {
+        <span class="kw">this</span>.capacity         = config.getCapacity();
+        <span class="kw">this</span>.refillRatePerSec = config.getRefillRatePerSec();
+        <span class="kw">this</span>.currentTokens   = capacity;        <span class="cm">// start full — generous to new clients</span>
+        <span class="kw">this</span>.lastRefillTimestamp = <span class="ty">System</span>.currentTimeMillis();
+    }
+
+    <span class="cm">// 'synchronized' — multiple threads could call this for the same client</span>
+    <span class="cm">// at the same time (e.g. parallel requests). Must be thread-safe.</span>
+    <span class="an">@Override</span>
+    <span class="kw">public synchronized boolean</span> <span class="mt">allowRequest</span>() {
+        refill();                              <span class="cm">// step 1: top up tokens based on elapsed time</span>
+
+        <span class="kw">if</span> (currentTokens &gt;= <span class="nm">1</span>) {           <span class="cm">// step 2: do we have a token to spend?</span>
+            currentTokens -= <span class="nm">1</span>;                <span class="cm">// step 3: consume it</span>
+            <span class="kw">return true</span>;
+        }
+        <span class="kw">return false</span>;                       <span class="cm">// bucket empty → reject</span>
+    }
+
+    <span class="cm">// Adds tokens proportional to elapsed time since last refill.</span>
+    <span class="cm">// Capped at `capacity` — bucket can't overflow.</span>
+    <span class="kw">private void</span> <span class="mt">refill</span>() {
+        <span class="kw">long</span> now = <span class="ty">System</span>.currentTimeMillis();
+        <span class="kw">double</span> elapsedSeconds = (now - lastRefillTimestamp) / <span class="nm">1000.0</span>;
+
+        <span class="kw">double</span> tokensToAdd = elapsedSeconds * refillRatePerSec;
+        <span class="kw">if</span> (tokensToAdd &gt; <span class="nm">0</span>) {
+            currentTokens = <span class="ty">Math</span>.min(capacity, currentTokens + tokensToAdd);
+            lastRefillTimestamp = now;
+        }
+    }
+}</pre>
+  </div>
+
+  <!-- FACTORY -->
+  <div class="code-card">
+    <div class="code-header"><span class="code-fname">RateLimiterType.java + RateLimiterFactory.java</span><div class="code-meta"><span class="code-tag tag-pattern">Factory Pattern</span><span class="code-tag tag-solid">OCP</span></div></div>
+    <pre><span class="cm">// ── Design Pattern: FACTORY ───────────────────────────────────────────────</span>
+<span class="cm">// Caller says WHAT algorithm they want (an enum), not HOW to build it.</span>
+<span class="cm">// ── SOLID: Open/Closed ────────────────────────────────────────────────────</span>
+<span class="cm">// Adding SlidingWindow: add enum value + one case. RateLimiter class untouched.</span>
+
+<span class="kw">public enum</span> <span class="ty">RateLimiterType</span> {
+    TOKEN_BUCKET,
+    SLIDING_WINDOW   <span class="cm">// not implemented here, but enum shows extensibility</span>
+}
+
+<span class="kw">public class</span> <span class="ty">RateLimiterFactory</span> {
+    <span class="kw">public static</span> <span class="ty">RateLimiterAlgorithm</span> <span class="mt">create</span>(<span class="ty">RateLimiterType</span> type, <span class="ty">RateLimiterConfig</span> config) {
+        <span class="kw">switch</span> (type) {
+            <span class="kw">case</span> TOKEN_BUCKET:
+                <span class="kw">return new</span> <span class="ty">TokenBucketRateLimiter</span>(config);
+            <span class="cm">// case SLIDING_WINDOW: return new SlidingWindowRateLimiter(config);</span>
+            <span class="kw">default</span>:
+                <span class="kw">throw new</span> <span class="ty">IllegalArgumentException</span>(<span class="st">"Unsupported type: "</span> + type);
+        }
+    }
+}</pre>
+  </div>
+
+  <!-- MAIN RATE LIMITER -->
+  <div class="code-card">
+    <div class="code-header"><span class="code-fname">RateLimiter.java</span><div class="code-meta"><span class="code-tag tag-pattern">Singleton + Factory usage</span><span class="code-tag tag-solid">SRP + DIP</span></div></div>
+    <pre><span class="kw">import</span> java.util.*;
+<span class="kw">import</span> java.util.concurrent.*;
+
+<span class="cm">// ── Design Pattern: SINGLETON ─────────────────────────────────────────────</span>
+<span class="cm">// Like ParkingLot, there's ONE global rate limiter registry per application.</span>
+<span class="cm">// ── SOLID: Single Responsibility ──────────────────────────────────────────</span>
+<span class="cm">// This class does ONE thing: map a clientId to ITS OWN algorithm instance,</span>
+<span class="cm">// and delegate the actual decision to that instance.</span>
+<span class="cm">// ── SOLID: Dependency Inversion ───────────────────────────────────────────</span>
+<span class="cm">// Depends on RateLimiterAlgorithm (interface) — doesn't know it's TokenBucket.</span>
+
+<span class="kw">public class</span> <span class="ty">RateLimiter</span> {
+
+    <span class="cm">// ── Singleton: standard pattern, same as ParkingLot ──────────────</span>
+    <span class="kw">private static volatile</span> <span class="ty">RateLimiter</span> instance;
+
+    <span class="kw">private final</span> <span class="ty">RateLimiterType</span> type;
+    <span class="kw">private final</span> <span class="ty">RateLimiterConfig</span> config;
+
+    <span class="cm">// ConcurrentHashMap — multiple threads create/read entries for</span>
+    <span class="cm">// DIFFERENT clients simultaneously. Must be thread-safe at the map level too.</span>
+    <span class="kw">private final</span> <span class="ty">Map</span>&lt;<span class="ty">String</span>, <span class="ty">RateLimiterAlgorithm</span>&gt; clientLimiters;
+
+    <span class="kw">private</span> <span class="mt">RateLimiter</span>(<span class="ty">RateLimiterType</span> type, <span class="ty">RateLimiterConfig</span> config) {
+        <span class="kw">this</span>.type   = type;
+        <span class="kw">this</span>.config = config;
+        <span class="kw">this</span>.clientLimiters = <span class="kw">new</span> <span class="ty">ConcurrentHashMap</span>&lt;&gt;();
+    }
+
+    <span class="kw">public static</span> <span class="ty">RateLimiter</span> <span class="mt">getInstance</span>(<span class="ty">RateLimiterType</span> type, <span class="ty">RateLimiterConfig</span> config) {
+        <span class="kw">if</span> (instance == <span class="kw">null</span>) {
+            <span class="kw">synchronized</span> (<span class="ty">RateLimiter</span>.<span class="kw">class</span>) {
+                <span class="kw">if</span> (instance == <span class="kw">null</span>) {
+                    instance = <span class="kw">new</span> <span class="ty">RateLimiter</span>(type, config);
+                }
+            }
+        }
+        <span class="kw">return</span> instance;
+    }
+
+    <span class="cm">// ── THE MAIN METHOD ─────────────────────────────────────────────</span>
+    <span class="cm">// 1. Find or create a per-client algorithm instance (lazy creation)</span>
+    <span class="cm">// 2. Delegate the decision to it</span>
+    <span class="cm">// computeIfAbsent = atomic "get or create" — avoids race conditions</span>
+    <span class="cm">// where two threads both create a limiter for a NEW client.</span>
+    <span class="kw">public boolean</span> <span class="mt">isAllowed</span>(<span class="ty">String</span> clientId) {
+        <span class="ty">RateLimiterAlgorithm</span> limiter = clientLimiters.computeIfAbsent(
+            clientId,
+            id -&gt; <span class="ty">RateLimiterFactory</span>.create(type, config)
+        );
+        <span class="kw">return</span> limiter.allowRequest();
+    }
+}</pre>
+  </div>
+
+  <!-- MAIN DEMO -->
+  <div class="code-card">
+    <div class="code-header"><span class="code-fname">Main.java</span><div class="code-meta"><span class="code-tag tag-solid">Always demo — prove burst + throttle</span></div></div>
+    <pre><span class="kw">public class</span> <span class="ty">Main</span> {
+    <span class="kw">public static void</span> <span class="mt">main</span>(<span class="ty">String</span>[] args) <span class="kw">throws</span> <span class="ty">InterruptedException</span> {
+
+        <span class="cm">// 5 requests capacity, refilling at 5 tokens/sec → "5 req/sec, bursts up to 5"</span>
+        <span class="ty">RateLimiterConfig</span> config = <span class="kw">new</span> <span class="ty">RateLimiterConfig</span>(<span class="nm">5</span>, <span class="nm">5</span>);
+        <span class="ty">RateLimiter</span> limiter = <span class="ty">RateLimiter</span>.getInstance(<span class="ty">RateLimiterType</span>.TOKEN_BUCKET, config);
+
+        <span class="ty">String</span> user = <span class="st">"user-123"</span>;
+
+        <span class="cm">// Burst of 7 requests instantly — first 5 should pass, last 2 rejected</span>
+        <span class="kw">for</span> (<span class="kw">int</span> i = <span class="nm">1</span>; i &lt;= <span class="nm">7</span>; i++) {
+            <span class="kw">boolean</span> allowed = limiter.isAllowed(user);
+            <span class="ty">System</span>.out.printf(<span class="st">"Request %d → %s%n"</span>, i, allowed ? <span class="st">"ALLOWED"</span> : <span class="st">"REJECTED"</span>);
+        }
+
+        <span class="ty">System</span>.out.println(<span class="st">"\nWaiting 1 second for refill...\n"</span>);
+        <span class="ty">Thread</span>.sleep(<span class="nm">1000</span>);
+
+        <span class="cm">// After 1 sec, ~5 tokens refilled → next requests should pass again</span>
+        <span class="kw">for</span> (<span class="kw">int</span> i = <span class="nm">8</span>; i &lt;= <span class="nm">10</span>; i++) {
+            <span class="kw">boolean</span> allowed = limiter.isAllowed(user);
+            <span class="ty">System</span>.out.printf(<span class="st">"Request %d → %s%n"</span>, i, allowed ? <span class="st">"ALLOWED"</span> : <span class="st">"REJECTED"</span>);
+        }
+
+        <span class="cm">// Different user — gets its OWN bucket, unaffected by user-123's usage</span>
+        <span class="ty">System</span>.out.println(<span class="st">"\nDifferent user:"</span>);
+        <span class="ty">System</span>.out.println(<span class="st">"Request 1 → "</span> + (limiter.isAllowed(<span class="st">"user-456"</span>) ? <span class="st">"ALLOWED"</span> : <span class="st">"REJECTED"</span>));
+    }
+}
+
+<span class="cm">/* Expected output:
+Request 1 → ALLOWED
+Request 2 → ALLOWED
+Request 3 → ALLOWED
+Request 4 → ALLOWED
+Request 5 → ALLOWED
+Request 6 → REJECTED   (bucket empty)
+Request 7 → REJECTED   (bucket empty)
+
+Waiting 1 second for refill...
+
+Request 8  → ALLOWED   (tokens refilled)
+Request 9  → ALLOWED
+Request 10 → ALLOWED
+
+Different user:
+Request 1 → ALLOWED    (own independent bucket)
+*/</span></pre>
+  </div>
+</div>
+
+<hr class="div">
+
+<!-- ── SOLID PRINCIPLES ── -->
+<div id="solid" class="section">
+  <div class="section-header">
+    <div class="section-badge" style="background:var(--teal-bg);border-color:var(--teal-border);color:var(--teal)">S</div>
+    <h2>SOLID Principles — where exactly in the code</h2>
+  </div>
+
+  <div class="callout callout-teal">
+    <strong>How to bring this up:</strong> Rate Limiter is actually the BEST problem to demonstrate SOLID because the interface-driven design makes every principle visible. Call them out as you write each class.
+  </div>
+
+  <div class="solid-grid">
+    <div class="solid-card">
+      <div class="solid-letter">S</div>
+      <div class="solid-name">Single Responsibility</div>
+      <div class="solid-desc">Every class has exactly one reason to change.</div>
+      <div class="solid-where">TokenBucketRateLimiter — only the algorithm math. RateLimiterConfig — only holds numbers. RateLimiter — only routes clientId to its bucket.</div>
+    </div>
+    <div class="solid-card">
+      <div class="solid-letter">O</div>
+      <div class="solid-name">Open / Closed</div>
+      <div class="solid-desc">Open for extension, closed for modification.</div>
+      <div class="solid-where">Add SlidingWindowRateLimiter → new class implementing RateLimiterAlgorithm + one factory case. Zero changes to RateLimiter or existing algorithms.</div>
+    </div>
+    <div class="solid-card">
+      <div class="solid-letter">L</div>
+      <div class="solid-name">Liskov Substitution</div>
+      <div class="solid-desc">Any implementation can replace another without breaking callers.</div>
+      <div class="solid-where">RateLimiter calls limiter.allowRequest() — works identically whether limiter is TokenBucketRateLimiter or any future SlidingWindowRateLimiter.</div>
+    </div>
+    <div class="solid-card">
+      <div class="solid-letter">I</div>
+      <div class="solid-name">Interface Segregation</div>
+      <div class="solid-desc">Don't force implementations to support unused methods.</div>
+      <div class="solid-where">RateLimiterAlgorithm has exactly ONE method — allowRequest(). No bloated interface forcing every algorithm to implement getRemainingTokens(), reset(), etc. unless truly needed.</div>
+    </div>
+    <div class="solid-card" style="grid-column: 1/-1">
+      <div class="solid-letter">D</div>
+      <div class="solid-name">Dependency Inversion</div>
+      <div class="solid-desc">High-level modules depend on abstractions, not concrete classes.</div>
+      <div class="solid-where">RateLimiter (high-level) holds Map&lt;String, RateLimiterAlgorithm&gt; — the abstraction — never references TokenBucketRateLimiter directly. The Factory is the only place that knows concrete types. This is THE textbook DIP example.</div>
+    </div>
+  </div>
+</div>
+
+<hr class="div">
+
+<!-- ── DESIGN PATTERNS ── -->
+<div id="patterns" class="section">
+  <div class="section-header">
+    <div class="section-badge" style="background:var(--blue-bg);border-color:var(--blue-border);color:var(--blue)">P</div>
+    <h2>Design Patterns — what's used and why</h2>
+  </div>
+
+  <div class="pattern-card">
+    <div class="pattern-head">
+      <div class="pattern-icon">1</div>
+      <div class="pattern-name">Strategy Pattern (the core pattern of this problem)</div>
+    </div>
+    <div class="pattern-why">The rate-limiting <em>algorithm</em> is a behavior that can vary independently of the rest of the system. By defining <code>RateLimiterAlgorithm</code> as an interface, we can swap Token Bucket for Sliding Window at runtime, per client, or per endpoint — without touching RateLimiter's code at all. This is the single most important design decision in this problem, and naming it explicitly is what separates SDE-1 from SDE-2 answers.</div>
+    <div class="pattern-where">Used in: RateLimiterAlgorithm interface + TokenBucketRateLimiter implementation</div>
+  </div>
+
+  <div class="pattern-card">
+    <div class="pattern-head">
+      <div class="pattern-icon">2</div>
+      <div class="pattern-name">Factory Pattern</div>
+    </div>
+    <div class="pattern-why">RateLimiter shouldn't know HOW to construct a TokenBucketRateLimiter (what constructor args it needs, etc). The Factory encapsulates that knowledge. If TokenBucketRateLimiter's constructor changes, only the factory changes — RateLimiter is untouched.</div>
+    <div class="pattern-where">Used in: RateLimiterFactory.create()</div>
+  </div>
+
+  <div class="pattern-card">
+    <div class="pattern-head">
+      <div class="pattern-icon">3</div>
+      <div class="pattern-name">Singleton Pattern</div>
+    </div>
+    <div class="pattern-why">There's one global rate-limiting service per application — similar reasoning to ParkingLot. All requests across the app go through the same registry of per-client buckets. Double-checked locking with <code>volatile</code> makes it thread-safe without locking on every read.</div>
+    <div class="pattern-where">Used in: RateLimiter.getInstance()</div>
+  </div>
+
+  <div class="pattern-card">
+    <div class="pattern-head">
+      <div class="pattern-icon">4</div>
+      <div class="pattern-name">Decorator Pattern (extension — mention if asked about logging/metrics)</div>
+    </div>
+    <div class="pattern-why">If the interviewer asks "how would you add logging or metrics without modifying TokenBucketRateLimiter?" — say: "I'd wrap it in a <code>LoggingRateLimiterDecorator implements RateLimiterAlgorithm</code> that logs before/after delegating to the real algorithm. This is the Decorator pattern — adding behavior without modifying the original class (OCP again)."</div>
+    <div class="pattern-where">Extension point: LoggingRateLimiterDecorator wraps RateLimiterAlgorithm</div>
+  </div>
+
+  <div class="code-card">
+    <div class="code-header"><span class="code-fname">LoggingRateLimiterDecorator.java — bonus answer</span><div class="code-meta"><span class="code-tag tag-pattern">Decorator Pattern</span></div></div>
+    <pre><span class="cm">// ── Design Pattern: DECORATOR ─────────────────────────────────────────────</span>
+<span class="cm">// Wraps any RateLimiterAlgorithm and adds logging — without modifying it.</span>
+<span class="cm">// Implements the SAME interface, so RateLimiter doesn't know the difference.</span>
+
+<span class="kw">public class</span> <span class="ty">LoggingRateLimiterDecorator</span> <span class="kw">implements</span> <span class="ty">RateLimiterAlgorithm</span> {
+    <span class="kw">private final</span> <span class="ty">RateLimiterAlgorithm</span> delegate;
+    <span class="kw">private final</span> <span class="ty">String</span> clientId;
+
+    <span class="kw">public</span> <span class="mt">LoggingRateLimiterDecorator</span>(<span class="ty">RateLimiterAlgorithm</span> delegate, <span class="ty">String</span> clientId) {
+        <span class="kw">this</span>.delegate = delegate;
+        <span class="kw">this</span>.clientId = clientId;
+    }
+
+    <span class="an">@Override</span>
+    <span class="kw">public boolean</span> <span class="mt">allowRequest</span>() {
+        <span class="kw">boolean</span> result = delegate.allowRequest();
+        <span class="ty">System</span>.out.printf(<span class="st">"[METRIC] client=%s allowed=%b%n"</span>, clientId, result);
+        <span class="kw">return</span> result;
+    }
+}</pre>
+  </div>
+</div>
+
+<hr class="div">
+
+<!-- ── INTERVIEW TIPS ── -->
+<div id="tips" class="section">
+  <div class="section-header">
+    <div class="section-badge" style="background:var(--amber-bg);border-color:var(--amber-border);color:var(--amber)">!</div>
+    <h2>Interview Tips — what separates good from great</h2>
+  </div>
+
+  <div style="display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-bottom:24px">
+    <div>
+      <div style="font-size:13px;font-weight:600;color:var(--green);margin-bottom:10px">Things to DO</div>
+      <div class="tip-row"><span class="tip-icon check">✓</span><span style="color:var(--text2);font-size:13.5px">Name the algorithm out loud before coding (Token Bucket)</span></div>
+      <div class="tip-row"><span class="tip-icon check">✓</span><span style="color:var(--text2);font-size:13.5px">Define the interface FIRST — show Strategy thinking upfront</span></div>
+      <div class="tip-row"><span class="tip-icon check">✓</span><span style="color:var(--text2);font-size:13.5px">Use <code>synchronized</code> + explain WHY (concurrent requests)</span></div>
+      <div class="tip-row"><span class="tip-icon check">✓</span><span style="color:var(--text2);font-size:13.5px">Use lazy "refill on read" — avoids needing a background thread</span></div>
+      <div class="tip-row"><span class="tip-icon check">✓</span><span style="color:var(--text2);font-size:13.5px">Demo with a burst test — prove limit AND refill both work</span></div>
+      <div class="tip-row"><span class="tip-icon check">✓</span><span style="color:var(--text2);font-size:13.5px">Mention distributed extension (Redis) without over-engineering</span></div>
+    </div>
+    <div>
+      <div style="font-size:13px;font-weight:600;color:var(--red);margin-bottom:10px">Things to AVOID</div>
+      <div class="tip-row"><span class="tip-icon cross">✗</span><span style="color:var(--text2);font-size:13.5px">Hardcoding TokenBucketRateLimiter everywhere (no interface)</span></div>
+      <div class="tip-row"><span class="tip-icon cross">✗</span><span style="color:var(--text2);font-size:13.5px">Using a background Timer/Thread to refill tokens (overcomplicated)</span></div>
+      <div class="tip-row"><span class="tip-icon cross">✗</span><span style="color:var(--text2);font-size:13.5px">Forgetting thread-safety (multiple requests = race conditions)</span></div>
+      <div class="tip-row"><span class="tip-icon cross">✗</span><span style="color:var(--text2);font-size:13.5px">Using a single shared bucket for ALL users (no per-client isolation)</span></div>
+      <div class="tip-row"><span class="tip-icon cross">✗</span><span style="color:var(--text2);font-size:13.5px">Jumping into Redis/distributed design unprompted (scope creep)</span></div>
+      <div class="tip-row"><span class="tip-icon cross">✗</span><span style="color:var(--text2);font-size:13.5px">Not explaining the refill math — interviewer can't follow silently</span></div>
+    </div>
+  </div>
+
+  <div class="callout callout-purple">
+    <strong>Bonus questions to prepare for:</strong><br>
+    <strong>"How would you make this distributed?"</strong> → Replace the HashMap with Redis (INCR + TTL or Lua script for atomicity). The RateLimiterAlgorithm interface stays the same — only the storage backing it changes. This is exactly why we abstracted it.<br>
+    <strong>"What if two threads call isAllowed() for the same user at the same instant?"</strong> → <code>synchronized</code> on allowRequest() ensures only one thread mutates currentTokens at a time. computeIfAbsent on ConcurrentHashMap prevents duplicate bucket creation.<br>
+    <strong>"How would you support different limits per endpoint?"</strong> → Key the map by (clientId + endpoint) instead of just clientId, and pass different RateLimiterConfig per endpoint type.<br>
+    <strong>"Difference between Token Bucket and Leaky Bucket?"</strong> → Token Bucket allows bursts up to capacity; Leaky Bucket processes at a constant rate via a queue, smoothing bursts entirely.<br>
+    <strong>"How would you clean up old client entries (memory leak)?"</strong> → Add a scheduled eviction — remove entries where lastRefillTimestamp is older than some TTL (e.g. 1 hour of inactivity).
+  </div>
+
+  <div class="callout callout-amber">
+    <strong>Next LLD problems to practice (in order):</strong><br>
+    1. LRU Cache — similar "algorithm wrapped in clean OOP" flavor<br>
+    2. Logger Framework — Strategy + Singleton again, different domain<br>
+    3. Notification System — Factory + Observer patterns<br>
+    4. Tic-Tac-Toe / Chess — state machine heavy<br>
+    5. Splitwise — graph + settlement algorithm
+  </div>
+</div>
+
+<script>
+const sections = document.querySelectorAll('[id]');
+const navLinks = document.querySelectorAll('.nav a');
+const observer = new IntersectionObserver(entries => {
+  entries.forEach(e => {
+    if(e.isIntersecting) {
+      navLinks.forEach(a => a.classList.toggle('active', a.getAttribute('href') === '#'+e.target.id));
+    }
+  });
+}, {rootMargin:'-20% 0px -70% 0px'});
+sections.forEach(s => observer.observe(s));
+</script>
+</body>
+</html>

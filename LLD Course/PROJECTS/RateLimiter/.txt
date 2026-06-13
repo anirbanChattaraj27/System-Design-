@@ -1,0 +1,6 @@
+Rate Limiter
+
+Strategy — RateLimiterAlgorithm (Token Bucket / Sliding Window are interchangeable)
+Factory — RateLimiterFactory creates the right algorithm based on config
+Singleton — one global RateLimiter registry
+Decorator (extension) — wrap algorithm with logging/metrics without modifying it
