@@ -1,0 +1,943 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Elevator System LLD — Complete 60-Min Interview Guide</title>
+<link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;600&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+:root {
+  --bg: #0d1117; --bg2: #161b22; --bg3: #21262d;
+  --border: rgba(255,255,255,0.08); --border2: rgba(255,255,255,0.14);
+  --text: #e6edf3; --text2: #8b949e; --text3: #6e7681;
+  --purple: #a78bfa; --purple-bg: rgba(167,139,250,0.1); --purple-border: rgba(167,139,250,0.3);
+  --teal: #34d399; --teal-bg: rgba(52,211,153,0.08); --teal-border: rgba(52,211,153,0.25);
+  --amber: #fbbf24; --amber-bg: rgba(251,191,36,0.08); --amber-border: rgba(251,191,36,0.25);
+  --coral: #fb923c; --coral-bg: rgba(251,146,60,0.08); --coral-border: rgba(251,146,60,0.25);
+  --blue: #60a5fa; --blue-bg: rgba(96,165,250,0.08); --blue-border: rgba(96,165,250,0.25);
+  --red: #f87171; --green: #4ade80;
+  --kw: #ff7b72; --ty: #79c0ff; --st: #a5d6a7; --cm: #484f58; --an: #e3b341; --mt: #d2a8ff;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth}
+body{background:var(--bg);color:var(--text);font-family:'Inter',sans-serif;font-size:15px;line-height:1.7}
+
+.nav{position:sticky;top:0;z-index:100;background:rgba(13,17,23,0.95);backdrop-filter:blur(8px);border-bottom:1px solid var(--border);padding:0 24px;display:flex;align-items:center;gap:4px;overflow-x:auto;white-space:nowrap}
+.nav a{display:inline-flex;align-items:center;gap:6px;padding:12px 10px;font-size:12px;font-weight:500;color:var(--text2);text-decoration:none;border-bottom:2px solid transparent;transition:color .15s,border-color .15s}
+.nav a:hover,.nav a.active{color:var(--text);border-bottom-color:var(--purple)}
+.nav-time{margin-left:auto;padding:8px 12px;background:var(--purple-bg);border:1px solid var(--purple-border);border-radius:6px;font-size:11px;color:var(--purple);font-weight:600;white-space:nowrap}
+
+.hero{background:linear-gradient(135deg,#1a1040 0%,#0d1117 50%,#0a1628 100%);padding:56px 40px 48px;border-bottom:1px solid var(--border)}
+.hero-tag{display:inline-flex;align-items:center;gap:6px;background:var(--purple-bg);border:1px solid var(--purple-border);border-radius:20px;padding:5px 14px;font-size:11px;font-weight:600;color:var(--purple);letter-spacing:.5px;margin-bottom:20px}
+.hero h1{font-size:36px;font-weight:700;color:#fff;line-height:1.15;margin-bottom:12px}
+.hero p{color:var(--text2);font-size:16px;max-width:620px;margin-bottom:24px}
+.hero-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;max-width:640px}
+.hero-stat{background:var(--bg2);border:1px solid var(--border);border-radius:10px;padding:14px 16px}
+.hero-stat .n{font-size:22px;font-weight:700;color:var(--purple)}
+.hero-stat .l{font-size:12px;color:var(--text2);margin-top:2px}
+
+.section{max-width:920px;margin:0 auto;padding:48px 24px}
+.section-header{display:flex;align-items:center;gap:12px;margin-bottom:28px}
+.section-badge{width:32px;height:32px;border-radius:8px;background:var(--purple-bg);border:1px solid var(--purple-border);display:flex;align-items:center;justify-content:center;font-size:13px;font-weight:700;color:var(--purple);flex-shrink:0}
+.section-header h2{font-size:20px;font-weight:600;color:#fff}
+.section-header .time-tag{margin-left:auto;font-size:11px;font-weight:600;padding:4px 10px;border-radius:12px;white-space:nowrap}
+.time-green{background:rgba(74,222,128,0.1);color:var(--green);border:1px solid rgba(74,222,128,0.2)}
+.time-blue{background:var(--blue-bg);color:var(--blue);border:1px solid var(--blue-border)}
+.time-amber{background:var(--amber-bg);color:var(--amber);border:1px solid var(--amber-border)}
+.time-coral{background:var(--coral-bg);color:var(--coral);border:1px solid var(--coral-border)}
+.time-purple{background:var(--purple-bg);color:var(--purple);border:1px solid var(--purple-border)}
+hr.div{border:none;border-top:1px solid var(--border);margin:0}
+
+.timeline{position:relative;padding-left:28px}
+.timeline::before{content:'';position:absolute;left:9px;top:8px;bottom:8px;width:1px;background:var(--border2)}
+.tl-item{position:relative;margin-bottom:24px}
+.tl-item:last-child{margin-bottom:0}
+.tl-dot{position:absolute;left:-24px;top:4px;width:18px;height:18px;border-radius:50%;border:2px solid var(--purple);background:var(--bg);display:flex;align-items:center;justify-content:center}
+.tl-dot-inner{width:6px;height:6px;border-radius:50%;background:var(--purple)}
+.tl-head{font-size:14px;font-weight:600;color:#fff;margin-bottom:4px;display:flex;align-items:center;gap:8px}
+.tl-body{font-size:13.5px;color:var(--text2);line-height:1.6}
+.tl-body code{font-family:'JetBrains Mono',monospace;font-size:12px;background:var(--bg3);padding:1px 5px;border-radius:3px;color:var(--ty)}
+
+.callout{border-radius:10px;padding:14px 18px;margin:16px 0;border-left:3px solid;font-size:13.5px;line-height:1.6}
+.callout-purple{background:var(--purple-bg);border-color:var(--purple)}
+.callout-teal{background:var(--teal-bg);border-color:var(--teal)}
+.callout-amber{background:var(--amber-bg);border-color:var(--amber)}
+.callout-coral{background:var(--coral-bg);border-color:var(--coral)}
+.callout-blue{background:var(--blue-bg);border-color:var(--blue)}
+.callout strong{color:#fff}
+.callout code{font-family:'JetBrains Mono',monospace;font-size:11.5px;background:rgba(255,255,255,0.08);padding:1px 5px;border-radius:3px}
+
+.dialogue{margin:20px 0}
+.msg{display:flex;gap:10px;margin-bottom:12px;align-items:flex-start}
+.msg-avatar{width:30px;height:30px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:700;flex-shrink:0;margin-top:2px}
+.av-i{background:rgba(251,146,60,0.2);color:var(--coral)}
+.av-you{background:var(--purple-bg);color:var(--purple)}
+.msg-bubble{padding:10px 14px;border-radius:10px;font-size:13.5px;line-height:1.6;max-width:90%}
+.bubble-i{background:var(--bg3);border:1px solid var(--border);color:var(--text)}
+.bubble-you{background:var(--purple-bg);border:1px solid var(--purple-border);color:var(--text)}
+.msg-label{font-size:11px;color:var(--text3);margin-bottom:4px;font-weight:500}
+.thought{font-style:italic;font-size:12px;color:var(--text3);margin-left:40px;margin-bottom:12px;padding:6px 12px;border-left:2px solid var(--border2)}
+
+.code-card{background:var(--bg2);border:1px solid var(--border);border-radius:12px;overflow:hidden;margin:16px 0}
+.code-header{display:flex;align-items:center;justify-content:space-between;padding:10px 16px;border-bottom:1px solid var(--border);background:var(--bg3)}
+.code-fname{font-family:'JetBrains Mono',monospace;font-size:12px;color:var(--amber);font-weight:600}
+.code-meta{font-size:11px;color:var(--text3);display:flex;align-items:center;gap:10px}
+.code-tag{padding:2px 8px;border-radius:4px;font-size:10px;font-weight:600;letter-spacing:.3px}
+.tag-solid{background:rgba(74,222,128,0.12);color:var(--green);border:1px solid rgba(74,222,128,0.2)}
+.tag-pattern{background:var(--blue-bg);color:var(--blue);border:1px solid var(--blue-border)}
+pre{margin:0;padding:18px 20px;overflow-x:auto;font-family:'JetBrains Mono',monospace;font-size:12.5px;line-height:1.85;tab-size:4}
+.kw{color:var(--kw);font-weight:600}.ty{color:var(--ty)}.st{color:var(--st)}.cm{color:var(--cm);font-style:italic}.an{color:var(--an)}.mt{color:var(--mt)}.fd{color:#e6edf3}.nm{color:#f97316}
+
+.er-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:10px;margin:16px 0}
+.er-card{background:var(--bg2);border:1px solid var(--border);border-radius:8px;overflow:hidden}
+.er-head{padding:8px 12px;font-size:12px;font-weight:600;border-bottom:1px solid var(--border)}
+.er-head.purple{background:var(--purple-bg);color:var(--purple)}
+.er-head.teal{background:var(--teal-bg);color:var(--teal)}
+.er-head.amber{background:var(--amber-bg);color:var(--amber)}
+.er-head.coral{background:var(--coral-bg);color:var(--coral)}
+.er-head.blue{background:var(--blue-bg);color:var(--blue)}
+.er-row{padding:5px 12px;font-size:11.5px;color:var(--text2);border-bottom:1px solid rgba(255,255,255,0.04);font-family:'JetBrains Mono',monospace}
+.er-row:last-child{border-bottom:none}
+.er-pk{color:var(--amber)}
+.er-fk{color:var(--blue)}
+.er-rel{display:flex;align-items:center;justify-content:center;gap:8px;padding:10px;font-size:11.5px;color:var(--text2);text-align:center}
+.rel-line{flex:1;height:1px;background:var(--border2)}
+
+.solid-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin:16px 0}
+.solid-card{background:var(--bg2);border:1px solid var(--border);border-radius:8px;padding:14px}
+.solid-letter{font-size:22px;font-weight:700;color:var(--purple);margin-bottom:4px}
+.solid-name{font-size:12px;font-weight:600;color:#fff;margin-bottom:6px}
+.solid-desc{font-size:12px;color:var(--text2);line-height:1.5}
+.solid-where{margin-top:8px;font-size:11px;color:var(--teal);background:var(--teal-bg);border:1px solid var(--teal-border);padding:4px 8px;border-radius:4px;display:inline-block}
+
+.pattern-card{background:var(--bg2);border:1px solid var(--border);border-radius:10px;padding:16px 18px;margin-bottom:14px}
+.pattern-head{display:flex;align-items:center;gap:10px;margin-bottom:8px}
+.pattern-icon{width:32px;height:32px;border-radius:8px;background:var(--blue-bg);border:1px solid var(--blue-border);display:flex;align-items:center;justify-content:center;font-size:14px;font-weight:700;color:var(--blue)}
+.pattern-name{font-size:14px;font-weight:600;color:#fff}
+.pattern-why{font-size:13px;color:var(--text2);margin-bottom:8px}
+.pattern-where{font-size:12px;color:var(--amber);background:var(--amber-bg);border:1px solid var(--amber-border);padding:4px 10px;border-radius:4px;display:inline-block}
+
+.order-table{width:100%;border-collapse:collapse;font-size:13px;margin:16px 0}
+.order-table th{text-align:left;padding:8px 14px;font-size:11px;font-weight:600;color:var(--text3);text-transform:uppercase;letter-spacing:.5px;border-bottom:1px solid var(--border)}
+.order-table td{padding:10px 14px;border-bottom:1px solid rgba(255,255,255,0.04);color:var(--text2)}
+.order-table tr:last-child td{border-bottom:none}
+.order-table td:first-child{color:#fff;font-weight:500;font-family:'JetBrains Mono',monospace;font-size:12px}
+.order-num{display:inline-flex;align-items:center;justify-content:center;width:20px;height:20px;border-radius:50%;background:var(--purple-bg);border:1px solid var(--purple-border);font-size:10px;font-weight:700;color:var(--purple);margin-right:8px;flex-shrink:0}
+
+.tip-row{display:flex;gap:8px;margin-bottom:10px;font-size:13.5px}
+.tip-icon{flex-shrink:0;margin-top:3px;font-size:15px}
+.check{color:var(--green)}.cross{color:var(--red)}.star{color:var(--amber)}
+
+.progress-container{margin:20px 0}
+.progress-row{display:flex;align-items:center;gap:12px;margin-bottom:10px}
+.progress-label{width:110px;font-size:12px;font-weight:500;color:var(--text2);flex-shrink:0}
+.progress-bar{flex:1;height:6px;background:var(--bg3);border-radius:3px;overflow:hidden}
+.progress-fill{height:100%;border-radius:3px;transition:width .3s}
+.progress-time{width:50px;font-size:11px;color:var(--text3);text-align:right;flex-shrink:0}
+
+.algo-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:12px;margin:16px 0}
+.algo-card{background:var(--bg2);border:1px solid var(--border);border-radius:10px;padding:14px 16px}
+.algo-card.active{border-color:var(--teal-border);background:var(--teal-bg)}
+.algo-name{font-size:13px;font-weight:600;color:#fff;margin-bottom:6px}
+.algo-desc{font-size:12px;color:var(--text2);line-height:1.5;margin-bottom:8px}
+.algo-tag{font-size:10px;font-weight:600;padding:2px 8px;border-radius:4px;display:inline-block}
+.algo-tag.pick{background:var(--teal-bg);color:var(--teal);border:1px solid var(--teal-border)}
+.algo-tag.alt{background:var(--bg3);color:var(--text3);border:1px solid var(--border)}
+
+@media(max-width:600px){
+  .hero{padding:32px 20px}.hero h1{font-size:26px}.hero-grid{grid-template-columns:1fr 1fr}
+  .solid-grid{grid-template-columns:1fr}.section{padding:32px 16px}
+  pre{font-size:11px;padding:14px}.nav a{padding:10px 8px;font-size:11px}
+}
+</style>
+</head>
+<body>
+
+<nav class="nav">
+  <a href="#overview">Overview</a>
+  <a href="#problem">The Problem</a>
+  <a href="#phase1">Phase 1: Requirements</a>
+  <a href="#phase2">Phase 2: Design</a>
+  <a href="#phase3">Phase 3: Code</a>
+  <a href="#solid">SOLID</a>
+  <a href="#patterns">Patterns</a>
+  <a href="#tips">Tips</a>
+  <span class="nav-time">60 min total</span>
+</nav>
+
+<div class="hero">
+  <div class="hero-tag">SDE-1 LLD Interview Playbook</div>
+  <h1>Elevator System<br>Complete 60-Minute Guide</h1>
+  <p>The hardest of the classic LLD questions — it has state machines AND a scheduling algorithm. Here's exactly how to think, talk, draw, and code it without running out of time.</p>
+  <div class="hero-grid">
+    <div class="hero-stat"><div class="n">10m</div><div class="l">Requirements</div></div>
+    <div class="hero-stat"><div class="n">10m</div><div class="l">Design + Diagram</div></div>
+    <div class="hero-stat"><div class="n">35m</div><div class="l">Coding</div></div>
+    <div class="hero-stat"><div class="n">5m</div><div class="l">Review + Q&A</div></div>
+  </div>
+</div>
+
+<!-- ── PROBLEM DEPTH ── -->
+<div id="problem" class="section" style="padding-bottom:0">
+  <div class="section-header">
+    <div class="section-badge">★</div>
+    <h2>Understanding the problem in depth — first</h2>
+  </div>
+
+  <div class="callout callout-purple">
+    <strong>What is an Elevator System, really?</strong> A building has N elevators and M floors. People press buttons (either "I'm on floor 3, going up" from a floor panel, or "take me to floor 7" from inside the elevator). The system must: (1) decide WHICH elevator should serve each request, and (2) decide, for each elevator, WHAT TO DO NEXT — move up, move down, stop and open doors, or idle.
+  </div>
+
+  <div class="callout callout-blue">
+    <strong>Why this is the HARDEST classic LLD question:</strong> It has TWO separate hard problems bundled together — (1) a state machine per elevator (idle/moving/door-open), and (2) a scheduling/dispatch algorithm (which of N elevators answers this call?). Most candidates run out of time trying to do both perfectly. The trick is to SCOPE DOWN early — say "I'll implement a simple state machine and a 'nearest idle elevator' strategy, and discuss more advanced scheduling (like SCAN/LOOK) verbally if time allows."
+  </div>
+
+  <p style="color:var(--text2);font-size:13px;margin:16px 0 8px">The 2 hard sub-problems — name both upfront, then pick simple versions of each:</p>
+  <div class="algo-grid">
+    <div class="algo-card active">
+      <div class="algo-name">Per-elevator state machine <span class="algo-tag pick">State Pattern (or enum)</span></div>
+      <div class="algo-desc">An elevator is IDLE, MOVING_UP, MOVING_DOWN, or DOORS_OPEN at any time. Transitions depend on pending requests. We'll model this with an enum + a step() method — full State Pattern (separate classes per state) is mentioned as an extension.</div>
+    </div>
+    <div class="algo-card active">
+      <div class="algo-name">Dispatch algorithm <span class="algo-tag pick">Strategy — "nearest elevator"</span></div>
+      <div class="algo-desc">When a request comes in (floor 5, going UP), which of N elevators should respond? Simplest: pick the elevator with minimum |currentFloor - requestFloor| that's idle or moving toward it. We implement this; mention SCAN/LOOK as advanced alternatives.</div>
+    </div>
+    <div class="algo-card">
+      <div class="algo-name">Request queue per elevator <span class="algo-tag alt">Two heaps</span></div>
+      <div class="algo-desc">Each elevator keeps an "upRequests" min-heap and "downRequests" max-heap — classic LeetCode-style elevator scheduling. Ensures requests are served in floor order, not arrival order (avoids unnecessary direction changes).</div>
+    </div>
+    <div class="algo-card">
+      <div class="algo-name">Observer for displays <span class="algo-tag alt">Mention only</span></div>
+      <div class="algo-desc">Floor displays and direction indicators "observe" the elevator and update when its floor/state changes. Good bonus answer for "how would you update the UI?"</div>
+    </div>
+  </div>
+
+  <div class="callout callout-amber">
+    <strong>The approach we'll build:</strong> <code>ElevatorController</code> (Singleton) holds a list of <code>Elevator</code> objects. Each <code>Elevator</code> has a state (enum), current floor, direction, and two priority queues (up/down requests). A <code>NearestElevatorStrategy</code> (Strategy pattern) picks which elevator handles an external request. A simple <code>step()</code> method simulates movement one floor at a time — this is what we'll demo.
+  </div>
+</div>
+
+<hr class="div" style="margin-top:32px">
+
+<!-- ── SECTION 0: OVERVIEW ── -->
+<div id="overview" style="max-width:920px;margin:0 auto;padding:48px 24px 0">
+  <div class="section-header">
+    <div class="section-badge">0</div>
+    <h2>The Mental Model — what are they actually testing?</h2>
+  </div>
+  <div class="callout callout-purple">
+    <strong>Interviewer's secret checklist:</strong> Can you model state explicitly instead of with scattered booleans? Can you separate "dispatch" (which elevator) from "movement" (what does ONE elevator do)? Do you know State and Strategy patterns and where each applies? Can you scope down a huge problem into something codeable in 35 minutes?
+  </div>
+  <div class="progress-container">
+    <div class="progress-row"><div class="progress-label">Requirements</div><div class="progress-bar"><div class="progress-fill" style="width:17%;background:#a78bfa"></div></div><div class="progress-time">0–10 min</div></div>
+    <div class="progress-row"><div class="progress-label">Entities</div><div class="progress-bar"><div class="progress-fill" style="width:10%;background:#34d399"></div></div><div class="progress-time">10–16 min</div></div>
+    <div class="progress-row"><div class="progress-label">Diagram</div><div class="progress-bar"><div class="progress-fill" style="width:7%;background:#60a5fa"></div></div><div class="progress-time">16–20 min</div></div>
+    <div class="progress-row"><div class="progress-label">Coding</div><div class="progress-bar"><div class="progress-fill" style="width:58%;background:#fb923c"></div></div><div class="progress-time">20–55 min</div></div>
+    <div class="progress-row"><div class="progress-label">Review</div><div class="progress-bar"><div class="progress-fill" style="width:8%;background:#fbbf24"></div></div><div class="progress-time">55–60 min</div></div>
+  </div>
+</div>
+
+<hr class="div">
+
+<!-- ── PHASE 1: REQUIREMENTS ── -->
+<div id="phase1" class="section">
+  <div class="section-header">
+    <div class="section-badge">1</div>
+    <h2>Phase 1 — Gathering Requirements</h2>
+    <span class="time-tag time-green">0 – 10 min</span>
+  </div>
+
+  <div class="callout callout-teal">
+    <strong>This is the MOST important phase for Elevator System.</strong> The scope here is huge — multiple elevators, multiple floors, capacity limits, scheduling algorithms. If you don't aggressively scope down in these 10 minutes, you WILL run out of time at minute 50 with half-written code.
+  </div>
+
+  <div class="dialogue">
+    <div class="msg"><div class="msg-avatar av-i">I</div><div><div class="msg-label">Interviewer</div><div class="msg-bubble bubble-i">"Design an Elevator System."</div></div></div>
+
+    <div class="msg"><div class="msg-avatar av-you">You</div><div><div class="msg-label">You</div><div class="msg-bubble bubble-you">"Sure! This has a few moving parts, so let me ask some scoping questions first."</div></div></div>
+
+    <div class="msg"><div class="msg-avatar av-you">You</div><div><div class="msg-label">You — Question 1 (Scale)</div><div class="msg-bubble bubble-you">"How many elevators and floors should the system support? And should I design for one building, or a generic multi-elevator controller?"</div></div></div>
+    <div class="thought">← Tells you whether ElevatorController manages 1 or N elevators — directly decides if you need a dispatch/scheduling algorithm at all.</div>
+
+    <div class="msg"><div class="msg-avatar av-i">I</div><div><div class="msg-label">Interviewer</div><div class="msg-bubble bubble-i">"Let's say a building with multiple elevators — like 3 — and 10 floors."</div></div></div>
+
+    <div class="msg"><div class="msg-avatar av-you">You</div><div><div class="msg-label">You — Question 2 (Request types)</div><div class="msg-bubble bubble-you">"There are typically two kinds of requests — an external request from a floor panel (e.g. 'I'm on floor 5, going up'), and an internal request from inside the elevator (e.g. 'take me to floor 8'). Should I model both?"</div></div></div>
+    <div class="thought">← This distinction matters: external requests need DISPATCH (which elevator?), internal requests just get added to that elevator's queue directly.</div>
+
+    <div class="msg"><div class="msg-avatar av-i">I</div><div><div class="msg-label">Interviewer</div><div class="msg-bubble bubble-i">"Yes, model both."</div></div></div>
+
+    <div class="msg"><div class="msg-avatar av-you">You</div><div><div class="msg-label">You — Question 3 (Scheduling algorithm depth)</div><div class="msg-bubble bubble-you">"For picking which elevator answers an external request — should I implement a simple 'nearest available elevator' strategy, or do you want something more advanced like load balancing or SCAN-based scheduling? I'd suggest starting simple and making it pluggable, since real systems use complex heuristics."</div></div></div>
+    <div class="thought">← This is THE most important sentence in this entire interview. "Start simple and make it pluggable" = you're naming Strategy pattern AND managing scope, simultaneously.</div>
+
+    <div class="msg"><div class="msg-avatar av-i">I</div><div><div class="msg-label">Interviewer</div><div class="msg-bubble bubble-i">"Simple nearest-elevator strategy is fine, pluggable is good."</div></div></div>
+
+    <div class="msg"><div class="msg-avatar av-you">You</div><div><div class="msg-label">You — Question 4 (Out of scope)</div><div class="msg-bubble bubble-you">"Things like weight/capacity limits, door sensors, emergency stops, and maintenance mode — should those be out of scope for now? I can mention how they'd fit in afterward."</div></div></div>
+    <div class="thought">← Proactively cutting scope is a senior signal. You're not waiting to be told "no" — you're suggesting what to cut.</div>
+
+    <div class="msg"><div class="msg-avatar av-i">I</div><div><div class="msg-label">Interviewer</div><div class="msg-bubble bubble-i">"Yes, out of scope. Let's focus on the core movement and dispatch logic."</div></div></div>
+
+    <div class="msg"><div class="msg-avatar av-you">You</div><div><div class="msg-label">You — Summarise</div><div class="msg-bubble bubble-you">"Great, so: a controller manages 3 elevators across 10 floors. Each elevator has a state — idle, moving up, moving down, doors open — and a queue of requests it needs to serve. External floor requests go through a pluggable dispatch strategy that picks the nearest suitable elevator; internal cabin requests go directly to that elevator's queue. I'll skip capacity/safety features but can discuss extensions. Sound good?"</div></div></div>
+
+    <div class="msg"><div class="msg-avatar av-i">I</div><div><div class="msg-label">Interviewer</div><div class="msg-bubble bubble-i">"Perfect, let's go."</div></div></div>
+  </div>
+
+  <div class="callout callout-amber">
+    <strong>The 4 questions to always ask for Elevator System:</strong><br>
+    1. <strong>How many elevators/floors?</strong> → 1 elevator = no dispatch needed; N elevators = need Strategy for selection<br>
+    2. <strong>External vs internal requests?</strong> → both exist in almost every answer; defines two entry points into the system<br>
+    3. <strong>How advanced should scheduling be?</strong> → ALWAYS say "simple + pluggable" — this is your scope-control lever<br>
+    4. <strong>What's explicitly OUT of scope?</strong> → proactively cut capacity/safety/maintenance — keeps you within 35 min
+  </div>
+</div>
+
+<hr class="div">
+
+<!-- ── PHASE 2: DESIGN ── -->
+<div id="phase2" class="section">
+  <div class="section-header">
+    <div class="section-badge">2</div>
+    <h2>Phase 2 — Identify Entities & Quick Diagram</h2>
+    <span class="time-tag time-blue">10 – 20 min</span>
+  </div>
+
+  <div class="callout callout-blue">
+    <strong>Two-layer thinking:</strong> Layer 1 = ONE elevator's behavior (state + its own request queue). Layer 2 = the CONTROLLER that owns multiple elevators and dispatches requests to them. Design layer 1 first — it's self-contained and easier — then layer 2 becomes "just" a router.
+  </div>
+
+  <div class="timeline">
+    <div class="tl-item">
+      <div class="tl-dot"><div class="tl-dot-inner"></div></div>
+      <div class="tl-head">Step 1 — Identify the "varies vs fixed" split (2 min, say out loud)</div>
+      <div class="tl-body">Say: <em>"An elevator's STATE varies over time (idle → moving → door open → idle), so that's either an enum with transition logic, or full State pattern. The DISPATCH ALGORITHM varies by requirement (nearest vs SCAN), so that's a Strategy. The CONTROLLER is fixed — one per building, so Singleton."</em></div>
+    </div>
+    <div class="tl-item">
+      <div class="tl-dot"><div class="tl-dot-inner"></div></div>
+      <div class="tl-head">Step 2 — List the classes (2 min)</div>
+      <div class="tl-body">
+        — <code>Direction</code> (enum) — UP, DOWN, IDLE<br>
+        — <code>ElevatorState</code> (enum) — IDLE, MOVING, DOORS_OPEN<br>
+        — <code>Request</code> — data holder: sourceFloor, destinationFloor (optional), direction<br>
+        — <code>Elevator</code> — id, currentFloor, state, direction, two request queues (up/down)<br>
+        — <code>DispatchStrategy</code> (interface) — the Strategy: <code>selectElevator(elevators, request)</code><br>
+        — <code>NearestElevatorStrategy</code> — implementation<br>
+        — <code>ElevatorController</code> — Singleton; owns elevators + strategy
+      </div>
+    </div>
+    <div class="tl-item">
+      <div class="tl-dot"><div class="tl-dot-inner"></div></div>
+      <div class="tl-head">Step 3 — Quick diagram — fastest possible (4 min)</div>
+      <div class="tl-body">Draw it in TWO small boxes side by side, not one big diagram: LEFT BOX = "one Elevator" (its state machine as a tiny circle diagram with 3 states and arrows). RIGHT BOX = "ElevatorController" with a list pointing to multiple Elevators, and a Strategy box for dispatch. Say: "I'll draw the state machine for one elevator first — that's the reusable unit — then show how the controller fans out requests to many of them."</div>
+    </div>
+  </div>
+
+  <p style="color:var(--text2);font-size:13px;margin:16px 0 12px">Quick diagram — draw this in under 4 minutes:</p>
+
+  <div class="er-grid">
+    <div class="er-card">
+      <div class="er-head purple">ElevatorController (Singleton)</div>
+      <div class="er-row">elevators: List&lt;Elevator&gt;</div>
+      <div class="er-row">strategy: DispatchStrategy</div>
+      <div class="er-row">requestElevator(floor, dir)</div>
+    </div>
+    <div class="er-card">
+      <div class="er-head blue">DispatchStrategy</div>
+      <div class="er-row"><span class="er-pk">«interface»</span></div>
+      <div class="er-row">selectElevator(</div>
+      <div class="er-row">&nbsp;&nbsp;elevators, request)</div>
+    </div>
+    <div class="er-card">
+      <div class="er-head teal">NearestElevatorStrategy</div>
+      <div class="er-row">implements ↑</div>
+      <div class="er-row">picks min |distance|</div>
+    </div>
+    <div class="er-card">
+      <div class="er-head coral">Elevator</div>
+      <div class="er-row"><span class="er-pk">id, currentFloor</span></div>
+      <div class="er-row">state: ElevatorState</div>
+      <div class="er-row">direction: Direction</div>
+      <div class="er-row">upQueue, downQueue</div>
+    </div>
+    <div class="er-card">
+      <div class="er-head amber">ElevatorState</div>
+      <div class="er-row"><span class="er-pk">«enum»</span></div>
+      <div class="er-row">IDLE</div>
+      <div class="er-row">MOVING</div>
+      <div class="er-row">DOORS_OPEN</div>
+    </div>
+    <div class="er-card">
+      <div class="er-head amber">Direction</div>
+      <div class="er-row"><span class="er-pk">«enum»</span></div>
+      <div class="er-row">UP, DOWN, IDLE</div>
+    </div>
+  </div>
+
+  <div style="background:var(--bg2);border:1px solid var(--border);border-radius:10px;padding:16px 18px;margin:16px 0">
+    <div style="font-size:13px;font-weight:600;color:#fff;margin-bottom:12px">State machine — draw as a tiny 3-circle diagram (this IS your "diagram"):</div>
+    <div class="er-rel"><span style="color:var(--amber)">IDLE</span><div class="rel-line"></div><span style="color:var(--text3);font-size:11px">request received → pick direction</span><div class="rel-line"></div><span style="color:var(--amber)">MOVING (UP/DOWN)</span></div>
+    <div class="er-rel"><span style="color:var(--amber)">MOVING</span><div class="rel-line"></div><span style="color:var(--text3);font-size:11px">reaches a floor with pending stop</span><div class="rel-line"></div><span style="color:var(--amber)">DOORS_OPEN</span></div>
+    <div class="er-rel"><span style="color:var(--amber)">DOORS_OPEN</span><div class="rel-line"></div><span style="color:var(--text3);font-size:11px">doors close → more requests?</span><div class="rel-line"></div><span style="color:var(--amber)">MOVING or IDLE</span></div>
+  </div>
+
+  <div style="background:var(--bg2);border:1px solid var(--border);border-radius:10px;padding:16px 18px;margin:16px 0">
+    <div style="font-size:13px;font-weight:600;color:#fff;margin-bottom:12px">Controller flow — second small diagram:</div>
+    <div class="er-rel"><span style="color:var(--purple)">User on floor 5</span><div class="rel-line"></div><span style="color:var(--text3);font-size:11px">requestElevator(5, UP)</span><div class="rel-line"></div><span style="color:var(--purple)">ElevatorController</span></div>
+    <div class="er-rel"><span style="color:var(--purple)">Controller</span><div class="rel-line"></div><span style="color:var(--text3);font-size:11px">delegates to</span><div class="rel-line"></div><span style="color:var(--blue)">NearestElevatorStrategy</span></div>
+    <div class="er-rel"><span style="color:var(--blue)">Strategy</span><div class="rel-line"></div><span style="color:var(--text3);font-size:11px">returns chosen</span><div class="rel-line"></div><span style="color:var(--coral)">Elevator instance</span></div>
+    <div class="er-rel"><span style="color:var(--coral)">Elevator</span><div class="rel-line"></div><span style="color:var(--text3);font-size:11px">adds to</span><div class="rel-line"></div><span style="color:var(--coral)">upQueue / downQueue</span></div>
+  </div>
+
+  <div class="callout callout-teal">
+    <strong>What to say while drawing:</strong> "I'll draw two small diagrams instead of one big one — a 3-state circle diagram for a single elevator's behavior, and a simple left-to-right flow for how the controller dispatches requests. Together these take under 4 minutes and cover the whole design."
+  </div>
+
+  <div class="callout callout-amber">
+    <strong>Class writing order — say this before coding:</strong> "I'll write the enums first, then the Request class, then build out Elevator fully — including its step() movement logic — since that's the core unit. Then the DispatchStrategy interface and implementation. ElevatorController ties it together last."
+  </div>
+
+  <table class="order-table">
+    <thead><tr><th>Order</th><th>Class</th><th>Why this order</th></tr></thead>
+    <tbody>
+      <tr><td><span class="order-num">1</span>Direction, ElevatorState</td><td style="color:var(--text2)">Enums</td><td style="color:var(--text2)">Foundation — every other class references these.</td></tr>
+      <tr><td><span class="order-num">2</span>Request</td><td style="color:var(--text2)">Data holder</td><td style="color:var(--text2)">Simple, used by Elevator and Controller.</td></tr>
+      <tr><td><span class="order-num">3</span>Elevator</td><td style="color:var(--text2)">Core state machine + queues</td><td style="color:var(--text2)">The MOST IMPORTANT class — self-contained, biggest chunk of logic.</td></tr>
+      <tr><td><span class="order-num">4</span>DispatchStrategy + NearestElevatorStrategy</td><td style="color:var(--text2)">Interface + impl</td><td style="color:var(--text2)">Needs Elevator to exist (operates on a list of them).</td></tr>
+      <tr><td><span class="order-num">5</span>ElevatorController</td><td style="color:var(--text2)">Singleton — orchestrator</td><td style="color:var(--text2)">Depends on everything above. Write last.</td></tr>
+      <tr><td><span class="order-num">6</span>Main</td><td style="color:var(--text2)">Demo / simulate steps</td><td style="color:var(--text2)">Call requestElevator + step() in a loop to show movement.</td></tr>
+    </tbody>
+  </table>
+</div>
+
+<hr class="div">
+
+<!-- ── PHASE 3: CODE ── -->
+<div id="phase3" class="section">
+  <div class="section-header">
+    <div class="section-badge">3</div>
+    <h2>Phase 3 — The Complete Code</h2>
+    <span class="time-tag time-coral">20 – 55 min</span>
+  </div>
+
+  <div class="callout callout-coral">
+    <strong>Say this before typing:</strong> "I'll build the Elevator class fully first since it's the self-contained core — state, queues, and movement logic. Once that works in isolation, the Controller is mostly plumbing."
+  </div>
+
+  <!-- ENUMS -->
+  <div class="code-card">
+    <div class="code-header"><span class="code-fname">Direction.java + ElevatorState.java</span><div class="code-meta"><span class="code-tag tag-solid">Foundation enums</span></div></div>
+    <pre><span class="cm">// Direction the elevator is currently travelling (or IDLE = not moving)</span>
+<span class="kw">public enum</span> <span class="ty">Direction</span> { UP, DOWN, IDLE }
+
+<span class="cm">// ── State Pattern (lightweight version) ───────────────────────────────────</span>
+<span class="cm">// Full State Pattern would make each of these a CLASS with its own</span>
+<span class="cm">// behavior (IdleState.handle(), MovingState.handle()...).</span>
+<span class="cm">// For an interview, an enum + a switch/if in Elevator.step() is the</span>
+<span class="cm">// pragmatic choice — explain you'd extract to full State classes if</span>
+<span class="cm">// each state's logic grew complex (e.g. maintenance mode, emergency stop).</span>
+<span class="kw">public enum</span> <span class="ty">ElevatorState</span> {
+    IDLE,         <span class="cm">// no pending requests, doors closed, not moving</span>
+    MOVING,       <span class="cm">// travelling toward next stop</span>
+    DOORS_OPEN    <span class="cm">// stopped at a floor, doors open</span>
+}</pre>
+  </div>
+
+  <!-- REQUEST -->
+  <div class="code-card">
+    <div class="code-header"><span class="code-fname">Request.java</span><div class="code-meta"><span class="code-tag tag-solid">SRP — pure data holder</span></div></div>
+    <pre><span class="cm">// ── SOLID: Single Responsibility ──────────────────────────────────────────</span>
+<span class="cm">// Represents ONE request — either:</span>
+<span class="cm">//  - External: "I'm on floor 5, I want to go UP" (destinationFloor unknown yet)</span>
+<span class="cm">//  - Internal: "Take me to floor 8" (destinationFloor known, called from inside cabin)</span>
+
+<span class="kw">public class</span> <span class="ty">Request</span> {
+    <span class="kw">private final</span> <span class="kw">int</span> floor;             <span class="cm">// the floor where the button was pressed</span>
+    <span class="kw">private final</span> <span class="ty">Direction</span> direction; <span class="cm">// desired direction (UP/DOWN); IDLE for internal dest-only requests</span>
+
+    <span class="kw">public</span> <span class="mt">Request</span>(<span class="kw">int</span> floor, <span class="ty">Direction</span> direction) {
+        <span class="kw">this</span>.floor     = floor;
+        <span class="kw">this</span>.direction = direction;
+    }
+
+    <span class="kw">public int</span> <span class="mt">getFloor</span>()         { <span class="kw">return</span> floor; }
+    <span class="kw">public</span> <span class="ty">Direction</span> <span class="mt">getDirection</span>() { <span class="kw">return</span> direction; }
+}</pre>
+  </div>
+
+  <!-- ELEVATOR -->
+  <div class="code-card">
+    <div class="code-header"><span class="code-fname">Elevator.java</span><div class="code-meta"><span class="code-tag tag-solid">SRP — core state machine</span><span class="code-tag tag-pattern">State (lightweight)</span></div></div>
+    <pre><span class="kw">import</span> java.util.*;
+
+<span class="cm">// ── SOLID: Single Responsibility ──────────────────────────────────────────</span>
+<span class="cm">// Elevator manages ONLY its own movement, state, and request queues.</span>
+<span class="cm">// It does NOT know about other elevators or how it was chosen — that's</span>
+<span class="cm">// the Controller's job. This separation is what makes the class testable</span>
+<span class="cm">// in isolation (you can unit-test ONE elevator with no controller at all).</span>
+<span class="cm">//</span>
+<span class="cm">// ── DATA STRUCTURE CHOICE: two priority queues ────────────────────────────</span>
+<span class="cm">// upRequests   = min-heap → always serve the LOWEST floor above us next</span>
+<span class="cm">// downRequests = max-heap → always serve the HIGHEST floor below us next</span>
+<span class="cm">// This is the classic "elevator scheduling" trick: it guarantees we serve</span>
+<span class="cm">// requests in floor-order along our current direction, never zig-zagging.</span>
+
+<span class="kw">public class</span> <span class="ty">Elevator</span> {
+
+    <span class="kw">private final int</span> id;
+    <span class="kw">private int</span> currentFloor;
+    <span class="kw">private</span> <span class="ty">ElevatorState</span> state;
+    <span class="kw">private</span> <span class="ty">Direction</span> direction;
+
+    <span class="kw">private final</span> <span class="ty">PriorityQueue</span>&lt;<span class="ty">Integer</span>&gt; upRequests;   <span class="cm">// min-heap (natural order)</span>
+    <span class="kw">private final</span> <span class="ty">PriorityQueue</span>&lt;<span class="ty">Integer</span>&gt; downRequests; <span class="cm">// max-heap (reverse order)</span>
+
+    <span class="kw">public</span> <span class="mt">Elevator</span>(<span class="kw">int</span> id) {
+        <span class="kw">this</span>.id           = id;
+        <span class="kw">this</span>.currentFloor = <span class="nm">0</span>;            <span class="cm">// ground floor</span>
+        <span class="kw">this</span>.state        = <span class="ty">ElevatorState</span>.IDLE;
+        <span class="kw">this</span>.direction    = <span class="ty">Direction</span>.IDLE;
+        <span class="kw">this</span>.upRequests   = <span class="kw">new</span> <span class="ty">PriorityQueue</span>&lt;&gt;();                          <span class="cm">// ascending</span>
+        <span class="kw">this</span>.downRequests = <span class="kw">new</span> <span class="ty">PriorityQueue</span>&lt;&gt;(<span class="ty">Collections</span>.reverseOrder()); <span class="cm">// descending</span>
+    }
+
+    <span class="cm">// ── Add a destination floor (called for BOTH internal cabin requests</span>
+    <span class="cm">// AND external requests once this elevator has been chosen) ──────</span>
+    <span class="kw">public void</span> <span class="mt">addRequest</span>(<span class="kw">int</span> floor) {
+        <span class="kw">if</span> (floor &gt; currentFloor) {
+            upRequests.add(floor);
+        } <span class="kw">else if</span> (floor &lt; currentFloor) {
+            downRequests.add(floor);
+        }
+        <span class="cm">// floor == currentFloor → already here, nothing to queue</span>
+
+        <span class="cm">// If we were idle, pick a direction now based on the new request</span>
+        <span class="kw">if</span> (state == <span class="ty">ElevatorState</span>.IDLE) {
+            direction = (floor &gt; currentFloor) ? <span class="ty">Direction</span>.UP
+                       : (floor &lt; currentFloor) ? <span class="ty">Direction</span>.DOWN
+                       : <span class="ty">Direction</span>.IDLE;
+            state = (direction == <span class="ty">Direction</span>.IDLE) ? <span class="ty">ElevatorState</span>.DOORS_OPEN : <span class="ty">ElevatorState</span>.MOVING;
+        }
+    }
+
+    <span class="cm">// ── THE SIMULATION TICK ───────────────────────────────────────────</span>
+    <span class="cm">// Moves the elevator ONE floor per call (or opens/closes doors).</span>
+    <span class="cm">// In a real system, this would be driven by a timer/motor controller —</span>
+    <span class="cm">// for the interview, calling step() repeatedly in Main simulates time.</span>
+    <span class="kw">public void</span> <span class="mt">step</span>() {
+        <span class="kw">switch</span> (state) {
+            <span class="kw">case</span> IDLE:
+                <span class="cm">// nothing to do</span>
+                <span class="kw">break</span>;
+
+            <span class="kw">case</span> DOORS_OPEN:
+                <span class="cm">// doors close, decide what's next</span>
+                state = <span class="ty">ElevatorState</span>.MOVING;
+                decideNextDirection();
+                <span class="kw">break</span>;
+
+            <span class="kw">case</span> MOVING:
+                <span class="kw">if</span> (direction == <span class="ty">Direction</span>.UP) {
+                    currentFloor++;
+                    <span class="kw">if</span> (!upRequests.isEmpty() && upRequests.peek() == currentFloor) {
+                        upRequests.poll();              <span class="cm">// arrived — remove this stop</span>
+                        state = <span class="ty">ElevatorState</span>.DOORS_OPEN;
+                    }
+                } <span class="kw">else if</span> (direction == <span class="ty">Direction</span>.DOWN) {
+                    currentFloor--;
+                    <span class="kw">if</span> (!downRequests.isEmpty() && downRequests.peek() == currentFloor) {
+                        downRequests.poll();
+                        state = <span class="ty">ElevatorState</span>.DOORS_OPEN;
+                    }
+                }
+                <span class="kw">break</span>;
+        }
+    }
+
+    <span class="cm">// After doors close, decide: continue same direction, switch, or go idle</span>
+    <span class="kw">private void</span> <span class="mt">decideNextDirection</span>() {
+        <span class="kw">if</span> (direction == <span class="ty">Direction</span>.UP && !upRequests.isEmpty()) {
+            <span class="kw">return</span>; <span class="cm">// keep going up — more stops above</span>
+        }
+        <span class="kw">if</span> (direction == <span class="ty">Direction</span>.DOWN && !downRequests.isEmpty()) {
+            <span class="kw">return</span>; <span class="cm">// keep going down — more stops below</span>
+        }
+        <span class="cm">// No more requests in current direction — try the other direction</span>
+        <span class="kw">if</span> (!upRequests.isEmpty()) {
+            direction = <span class="ty">Direction</span>.UP;
+        } <span class="kw">else if</span> (!downRequests.isEmpty()) {
+            direction = <span class="ty">Direction</span>.DOWN;
+        } <span class="kw">else</span> {
+            direction = <span class="ty">Direction</span>.IDLE;
+            state     = <span class="ty">ElevatorState</span>.IDLE;
+        }
+    }
+
+    <span class="cm">// ── Helper for dispatch strategy: how "good" a fit is this elevator? ──</span>
+    <span class="cm">// Simple metric: absolute floor distance. Lower = better.</span>
+    <span class="kw">public int</span> <span class="mt">distanceTo</span>(<span class="kw">int</span> floor) {
+        <span class="kw">return</span> <span class="ty">Math</span>.abs(<span class="kw">this</span>.currentFloor - floor);
+    }
+
+    <span class="kw">public int</span> <span class="mt">getId</span>()            { <span class="kw">return</span> id; }
+    <span class="kw">public int</span> <span class="mt">getCurrentFloor</span>() { <span class="kw">return</span> currentFloor; }
+    <span class="kw">public</span> <span class="ty">ElevatorState</span> <span class="mt">getState</span>()     { <span class="kw">return</span> state; }
+    <span class="kw">public</span> <span class="ty">Direction</span> <span class="mt">getDirection</span>()   { <span class="kw">return</span> direction; }
+}</pre>
+  </div>
+
+  <!-- DISPATCH STRATEGY -->
+  <div class="code-card">
+    <div class="code-header"><span class="code-fname">DispatchStrategy.java + NearestElevatorStrategy.java</span><div class="code-meta"><span class="code-tag tag-pattern">Strategy Pattern</span><span class="code-tag tag-solid">OCP + DIP</span></div></div>
+    <pre><span class="kw">import</span> java.util.*;
+
+<span class="cm">// ── Design Pattern: STRATEGY ──────────────────────────────────────────────</span>
+<span class="cm">// "Which elevator answers this call?" is THE classic example of varying</span>
+<span class="cm">// behavior. Real systems use complex heuristics (load balancing, zoning,</span>
+<span class="cm">// SCAN/LOOK algorithms); we implement the simplest correct one and make</span>
+<span class="cm">// it swappable.</span>
+<span class="cm">// ── SOLID: Open/Closed ────────────────────────────────────────────────────</span>
+<span class="cm">// Add ZoningStrategy or LoadBalancedStrategy later → new class implementing</span>
+<span class="cm">// this interface. ElevatorController is untouched.</span>
+
+<span class="kw">public interface</span> <span class="ty">DispatchStrategy</span> {
+    <span class="ty">Elevator</span> <span class="mt">selectElevator</span>(<span class="ty">List</span>&lt;<span class="ty">Elevator</span>&gt; elevators, <span class="ty">Request</span> request);
+}
+
+<span class="cm">// ── SOLID: Single Responsibility ──────────────────────────────────────────</span>
+<span class="cm">// Does ONE thing: picks the elevator with the smallest floor distance</span>
+<span class="cm">// to the request's floor. Doesn't care about direction matching —</span>
+<span class="cm">// that nuance is exactly what a more advanced strategy would add.</span>
+<span class="kw">public class</span> <span class="ty">NearestElevatorStrategy</span> <span class="kw">implements</span> <span class="ty">DispatchStrategy</span> {
+    <span class="an">@Override</span>
+    <span class="kw">public</span> <span class="ty">Elevator</span> <span class="mt">selectElevator</span>(<span class="ty">List</span>&lt;<span class="ty">Elevator</span>&gt; elevators, <span class="ty">Request</span> request) {
+        <span class="ty">Elevator</span> best = <span class="kw">null</span>;
+        <span class="kw">int</span> bestDistance = <span class="ty">Integer</span>.MAX_VALUE;
+
+        <span class="kw">for</span> (<span class="ty">Elevator</span> e : elevators) {
+            <span class="kw">int</span> dist = e.distanceTo(request.getFloor());
+            <span class="kw">if</span> (dist &lt; bestDistance) {
+                bestDistance = dist;
+                best = e;
+            }
+        }
+        <span class="kw">return</span> best;  <span class="cm">// elevators list is never empty in our design, so always non-null</span>
+    }
+}</pre>
+  </div>
+
+  <!-- CONTROLLER -->
+  <div class="code-card">
+    <div class="code-header"><span class="code-fname">ElevatorController.java</span><div class="code-meta"><span class="code-tag tag-pattern">Singleton + Strategy usage</span><span class="code-tag tag-solid">SRP + DIP</span></div></div>
+    <pre><span class="kw">import</span> java.util.*;
+
+<span class="cm">// ── Design Pattern: SINGLETON ─────────────────────────────────────────────</span>
+<span class="cm">// One controller manages all elevators in the building — same reasoning</span>
+<span class="cm">// as ParkingLot / RateLimiter / Logger. Two controllers would double-dispatch.</span>
+<span class="cm">// ── SOLID: Single Responsibility ──────────────────────────────────────────</span>
+<span class="cm">// Controller's ONE job: receive external requests, pick an elevator via</span>
+<span class="cm">// the strategy, and forward the request. It does NOT implement movement —</span>
+<span class="cm">// that's Elevator's job (separation of concerns).</span>
+<span class="cm">// ── SOLID: Dependency Inversion ───────────────────────────────────────────</span>
+<span class="cm">// Controller depends on DispatchStrategy (interface), never on</span>
+<span class="cm">// NearestElevatorStrategy directly.</span>
+
+<span class="kw">public class</span> <span class="ty">ElevatorController</span> {
+
+    <span class="kw">private static volatile</span> <span class="ty">ElevatorController</span> instance;
+
+    <span class="kw">private final</span> <span class="ty">List</span>&lt;<span class="ty">Elevator</span>&gt; elevators;
+    <span class="kw">private</span> <span class="ty">DispatchStrategy</span> dispatchStrategy;
+
+    <span class="kw">private</span> <span class="mt">ElevatorController</span>(<span class="kw">int</span> numElevators) {
+        <span class="kw">this</span>.elevators = <span class="kw">new</span> <span class="ty">ArrayList</span>&lt;&gt;();
+        <span class="kw">for</span> (<span class="kw">int</span> i = <span class="nm">1</span>; i &lt;= numElevators; i++) {
+            elevators.add(<span class="kw">new</span> <span class="ty">Elevator</span>(i));
+        }
+        <span class="kw">this</span>.dispatchStrategy = <span class="kw">new</span> <span class="ty">NearestElevatorStrategy</span>(); <span class="cm">// sensible default</span>
+    }
+
+    <span class="kw">public static</span> <span class="ty">ElevatorController</span> <span class="mt">getInstance</span>(<span class="kw">int</span> numElevators) {
+        <span class="kw">if</span> (instance == <span class="kw">null</span>) {
+            <span class="kw">synchronized</span> (<span class="ty">ElevatorController</span>.<span class="kw">class</span>) {
+                <span class="kw">if</span> (instance == <span class="kw">null</span>) {
+                    instance = <span class="kw">new</span> <span class="ty">ElevatorController</span>(numElevators);
+                }
+            }
+        }
+        <span class="kw">return</span> instance;
+    }
+
+    <span class="cm">// Allows swapping strategy at runtime — e.g. switch to a</span>
+    <span class="cm">// LoadBalancedStrategy during peak hours.</span>
+    <span class="kw">public void</span> <span class="mt">setDispatchStrategy</span>(<span class="ty">DispatchStrategy</span> strategy) {
+        <span class="kw">this</span>.dispatchStrategy = strategy;
+    }
+
+    <span class="cm">// ── EXTERNAL REQUEST: "I'm on floor X, going UP/DOWN" ────────────</span>
+    <span class="cm">// 1. Ask the strategy which elevator should handle this</span>
+    <span class="cm">// 2. Forward the floor to that elevator's queue</span>
+    <span class="kw">public void</span> <span class="mt">requestElevator</span>(<span class="kw">int</span> floor, <span class="ty">Direction</span> direction) {
+        <span class="ty">Request</span> request = <span class="kw">new</span> <span class="ty">Request</span>(floor, direction);
+        <span class="ty">Elevator</span> chosen = dispatchStrategy.selectElevator(elevators, request);
+        chosen.addRequest(floor);
+        <span class="ty">System</span>.out.printf(<span class="st">"[DISPATCH] Floor %d (%s) -> Elevator %d%n"</span>,
+            floor, direction, chosen.getId());
+    }
+
+    <span class="cm">// ── INTERNAL REQUEST: "Take me to floor X" (from inside a cabin) ──</span>
+    <span class="cm">// No dispatch needed — goes straight to the elevator you're already in.</span>
+    <span class="kw">public void</span> <span class="mt">requestFloorFromInsideElevator</span>(<span class="kw">int</span> elevatorId, <span class="kw">int</span> destinationFloor) {
+        <span class="kw">for</span> (<span class="ty">Elevator</span> e : elevators) {
+            <span class="kw">if</span> (e.getId() == elevatorId) {
+                e.addRequest(destinationFloor);
+                <span class="ty">System</span>.out.printf(<span class="st">"[CABIN] Elevator %d -> Floor %d%n"</span>, elevatorId, destinationFloor);
+                <span class="kw">return</span>;
+            }
+        }
+    }
+
+    <span class="cm">// ── Advance simulation by one tick for ALL elevators ─────────────</span>
+    <span class="kw">public void</span> <span class="mt">stepAll</span>() {
+        <span class="kw">for</span> (<span class="ty">Elevator</span> e : elevators) {
+            e.step();
+        }
+    }
+
+    <span class="kw">public void</span> <span class="mt">printStatus</span>() {
+        <span class="kw">for</span> (<span class="ty">Elevator</span> e : elevators) {
+            <span class="ty">System</span>.out.printf(<span class="st">"  Elevator %d: floor=%d state=%s dir=%s%n"</span>,
+                e.getId(), e.getCurrentFloor(), e.getState(), e.getDirection());
+        }
+    }
+}</pre>
+  </div>
+
+  <!-- MAIN -->
+  <div class="code-card">
+    <div class="code-header"><span class="code-fname">Main.java</span><div class="code-meta"><span class="code-tag tag-solid">Always demo — simulate ticks</span></div></div>
+    <pre><span class="kw">public class</span> <span class="ty">Main</span> {
+    <span class="kw">public static void</span> <span class="mt">main</span>(<span class="ty">String</span>[] args) {
+
+        <span class="cm">// 3 elevators, all starting at ground floor (0)</span>
+        <span class="ty">ElevatorController</span> controller = <span class="ty">ElevatorController</span>.getInstance(<span class="nm">3</span>);
+
+        <span class="cm">// External request: someone on floor 5 wants to go UP</span>
+        controller.requestElevator(<span class="nm">5</span>, <span class="ty">Direction</span>.UP);
+
+        <span class="cm">// Internal request: person inside Elevator 1 wants floor 8</span>
+        controller.requestFloorFromInsideElevator(<span class="nm">1</span>, <span class="nm">8</span>);
+
+        <span class="ty">System</span>.out.println(<span class="st">"\nInitial status:"</span>);
+        controller.printStatus();
+
+        <span class="cm">// Simulate 6 time steps — watch Elevator 1 move toward floor 5, then 8</span>
+        <span class="kw">for</span> (<span class="kw">int</span> tick = <span class="nm">1</span>; tick &lt;= <span class="nm">6</span>; tick++) {
+            controller.stepAll();
+            <span class="ty">System</span>.out.println(<span class="st">"\nAfter tick "</span> + tick + <span class="st">":"</span>);
+            controller.printStatus();
+        }
+    }
+}
+
+<span class="cm">/* Expected output (abridged):
+[DISPATCH] Floor 5 (UP) -> Elevator 1   (all elevators at floor 0, Elevator 1 picked — tie-break: first)
+[CABIN] Elevator 1 -> Floor 8
+
+Initial status:
+  Elevator 1: floor=0 state=MOVING dir=UP
+  Elevator 2: floor=0 state=IDLE dir=IDLE
+  Elevator 3: floor=0 state=IDLE dir=IDLE
+
+After tick 1:
+  Elevator 1: floor=1 state=MOVING dir=UP
+  ...
+After tick 5:
+  Elevator 1: floor=5 state=DOORS_OPEN dir=UP   (reached floor 5, doors open)
+After tick 6:
+  Elevator 1: floor=5 state=MOVING dir=UP       (doors closed, continuing to floor 8)
+*/</span></pre>
+  </div>
+
+  <div class="callout callout-blue">
+    <strong>Why "step by step" simulation instead of real threads/timers?</strong> In a 35-minute window, a deterministic <code>step()</code> method you call in a loop is MUCH easier to demo and reason about than real concurrency. If asked "how would this run in production?" — say: "Each Elevator would run on its own thread or be driven by a scheduled task calling step() every N milliseconds; the Controller's methods would need synchronization since multiple floor panels could call requestElevator() concurrently."
+  </div>
+</div>
+
+<hr class="div">
+
+<!-- ── SOLID PRINCIPLES ── -->
+<div id="solid" class="section">
+  <div class="section-header">
+    <div class="section-badge" style="background:var(--teal-bg);border-color:var(--teal-border);color:var(--teal)">S</div>
+    <h2>SOLID Principles — where exactly in the code</h2>
+  </div>
+
+  <div class="callout callout-teal">
+    <strong>How to bring this up:</strong> The Elevator/Controller split is the cleanest SRP example across all 4 problems we've covered — "movement" and "dispatch" are TRULY independent concerns, and the code structure makes that obvious.
+  </div>
+
+  <div class="solid-grid">
+    <div class="solid-card">
+      <div class="solid-letter">S</div>
+      <div class="solid-name">Single Responsibility</div>
+      <div class="solid-desc">Every class has exactly one reason to change.</div>
+      <div class="solid-where">Elevator — only its own movement/state/queues. ElevatorController — only dispatch + aggregation. NearestElevatorStrategy — only the selection metric. Request — only data.</div>
+    </div>
+    <div class="solid-card">
+      <div class="solid-letter">O</div>
+      <div class="solid-name">Open / Closed</div>
+      <div class="solid-desc">Open for extension, closed for modification.</div>
+      <div class="solid-where">Add ZoningStrategy or SCANStrategy → new class implementing DispatchStrategy + one setDispatchStrategy() call. Elevator and ElevatorController's core logic — zero changes.</div>
+    </div>
+    <div class="solid-card">
+      <div class="solid-letter">L</div>
+      <div class="solid-name">Liskov Substitution</div>
+      <div class="solid-desc">Any implementation can replace another without breaking callers.</div>
+      <div class="solid-where">controller.requestElevator() calls dispatchStrategy.selectElevator(...) — works identically whether the strategy is NearestElevatorStrategy or any future strategy returning a valid Elevator.</div>
+    </div>
+    <div class="solid-card">
+      <div class="solid-letter">I</div>
+      <div class="solid-name">Interface Segregation</div>
+      <div class="solid-desc">Don't force implementations to support unused methods.</div>
+      <div class="solid-where">DispatchStrategy has exactly ONE method — selectElevator(). A strategy implementation isn't forced to also implement movement logic or state transitions — those stay in Elevator.</div>
+    </div>
+    <div class="solid-card" style="grid-column: 1/-1">
+      <div class="solid-letter">D</div>
+      <div class="solid-name">Dependency Inversion</div>
+      <div class="solid-desc">High-level modules depend on abstractions, not concrete classes.</div>
+      <div class="solid-where">ElevatorController holds a DispatchStrategy field (interface) — never references NearestElevatorStrategy in its logic, only at construction/configuration time. This is why setDispatchStrategy() can swap algorithms at runtime without recompiling Controller.</div>
+    </div>
+  </div>
+</div>
+
+<hr class="div">
+
+<!-- ── DESIGN PATTERNS ── -->
+<div id="patterns" class="section">
+  <div class="section-header">
+    <div class="section-badge" style="background:var(--blue-bg);border-color:var(--blue-border);color:var(--blue)">P</div>
+    <h2>Design Patterns — what's used and why</h2>
+  </div>
+
+  <div class="pattern-card">
+    <div class="pattern-head">
+      <div class="pattern-icon">1</div>
+      <div class="pattern-name">State Pattern (lightweight version)</div>
+    </div>
+    <div class="pattern-why">An elevator's behavior fundamentally depends on its current state — what step() does differs completely for IDLE vs MOVING vs DOORS_OPEN. We implemented this as an enum + switch for speed, but it IS the State pattern's core idea: behavior varies by current state. <strong>If asked to go deeper:</strong> "I'd extract each case into its own class — IdleState, MovingState, DoorsOpenState — each implementing a common ElevatorStateHandler interface with a handle(Elevator) method. Elevator would hold a reference to its current state object and delegate step() to it. This helps when each state has MANY lines of distinct logic (e.g. adding emergency/maintenance states) — the switch statement would otherwise become huge and violate OCP."</div>
+    <div class="pattern-where">Used in: ElevatorState enum + Elevator.step() switch. Full version: extension point.</div>
+  </div>
+
+  <div class="pattern-card">
+    <div class="pattern-head">
+      <div class="pattern-icon">2</div>
+      <div class="pattern-name">Strategy Pattern (dispatch algorithm)</div>
+    </div>
+    <div class="pattern-why">"Which elevator answers this call?" is the single most variable piece of an elevator system — entire research papers exist on elevator scheduling (SCAN, LOOK, destination dispatch, zoning). By isolating this behind <code>DispatchStrategy</code>, we can start with the simplest correct version (nearest elevator) and swap in smarter ones later without touching Elevator or Controller. This is also the answer to "the algorithm could get arbitrarily complex — how do you keep your design from becoming spaghetti?"</div>
+    <div class="pattern-where">Used in: DispatchStrategy interface + NearestElevatorStrategy</div>
+  </div>
+
+  <div class="pattern-card">
+    <div class="pattern-head">
+      <div class="pattern-icon">3</div>
+      <div class="pattern-name">Singleton Pattern</div>
+    </div>
+    <div class="pattern-why">One controller manages the building's elevator bank — exactly the same reasoning as ParkingLot, RateLimiter, and Logger. Two independent controllers could dispatch conflicting instructions to the same elevator.</div>
+    <div class="pattern-where">Used in: ElevatorController.getInstance()</div>
+  </div>
+
+  <div class="pattern-card">
+    <div class="pattern-head">
+      <div class="pattern-icon">4</div>
+      <div class="pattern-name">Observer Pattern (extension — for displays/indicators)</div>
+    </div>
+    <div class="pattern-why">If asked "how would you update floor displays and direction arrows in real time?" — say: "I'd make Elevator a <em>subject</em> that floor displays and in-cabin indicators <em>observe</em>. Whenever step() changes currentFloor or direction, Elevator notifies all registered observers, who update their UI. This decouples 'how the elevator moves' from 'how that movement is displayed' — adding a new display type requires zero changes to Elevator."</div>
+    <div class="pattern-where">Extension point: ElevatorObserver interface + Elevator.notifyObservers()</div>
+  </div>
+
+  <div class="code-card">
+    <div class="code-header"><span class="code-fname">ElevatorObserver.java — bonus answer for live displays</span><div class="code-meta"><span class="code-tag tag-pattern">Observer Pattern</span></div></div>
+    <pre><span class="cm">// ── Design Pattern: OBSERVER ──────────────────────────────────────────────</span>
+<span class="cm">// Displays/indicators register themselves and get notified on every change.</span>
+<span class="cm">// Elevator doesn't know or care WHAT the observers do with the update.</span>
+
+<span class="kw">public interface</span> <span class="ty">ElevatorObserver</span> {
+    <span class="kw">void</span> <span class="mt">onElevatorUpdate</span>(<span class="kw">int</span> elevatorId, <span class="kw">int</span> currentFloor, <span class="ty">Direction</span> direction);
+}
+
+<span class="cm">// Example concrete observer — a floor display panel</span>
+<span class="kw">public class</span> <span class="ty">FloorDisplay</span> <span class="kw">implements</span> <span class="ty">ElevatorObserver</span> {
+    <span class="an">@Override</span>
+    <span class="kw">public void</span> <span class="mt">onElevatorUpdate</span>(<span class="kw">int</span> elevatorId, <span class="kw">int</span> currentFloor, <span class="ty">Direction</span> direction) {
+        <span class="ty">System</span>.out.printf(<span class="st">"[DISPLAY] Elevator %d is now at floor %d (%s)%n"</span>,
+            elevatorId, currentFloor, direction);
+    }
+}
+
+<span class="cm">// In Elevator: maintain List&lt;ElevatorObserver&gt; observers;</span>
+<span class="cm">// At the end of step(), call: observers.forEach(o -&gt;</span>
+<span class="cm">//     o.onElevatorUpdate(id, currentFloor, direction));</span></pre>
+  </div>
+</div>
+
+<hr class="div">
+
+<!-- ── INTERVIEW TIPS ── -->
+<div id="tips" class="section">
+  <div class="section-header">
+    <div class="section-badge" style="background:var(--amber-bg);border-color:var(--amber-border);color:var(--amber)">!</div>
+    <h2>Interview Tips — what separates good from great</h2>
+  </div>
+
+  <div style="display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-bottom:24px">
+    <div>
+      <div style="font-size:13px;font-weight:600;color:var(--green);margin-bottom:10px">Things to DO</div>
+      <div class="tip-row"><span class="tip-icon check">✓</span><span style="color:var(--text2);font-size:13.5px">Scope down aggressively in the first 10 minutes</span></div>
+      <div class="tip-row"><span class="tip-icon check">✓</span><span style="color:var(--text2);font-size:13.5px">Separate "one elevator's behavior" from "the dispatcher"</span></div>
+      <div class="tip-row"><span class="tip-icon check">✓</span><span style="color:var(--text2);font-size:13.5px">Use two priority queues (up/down) — the classic correct structure</span></div>
+      <div class="tip-row"><span class="tip-icon check">✓</span><span style="color:var(--text2);font-size:13.5px">Implement a simple step() — easy to demo deterministically</span></div>
+      <div class="tip-row"><span class="tip-icon check">✓</span><span style="color:var(--text2);font-size:13.5px">Distinguish external (dispatch) vs internal (direct) requests</span></div>
+      <div class="tip-row"><span class="tip-icon check">✓</span><span style="color:var(--text2);font-size:13.5px">Mention State pattern, Observer, SCAN — even if not coded</span></div>
+    </div>
+    <div>
+      <div style="font-size:13px;font-weight:600;color:var(--red);margin-bottom:10px">Things to AVOID</div>
+      <div class="tip-row"><span class="tip-icon cross">✗</span><span style="color:var(--text2);font-size:13.5px">Trying to implement SCAN/LOOK scheduling in 35 minutes</span></div>
+      <div class="tip-row"><span class="tip-icon cross">✗</span><span style="color:var(--text2);font-size:13.5px">Using a single ArrayList of requests (loses floor-order guarantee)</span></div>
+      <div class="tip-row"><span class="tip-icon cross">✗</span><span style="color:var(--text2);font-size:13.5px">Real threads/Thread.sleep() for "movement" — overcomplicates demo</span></div>
+      <div class="tip-row"><span class="tip-icon cross">✗</span><span style="color:var(--text2);font-size:13.5px">Putting dispatch logic inside the Elevator class itself</span></div>
+      <div class="tip-row"><span class="tip-icon cross">✗</span><span style="color:var(--text2);font-size:13.5px">Forgetting to handle "elevator finishes all requests → IDLE"</span></div>
+      <div class="tip-row"><span class="tip-icon cross">✗</span><span style="color:var(--text2);font-size:13.5px">Ignoring direction when picking "nearest" (fine to mention as limitation)</span></div>
+    </div>
+  </div>
+
+  <div class="callout callout-purple">
+    <strong>Bonus questions to prepare for:</strong><br>
+    <strong>"Your nearest-elevator strategy ignores direction — is that a problem?"</strong> → Yes: an elevator moving DOWN past floor 5 shouldn't be picked for an UP request at floor 5 even if it's "nearest" at that instant. A better strategy checks direction compatibility, or only considers IDLE elevators + elevators already moving toward the request in the same direction.<br>
+    <strong>"How would you implement SCAN/LOOK scheduling?"</strong> → Each elevator services all requests in its current direction until none remain, then reverses — which is EXACTLY what our two-heap + decideNextDirection() already does per elevator! SCAN at the building level would extend this to coordinating multiple elevators into "zones" so they don't cluster.<br>
+    <strong>"How do you prevent starvation — a request on floor 10 waiting forever if elevators keep getting closer requests?"</strong> → Add a max-wait timer per request; if exceeded, temporarily boost its priority or force the nearest idle elevator to serve it next.<br>
+    <strong>"What about capacity (max weight/people)?"</strong> → Add a <code>capacity</code> field and <code>currentLoad</code> to Elevator; DispatchStrategy.selectElevator() filters out elevators at capacity before computing distance.<br>
+    <strong>"How would you make this thread-safe for concurrent requests?"</strong> → synchronized on requestElevator() and addRequest(), or use a single-threaded executor per elevator that processes its queue, with the controller submitting tasks to the right executor.
+  </div>
+
+  <div class="callout callout-amber">
+    <strong>Next LLD problems to practice (in order):</strong><br>
+    1. LRU Cache — small interface + core algorithm (DLL + HashMap)<br>
+    2. Splitwise — graph + settlement algorithm<br>
+    3. Tic-Tac-Toe / Chess — full State pattern in depth<br>
+    4. Vending Machine — State pattern, different domain<br>
+    5. Notification System — Strategy (channels) + Observer + Factory
+  </div>
+</div>
+
+<script>
+const sections = document.querySelectorAll('[id]');
+const navLinks = document.querySelectorAll('.nav a');
+const observer = new IntersectionObserver(entries => {
+  entries.forEach(e => {
+    if(e.isIntersecting) {
+      navLinks.forEach(a => a.classList.toggle('active', a.getAttribute('href') === '#'+e.target.id));
+    }
+  });
+}, {rootMargin:'-20% 0px -70% 0px'});
+sections.forEach(s => observer.observe(s));
+</script>
+</body>
+</html>
