@@ -1,0 +1,918 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Notification System LLD — Complete 60-Min Interview Guide</title>
+<link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;600&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+:root {
+  --bg:#0d1117;--bg2:#161b22;--bg3:#21262d;
+  --border:rgba(255,255,255,0.08);--border2:rgba(255,255,255,0.14);
+  --text:#e6edf3;--text2:#8b949e;--text3:#6e7681;
+  --purple:#a78bfa;--purple-bg:rgba(167,139,250,0.1);--purple-border:rgba(167,139,250,0.3);
+  --teal:#34d399;--teal-bg:rgba(52,211,153,0.08);--teal-border:rgba(52,211,153,0.25);
+  --amber:#fbbf24;--amber-bg:rgba(251,191,36,0.08);--amber-border:rgba(251,191,36,0.25);
+  --coral:#fb923c;--coral-bg:rgba(251,146,60,0.08);--coral-border:rgba(251,146,60,0.25);
+  --blue:#60a5fa;--blue-bg:rgba(96,165,250,0.08);--blue-border:rgba(96,165,250,0.25);
+  --red:#f87171;--green:#4ade80;
+  --kw:#ff7b72;--ty:#79c0ff;--st:#a5d6a7;--cm:#484f58;--an:#e3b341;--mt:#d2a8ff;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth}
+body{background:var(--bg);color:var(--text);font-family:'Inter',sans-serif;font-size:15px;line-height:1.7}
+
+.nav{position:sticky;top:0;z-index:100;background:rgba(13,17,23,0.95);backdrop-filter:blur(8px);border-bottom:1px solid var(--border);padding:0 24px;display:flex;align-items:center;gap:4px;overflow-x:auto;white-space:nowrap}
+.nav a{display:inline-flex;align-items:center;gap:6px;padding:12px 10px;font-size:12px;font-weight:500;color:var(--text2);text-decoration:none;border-bottom:2px solid transparent;transition:color .15s,border-color .15s}
+.nav a:hover,.nav a.active{color:var(--text);border-bottom-color:var(--purple)}
+.nav-time{margin-left:auto;padding:8px 12px;background:var(--purple-bg);border:1px solid var(--purple-border);border-radius:6px;font-size:11px;color:var(--purple);font-weight:600;white-space:nowrap}
+
+.hero{background:linear-gradient(135deg,#1a1040 0%,#0d1117 50%,#0a1628 100%);padding:56px 40px 48px;border-bottom:1px solid var(--border)}
+.hero-tag{display:inline-flex;align-items:center;gap:6px;background:var(--purple-bg);border:1px solid var(--purple-border);border-radius:20px;padding:5px 14px;font-size:11px;font-weight:600;color:var(--purple);letter-spacing:.5px;margin-bottom:20px}
+.hero h1{font-size:36px;font-weight:700;color:#fff;line-height:1.15;margin-bottom:12px}
+.hero p{color:var(--text2);font-size:16px;max-width:620px;margin-bottom:24px}
+.hero-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;max-width:640px}
+.hero-stat{background:var(--bg2);border:1px solid var(--border);border-radius:10px;padding:14px 16px}
+.hero-stat .n{font-size:22px;font-weight:700;color:var(--purple)}
+.hero-stat .l{font-size:12px;color:var(--text2);margin-top:2px}
+
+.section{max-width:920px;margin:0 auto;padding:48px 24px}
+.section-header{display:flex;align-items:center;gap:12px;margin-bottom:28px}
+.section-badge{width:32px;height:32px;border-radius:8px;background:var(--purple-bg);border:1px solid var(--purple-border);display:flex;align-items:center;justify-content:center;font-size:13px;font-weight:700;color:var(--purple);flex-shrink:0}
+.section-header h2{font-size:20px;font-weight:600;color:#fff}
+.section-header .time-tag{margin-left:auto;font-size:11px;font-weight:600;padding:4px 10px;border-radius:12px;white-space:nowrap}
+.time-green{background:rgba(74,222,128,0.1);color:var(--green);border:1px solid rgba(74,222,128,0.2)}
+.time-blue{background:var(--blue-bg);color:var(--blue);border:1px solid var(--blue-border)}
+.time-amber{background:var(--amber-bg);color:var(--amber);border:1px solid var(--amber-border)}
+.time-coral{background:var(--coral-bg);color:var(--coral);border:1px solid var(--coral-border)}
+hr.div{border:none;border-top:1px solid var(--border);margin:0}
+
+.timeline{position:relative;padding-left:28px}
+.timeline::before{content:'';position:absolute;left:9px;top:8px;bottom:8px;width:1px;background:var(--border2)}
+.tl-item{position:relative;margin-bottom:24px}
+.tl-item:last-child{margin-bottom:0}
+.tl-dot{position:absolute;left:-24px;top:4px;width:18px;height:18px;border-radius:50%;border:2px solid var(--purple);background:var(--bg);display:flex;align-items:center;justify-content:center}
+.tl-dot-inner{width:6px;height:6px;border-radius:50%;background:var(--purple)}
+.tl-head{font-size:14px;font-weight:600;color:#fff;margin-bottom:4px}
+.tl-body{font-size:13.5px;color:var(--text2);line-height:1.6}
+.tl-body code{font-family:'JetBrains Mono',monospace;font-size:12px;background:var(--bg3);padding:1px 5px;border-radius:3px;color:var(--ty)}
+
+.callout{border-radius:10px;padding:14px 18px;margin:16px 0;border-left:3px solid;font-size:13.5px;line-height:1.6}
+.callout-purple{background:var(--purple-bg);border-color:var(--purple)}
+.callout-teal{background:var(--teal-bg);border-color:var(--teal)}
+.callout-amber{background:var(--amber-bg);border-color:var(--amber)}
+.callout-coral{background:var(--coral-bg);border-color:var(--coral)}
+.callout-blue{background:var(--blue-bg);border-color:var(--blue)}
+.callout strong{color:#fff}
+.callout code{font-family:'JetBrains Mono',monospace;font-size:11.5px;background:rgba(255,255,255,0.08);padding:1px 5px;border-radius:3px}
+
+.dialogue{margin:20px 0}
+.msg{display:flex;gap:10px;margin-bottom:12px;align-items:flex-start}
+.msg-avatar{width:30px;height:30px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:700;flex-shrink:0;margin-top:2px}
+.av-i{background:rgba(251,146,60,0.2);color:var(--coral)}
+.av-you{background:var(--purple-bg);color:var(--purple)}
+.msg-bubble{padding:10px 14px;border-radius:10px;font-size:13.5px;line-height:1.6;max-width:90%}
+.bubble-i{background:var(--bg3);border:1px solid var(--border);color:var(--text)}
+.bubble-you{background:var(--purple-bg);border:1px solid var(--purple-border);color:var(--text)}
+.msg-label{font-size:11px;color:var(--text3);margin-bottom:4px;font-weight:500}
+.thought{font-style:italic;font-size:12px;color:var(--text3);margin-left:40px;margin-bottom:12px;padding:6px 12px;border-left:2px solid var(--border2)}
+
+.code-card{background:var(--bg2);border:1px solid var(--border);border-radius:12px;overflow:hidden;margin:16px 0}
+.code-header{display:flex;align-items:center;justify-content:space-between;padding:10px 16px;border-bottom:1px solid var(--border);background:var(--bg3)}
+.code-fname{font-family:'JetBrains Mono',monospace;font-size:12px;color:var(--amber);font-weight:600}
+.code-meta{font-size:11px;color:var(--text3);display:flex;align-items:center;gap:10px;flex-wrap:wrap}
+.code-tag{padding:2px 8px;border-radius:4px;font-size:10px;font-weight:600;letter-spacing:.3px}
+.tag-solid{background:rgba(74,222,128,0.12);color:var(--green);border:1px solid rgba(74,222,128,0.2)}
+.tag-pattern{background:var(--blue-bg);color:var(--blue);border:1px solid var(--blue-border)}
+pre{margin:0;padding:18px 20px;overflow-x:auto;font-family:'JetBrains Mono',monospace;font-size:12.5px;line-height:1.85;tab-size:4}
+.kw{color:var(--kw);font-weight:600}.ty{color:var(--ty)}.st{color:var(--st)}.cm{color:var(--cm);font-style:italic}.an{color:var(--an)}.mt{color:var(--mt)}.nm{color:#f97316}
+
+.er-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(155px,1fr));gap:10px;margin:16px 0}
+.er-card{background:var(--bg2);border:1px solid var(--border);border-radius:8px;overflow:hidden}
+.er-head{padding:8px 12px;font-size:12px;font-weight:600;border-bottom:1px solid var(--border)}
+.er-head.purple{background:var(--purple-bg);color:var(--purple)}
+.er-head.teal{background:var(--teal-bg);color:var(--teal)}
+.er-head.amber{background:var(--amber-bg);color:var(--amber)}
+.er-head.coral{background:var(--coral-bg);color:var(--coral)}
+.er-head.blue{background:var(--blue-bg);color:var(--blue)}
+.er-row{padding:5px 12px;font-size:11.5px;color:var(--text2);border-bottom:1px solid rgba(255,255,255,0.04);font-family:'JetBrains Mono',monospace}
+.er-row:last-child{border-bottom:none}
+.er-pk{color:var(--amber)}
+.er-rel{display:flex;align-items:center;justify-content:center;gap:8px;padding:10px;font-size:11.5px;color:var(--text2);text-align:center}
+.rel-line{flex:1;height:1px;background:var(--border2)}
+
+.solid-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin:16px 0}
+.solid-card{background:var(--bg2);border:1px solid var(--border);border-radius:8px;padding:14px}
+.solid-letter{font-size:22px;font-weight:700;color:var(--purple);margin-bottom:4px}
+.solid-name{font-size:12px;font-weight:600;color:#fff;margin-bottom:6px}
+.solid-desc{font-size:12px;color:var(--text2);line-height:1.5}
+.solid-where{margin-top:8px;font-size:11px;color:var(--teal);background:var(--teal-bg);border:1px solid var(--teal-border);padding:4px 8px;border-radius:4px;display:inline-block}
+
+.pattern-card{background:var(--bg2);border:1px solid var(--border);border-radius:10px;padding:16px 18px;margin-bottom:14px}
+.pattern-head{display:flex;align-items:center;gap:10px;margin-bottom:8px}
+.pattern-icon{width:32px;height:32px;border-radius:8px;background:var(--blue-bg);border:1px solid var(--blue-border);display:flex;align-items:center;justify-content:center;font-size:14px;font-weight:700;color:var(--blue)}
+.pattern-name{font-size:14px;font-weight:600;color:#fff}
+.pattern-why{font-size:13px;color:var(--text2);margin-bottom:8px}
+.pattern-where{font-size:12px;color:var(--amber);background:var(--amber-bg);border:1px solid var(--amber-border);padding:4px 10px;border-radius:4px;display:inline-block}
+
+.order-table{width:100%;border-collapse:collapse;font-size:13px;margin:16px 0}
+.order-table th{text-align:left;padding:8px 14px;font-size:11px;font-weight:600;color:var(--text3);text-transform:uppercase;letter-spacing:.5px;border-bottom:1px solid var(--border)}
+.order-table td{padding:10px 14px;border-bottom:1px solid rgba(255,255,255,0.04);color:var(--text2)}
+.order-table tr:last-child td{border-bottom:none}
+.order-table td:first-child{color:#fff;font-weight:500;font-family:'JetBrains Mono',monospace;font-size:12px}
+.order-num{display:inline-flex;align-items:center;justify-content:center;width:20px;height:20px;border-radius:50%;background:var(--purple-bg);border:1px solid var(--purple-border);font-size:10px;font-weight:700;color:var(--purple);margin-right:8px}
+
+.tip-row{display:flex;gap:8px;margin-bottom:10px;font-size:13.5px}
+.tip-icon{flex-shrink:0;margin-top:3px;font-size:15px}
+.check{color:var(--green)}.cross{color:var(--red)}
+
+.progress-container{margin:20px 0}
+.progress-row{display:flex;align-items:center;gap:12px;margin-bottom:10px}
+.progress-label{width:110px;font-size:12px;font-weight:500;color:var(--text2);flex-shrink:0}
+.progress-bar{flex:1;height:6px;background:var(--bg3);border-radius:3px;overflow:hidden}
+.progress-fill{height:100%;border-radius:3px}
+.progress-time{width:50px;font-size:11px;color:var(--text3);text-align:right;flex-shrink:0}
+
+.algo-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:12px;margin:16px 0}
+.algo-card{background:var(--bg2);border:1px solid var(--border);border-radius:10px;padding:14px 16px}
+.algo-card.active{border-color:var(--teal-border);background:var(--teal-bg)}
+.algo-name{font-size:13px;font-weight:600;color:#fff;margin-bottom:6px}
+.algo-desc{font-size:12px;color:var(--text2);line-height:1.5;margin-bottom:8px}
+.algo-tag{font-size:10px;font-weight:600;padding:2px 8px;border-radius:4px;display:inline-block}
+.algo-tag.pick{background:var(--teal-bg);color:var(--teal);border:1px solid var(--teal-border)}
+.algo-tag.alt{background:var(--bg3);color:var(--text3);border:1px solid var(--border)}
+
+@media(max-width:600px){
+  .hero{padding:32px 20px}.hero h1{font-size:26px}.hero-grid{grid-template-columns:1fr 1fr}
+  .solid-grid{grid-template-columns:1fr}.section{padding:32px 16px}
+  pre{font-size:11px;padding:14px}.nav a{padding:10px 8px;font-size:11px}
+}
+</style>
+</head>
+<body>
+
+<nav class="nav">
+  <a href="#overview">Overview</a>
+  <a href="#problem">The Problem</a>
+  <a href="#phase1">Phase 1: Requirements</a>
+  <a href="#phase2">Phase 2: Design</a>
+  <a href="#phase3">Phase 3: Code</a>
+  <a href="#solid">SOLID</a>
+  <a href="#patterns">Patterns</a>
+  <a href="#tips">Tips</a>
+  <span class="nav-time">60 min total</span>
+</nav>
+
+<div class="hero">
+  <div class="hero-tag">SDE-1 LLD Interview Playbook</div>
+  <h1>Notification System<br>Complete 60-Minute Guide</h1>
+  <p>The RICHEST patterns problem — Strategy + Observer + Factory all in one place. Three patterns, one clean system. Here's exactly how to think, talk, draw, and code it.</p>
+  <div class="hero-grid">
+    <div class="hero-stat"><div class="n">10m</div><div class="l">Requirements</div></div>
+    <div class="hero-stat"><div class="n">10m</div><div class="l">Design + Diagram</div></div>
+    <div class="hero-stat"><div class="n">35m</div><div class="l">Coding</div></div>
+    <div class="hero-stat"><div class="n">5m</div><div class="l">Review + Q&A</div></div>
+  </div>
+</div>
+
+<!-- ── PROBLEM DEPTH ── -->
+<div id="problem" class="section" style="padding-bottom:0">
+  <div class="section-header">
+    <div class="section-badge">★</div>
+    <h2>Understanding the problem in depth — first</h2>
+  </div>
+
+  <div class="callout callout-purple">
+    <strong>What is a Notification System, really?</strong> When something happens in your app — a new order, a password reset, a promotional campaign — the system needs to tell certain users about it, through one or more channels (Email, SMS, Push, WhatsApp). The system decides: WHICH users to notify, through WHICH channels, with WHAT message content.
+  </div>
+
+  <div class="callout callout-blue">
+    <strong>Why this question is uniquely rich for SDE-1:</strong> It's the only classic LLD problem where THREE of the most important patterns appear naturally and necessarily — Observer (who gets notified?), Strategy (how is the notification sent?), and Factory (who creates the right sender?). Each pattern solves a genuinely different problem in the same system — making this the best problem to demonstrate pattern fluency.
+  </div>
+
+  <p style="color:var(--text2);font-size:13px;margin:16px 0 8px">The 3 axes of variation — identify these first, each becomes a pattern:</p>
+  <div class="algo-grid">
+    <div class="algo-card active">
+      <div class="algo-name">WHO gets notified <span class="algo-tag pick">Observer Pattern</span></div>
+      <div class="algo-desc">Users subscribe to event types (ORDER_PLACED, PROMO, ALERT). When an event fires, all subscribers to that type get notified. Adding/removing subscribers doesn't change the event source.</div>
+    </div>
+    <div class="algo-card active">
+      <div class="algo-name">HOW it's delivered <span class="algo-tag pick">Strategy Pattern</span></div>
+      <div class="algo-desc">Email, SMS, Push notification, WhatsApp. Each channel has a completely different implementation. Must be pluggable — a new channel = new class, no changes elsewhere.</div>
+    </div>
+    <div class="algo-card active">
+      <div class="algo-name">WHICH channel to create <span class="algo-tag pick">Factory Pattern</span></div>
+      <div class="algo-desc">Based on user preferences or notification type, a factory decides which NotificationSender to instantiate. Callers don't write "new EmailSender()" — they ask the factory.</div>
+    </div>
+    <div class="algo-card">
+      <div class="algo-name">User preferences <span class="algo-tag alt">User Profile</span></div>
+      <div class="algo-desc">Each user has preferred channels (some want Email only, some want SMS + Push). The system respects these preferences — one event may send via 2 channels for one user and 1 channel for another.</div>
+    </div>
+  </div>
+
+  <div class="callout callout-amber">
+    <strong>The exact system we'll build:</strong> A <code>NotificationService</code> (Singleton) accepts events. Users subscribe to event types (Observer). When an event fires, all subscribers are notified. For each subscriber, the system checks their preferred channels, uses a <code>NotificationSenderFactory</code> to get the right <code>NotificationSender</code> (Strategy), and sends. Every piece is independently extensible.
+  </div>
+</div>
+
+<hr class="div" style="margin-top:32px">
+
+<div id="overview" style="max-width:920px;margin:0 auto;padding:48px 24px 0">
+  <div class="section-header">
+    <div class="section-badge">0</div>
+    <h2>The Mental Model — what are they actually testing?</h2>
+  </div>
+  <div class="callout callout-purple">
+    <strong>Interviewer's secret checklist:</strong> Can you correctly identify that "who gets notified" and "how it's sent" are two INDEPENDENT concerns? Do you know Observer vs Strategy and which solves which? Can you articulate why Factory is needed even when Strategy exists? Can you model user preferences cleanly?
+  </div>
+  <div class="progress-container">
+    <div class="progress-row"><div class="progress-label">Requirements</div><div class="progress-bar"><div class="progress-fill" style="width:17%;background:#a78bfa"></div></div><div class="progress-time">0–10 min</div></div>
+    <div class="progress-row"><div class="progress-label">Entities</div><div class="progress-bar"><div class="progress-fill" style="width:10%;background:#34d399"></div></div><div class="progress-time">10–16 min</div></div>
+    <div class="progress-row"><div class="progress-label">Diagram</div><div class="progress-bar"><div class="progress-fill" style="width:7%;background:#60a5fa"></div></div><div class="progress-time">16–20 min</div></div>
+    <div class="progress-row"><div class="progress-label">Coding</div><div class="progress-bar"><div class="progress-fill" style="width:58%;background:#fb923c"></div></div><div class="progress-time">20–55 min</div></div>
+    <div class="progress-row"><div class="progress-label">Review</div><div class="progress-bar"><div class="progress-fill" style="width:8%;background:#fbbf24"></div></div><div class="progress-time">55–60 min</div></div>
+  </div>
+</div>
+
+<hr class="div">
+
+<!-- ── PHASE 1: REQUIREMENTS ── -->
+<div id="phase1" class="section">
+  <div class="section-header">
+    <div class="section-badge">1</div>
+    <h2>Phase 1 — Gathering Requirements</h2>
+    <span class="time-tag time-green">0 – 10 min</span>
+  </div>
+
+  <div class="callout callout-teal">
+    <strong>The critical insight to name early:</strong> "Who gets notified" and "how it's delivered" are completely separate concerns. If you say this within the first 5 minutes, the interviewer knows you already understand the design before writing a line.
+  </div>
+
+  <div class="dialogue">
+    <div class="msg"><div class="msg-avatar av-i">I</div><div><div class="msg-label">Interviewer</div><div class="msg-bubble bubble-i">"Design a Notification System."</div></div></div>
+
+    <div class="msg"><div class="msg-avatar av-you">You</div><div><div class="msg-label">You</div><div class="msg-bubble bubble-you">"Sure! Let me ask a few questions to understand the scope."</div></div></div>
+
+    <div class="msg"><div class="msg-avatar av-you">You</div><div><div class="msg-label">You — Question 1 (Channels)</div><div class="msg-bubble bubble-you">"What delivery channels should we support — Email, SMS, Push notification? Should multiple channels be active at the same time, and should we design it so new channels like WhatsApp can be added later without changing existing code?"</div></div></div>
+    <div class="thought">← "Multiple channels simultaneously" + "extensible" = Strategy pattern with a list. Naming extensibility here is the same move we made in the Logging Framework — it directly maps to Strategy.</div>
+
+    <div class="msg"><div class="msg-avatar av-i">I</div><div><div class="msg-label">Interviewer</div><div class="msg-bubble bubble-i">"Email, SMS, and Push for now. Yes, extensible, and a user might get SMS and Email both."</div></div></div>
+
+    <div class="msg"><div class="msg-avatar av-you">You</div><div><div class="msg-label">You — Question 2 (Who gets notified)</div><div class="msg-bubble bubble-you">"How do users opt in to notifications — do they subscribe to specific event types like 'order updates' or 'promotions'? And when an event fires, does it notify all subscribers to that type, or is it targeted at a specific user?"</div></div></div>
+    <div class="thought">← "Subscribe to event types, all subscribers get notified when event fires" = Observer pattern. This is the exact definition. Name it as soon as you recognize it.</div>
+
+    <div class="msg"><div class="msg-avatar av-i">I</div><div><div class="msg-label">Interviewer</div><div class="msg-bubble bubble-i">"Users subscribe to event types. When an event fires, all subscribers to that type should be notified."</div></div></div>
+
+    <div class="msg"><div class="msg-avatar av-you">You</div><div><div class="msg-label">You — Question 3 (User preferences)</div><div class="msg-bubble bubble-you">"Can each user have preferred channels — like user A wants Email only, user B wants SMS and Push? So the same event might go via different channels for different users?"</div></div></div>
+    <div class="thought">← If yes, user preferences live on the User object. The NotificationService must loop through each user's preferred channels and send through each — this is where Factory fits in.</div>
+
+    <div class="msg"><div class="msg-avatar av-i">I</div><div><div class="msg-label">Interviewer</div><div class="msg-bubble bubble-i">"Yes, each user has their own preferred channels."</div></div></div>
+
+    <div class="msg"><div class="msg-avatar av-you">You</div><div><div class="msg-label">You — Question 4 (Notification content)</div><div class="msg-bubble bubble-you">"Is the message content fixed per event type, or does it vary per channel — like a short SMS vs a rich HTML email for the same event?"</div></div></div>
+    <div class="thought">← If content varies per channel, you need a template per channel. For SDE-1, say "fixed content for now, but I'll design it so templates can be added later" — keeps scope tight.</div>
+
+    <div class="msg"><div class="msg-avatar av-i">I</div><div><div class="msg-label">Interviewer</div><div class="msg-bubble bubble-i">"Fixed content per event is fine for now."</div></div></div>
+
+    <div class="msg"><div class="msg-avatar av-you">You</div><div><div class="msg-label">You — Summarise (name the patterns explicitly)</div><div class="msg-bubble bubble-you">"Great. So I see three independent concerns here — WHO gets notified (users subscribing to event types → Observer pattern), HOW it's delivered (Email/SMS/Push, extensible → Strategy pattern), and WHICH sender to create (based on channel type → Factory pattern). I'll design these as three separate, independently swappable pieces. Sound good?"</div></div></div>
+    <div class="thought">← You've now named all three patterns in the summary. This is the highest-value sentence in the entire interview. The code is almost secondary to having said this clearly.</div>
+
+    <div class="msg"><div class="msg-avatar av-i">I</div><div><div class="msg-label">Interviewer</div><div class="msg-bubble bubble-i">"Excellent, proceed."</div></div></div>
+  </div>
+
+  <div class="callout callout-amber">
+    <strong>The 4 questions to always ask for Notification System:</strong><br>
+    1. <strong>Which channels? Simultaneous? Extensible?</strong> → Strategy pattern, list of senders<br>
+    2. <strong>Subscribe to event types or targeted sends?</strong> → "subscribe to types" = Observer<br>
+    3. <strong>Per-user channel preferences?</strong> → preferences on User object; Factory picks sender per channel<br>
+    4. <strong>Fixed or per-channel content?</strong> → scope control: "fixed for now, extensible via templates later"
+  </div>
+</div>
+
+<hr class="div">
+
+<!-- ── PHASE 2: DESIGN ── -->
+<div id="phase2" class="section">
+  <div class="section-header">
+    <div class="section-badge">2</div>
+    <h2>Phase 2 — Identify Entities & Quick Diagram</h2>
+    <span class="time-tag time-blue">10 – 20 min</span>
+  </div>
+
+  <div class="callout callout-blue">
+    <strong>Three separate "varies" axes = three separate abstractions.</strong> Do NOT merge them into one big class. The elegance of this design is that each pattern solves exactly one axis — Observer (who), Strategy (how), Factory (which). Keeping them separate means each can evolve independently.
+  </div>
+
+  <div class="timeline">
+    <div class="tl-item">
+      <div class="tl-dot"><div class="tl-dot-inner"></div></div>
+      <div class="tl-head">Step 1 — Identify "varies vs fixed" (2 min, say out loud)</div>
+      <div class="tl-body">Say: <em>"Three things vary independently: WHO is notified (Observer), HOW it's sent (Strategy — NotificationSender interface), and WHICH sender object to create (Factory). Everything else — the User, Notification, NotificationService — is fixed structure."</em></div>
+    </div>
+    <div class="tl-item">
+      <div class="tl-dot"><div class="tl-dot-inner"></div></div>
+      <div class="tl-head">Step 2 — List the classes (2 min)</div>
+      <div class="tl-body">
+        — <code>NotificationType</code> (enum) — ORDER_PLACED, PROMO, SECURITY_ALERT<br>
+        — <code>Channel</code> (enum) — EMAIL, SMS, PUSH<br>
+        — <code>Notification</code> — data holder: type, title, message<br>
+        — <code>User</code> — userId, name, contact info, preferred channels (List&lt;Channel&gt;)<br>
+        — <code>NotificationSender</code> (interface) — Strategy: <code>send(User, Notification)</code><br>
+        — <code>EmailSender</code>, <code>SmsSender</code>, <code>PushSender</code> — Strategy implementations<br>
+        — <code>NotificationSenderFactory</code> — Factory: <code>getSender(Channel)</code> → NotificationSender<br>
+        — <code>NotificationService</code> — Observer subject: subscribe/unsubscribe/notify
+      </div>
+    </div>
+    <div class="tl-item">
+      <div class="tl-dot"><div class="tl-dot-inner"></div></div>
+      <div class="tl-head">Step 3 — Quick diagram — 3 minutes (draw 3 mini-diagrams, not 1 big one)</div>
+      <div class="tl-body">
+        Say: "I'll draw three tiny diagrams — one per pattern — instead of one overwhelming class diagram."<br>
+        <strong>Diagram 1 (Observer):</strong> NotificationService box → "subscribers map" → User1, User2<br>
+        <strong>Diagram 2 (Strategy):</strong> NotificationSender interface → Email/SMS/Push implementations<br>
+        <strong>Diagram 3 (Factory):</strong> Channel enum → Factory → correct Sender instance
+      </div>
+    </div>
+  </div>
+
+  <p style="color:var(--text2);font-size:13px;margin:16px 0 12px">Quick diagram — draw these in under 4 minutes:</p>
+
+  <div class="er-grid">
+    <div class="er-card">
+      <div class="er-head purple">NotificationService</div>
+      <div class="er-row">subscribers: Map&lt;</div>
+      <div class="er-row">&nbsp;NotifType,List&lt;User&gt;&gt;</div>
+      <div class="er-row">subscribe(type, user)</div>
+      <div class="er-row">notify(notification)</div>
+    </div>
+    <div class="er-card">
+      <div class="er-head blue">NotificationSender</div>
+      <div class="er-row"><span class="er-pk">«interface»</span></div>
+      <div class="er-row">send(User, Notification)</div>
+    </div>
+    <div class="er-card">
+      <div class="er-head teal">EmailSender</div>
+      <div class="er-row">implements ↑</div>
+      <div class="er-row">sends via SMTP</div>
+    </div>
+    <div class="er-card">
+      <div class="er-head teal">SmsSender</div>
+      <div class="er-row">implements ↑</div>
+      <div class="er-row">sends via Twilio</div>
+    </div>
+    <div class="er-card">
+      <div class="er-head teal">PushSender</div>
+      <div class="er-row">implements ↑</div>
+      <div class="er-row">sends via FCM</div>
+    </div>
+    <div class="er-card">
+      <div class="er-head coral">NotificationSenderFactory</div>
+      <div class="er-row">getSender(Channel)</div>
+      <div class="er-row">→ NotificationSender</div>
+    </div>
+    <div class="er-card">
+      <div class="er-head amber">User</div>
+      <div class="er-row"><span class="er-pk">userId, name</span></div>
+      <div class="er-row">email, phone</div>
+      <div class="er-row">preferredChannels</div>
+    </div>
+    <div class="er-card">
+      <div class="er-head amber">Notification</div>
+      <div class="er-row"><span class="er-pk">type: NotifType</span></div>
+      <div class="er-row">title, message</div>
+    </div>
+  </div>
+
+  <div style="background:var(--bg2);border:1px solid var(--border);border-radius:10px;padding:16px 18px;margin:16px 0">
+    <div style="font-size:13px;font-weight:600;color:#fff;margin-bottom:12px">Full notification flow — draw as one left-to-right pipeline:</div>
+    <div class="er-rel"><span style="color:var(--purple)">Event fires</span><div class="rel-line"></div><span style="color:var(--text3);font-size:11px">notify(notification)</span><div class="rel-line"></div><span style="color:var(--purple)">NotificationService</span></div>
+    <div class="er-rel"><span style="color:var(--purple)">Service</span><div class="rel-line"></div><span style="color:var(--text3);font-size:11px">looks up subscribers for</span><div class="rel-line"></div><span style="color:var(--amber)">NotificationType</span></div>
+    <div class="er-rel"><span style="color:var(--purple)">For each User</span><div class="rel-line"></div><span style="color:var(--text3);font-size:11px">loop through their</span><div class="rel-line"></div><span style="color:var(--amber)">preferredChannels</span></div>
+    <div class="er-rel"><span style="color:var(--purple)">Per channel</span><div class="rel-line"></div><span style="color:var(--text3);font-size:11px">ask Factory →</span><div class="rel-line"></div><span style="color:var(--coral)">NotificationSenderFactory</span></div>
+    <div class="er-rel"><span style="color:var(--coral)">Factory</span><div class="rel-line"></div><span style="color:var(--text3);font-size:11px">returns correct</span><div class="rel-line"></div><span style="color:var(--teal)">Email/SMS/PushSender</span></div>
+    <div class="er-rel"><span style="color:var(--teal)">Sender</span><div class="rel-line"></div><span style="color:var(--text3);font-size:11px">calls send(user, notification)</span><div class="rel-line"></div><span style="color:var(--teal)">→ delivered</span></div>
+  </div>
+
+  <div class="callout callout-teal">
+    <strong>What to say while drawing:</strong> "I'll draw the pipeline left-to-right: event → service → find subscribers → for each user and their channels → factory picks sender → sender delivers. This is the complete flow in six steps."
+  </div>
+
+  <table class="order-table">
+    <thead><tr><th>Order</th><th>Class</th><th>Why this order</th></tr></thead>
+    <tbody>
+      <tr><td><span class="order-num">1</span>NotificationType, Channel</td><td style="color:var(--text2)">Enums</td><td style="color:var(--text2)">Foundation — no deps, used everywhere.</td></tr>
+      <tr><td><span class="order-num">2</span>Notification</td><td style="color:var(--text2)">Data holder</td><td style="color:var(--text2)">Pure data, no deps beyond enum.</td></tr>
+      <tr><td><span class="order-num">3</span>User</td><td style="color:var(--text2)">Has preferred channels</td><td style="color:var(--text2)">Needed by Service and Senders.</td></tr>
+      <tr><td><span class="order-num">4</span>NotificationSender</td><td style="color:var(--text2)">Interface — Strategy contract</td><td style="color:var(--text2)">Define before implementations and Factory.</td></tr>
+      <tr><td><span class="order-num">5</span>EmailSender, SmsSender, PushSender</td><td style="color:var(--text2)">Concrete strategies</td><td style="color:var(--text2)">Quick, mostly boilerplate — write fast.</td></tr>
+      <tr><td><span class="order-num">6</span>NotificationSenderFactory</td><td style="color:var(--text2)">Creates senders by channel</td><td style="color:var(--text2)">Needs senders to exist first.</td></tr>
+      <tr><td><span class="order-num">7</span>NotificationService</td><td style="color:var(--text2)">Observer + orchestrator</td><td style="color:var(--text2)">Depends on everything above. Write last.</td></tr>
+      <tr><td><span class="order-num">8</span>Main</td><td style="color:var(--text2)">Demo</td><td style="color:var(--text2)">Subscribe users, fire events, prove fan-out.</td></tr>
+    </tbody>
+  </table>
+</div>
+
+<hr class="div">
+
+<!-- ── PHASE 3: CODE ── -->
+<div id="phase3" class="section">
+  <div class="section-header">
+    <div class="section-badge">3</div>
+    <h2>Phase 3 — The Complete Code</h2>
+    <span class="time-tag time-coral">20 – 55 min</span>
+  </div>
+
+  <div class="callout callout-coral">
+    <strong>Say before typing:</strong> "I'll write the enums first, then the data classes, then the Strategy interface and its implementations, then the Factory, and finally the NotificationService which ties all three patterns together."
+  </div>
+
+  <!-- ENUMS -->
+  <div class="code-card">
+    <div class="code-header"><span class="code-fname">NotificationType.java + Channel.java</span><div class="code-meta"><span class="code-tag tag-solid">Foundation enums — write in 1 min</span></div></div>
+    <pre><span class="cm">// WHAT kind of event triggered this notification</span>
+<span class="cm">// ── SOLID: Open/Closed ────────────────────────────────────────────────────</span>
+<span class="cm">// Add PAYMENT_FAILED → add enum value. Zero changes to NotificationService logic.</span>
+<span class="kw">public enum</span> <span class="ty">NotificationType</span> {
+    ORDER_PLACED,
+    PROMO,
+    SECURITY_ALERT
+}
+
+<span class="cm">// WHICH channel this notification travels through</span>
+<span class="cm">// ── SOLID: Open/Closed ────────────────────────────────────────────────────</span>
+<span class="cm">// Add WHATSAPP → add enum value + WhatsAppSender + factory case. Service untouched.</span>
+<span class="kw">public enum</span> <span class="ty">Channel</span> {
+    EMAIL,
+    SMS,
+    PUSH
+}</pre>
+  </div>
+
+  <!-- NOTIFICATION -->
+  <div class="code-card">
+    <div class="code-header"><span class="code-fname">Notification.java</span><div class="code-meta"><span class="code-tag tag-solid">SRP — immutable data holder</span></div></div>
+    <pre><span class="cm">// ── SOLID: Single Responsibility ──────────────────────────────────────────</span>
+<span class="cm">// Carries notification data ONLY. No sending logic, no routing logic.</span>
+<span class="cm">// Immutable — once created, a notification's content never changes.</span>
+
+<span class="kw">public class</span> <span class="ty">Notification</span> {
+    <span class="kw">private final</span> <span class="ty">NotificationType</span> type;
+    <span class="kw">private final</span> <span class="ty">String</span> title;
+    <span class="kw">private final</span> <span class="ty">String</span> message;
+
+    <span class="kw">public</span> <span class="mt">Notification</span>(<span class="ty">NotificationType</span> type, <span class="ty">String</span> title, <span class="ty">String</span> message) {
+        <span class="kw">this</span>.type    = type;
+        <span class="kw">this</span>.title   = title;
+        <span class="kw">this</span>.message = message;
+    }
+
+    <span class="kw">public</span> <span class="ty">NotificationType</span> <span class="mt">getType</span>()    { <span class="kw">return</span> type; }
+    <span class="kw">public</span> <span class="ty">String</span> <span class="mt">getTitle</span>()             { <span class="kw">return</span> title; }
+    <span class="kw">public</span> <span class="ty">String</span> <span class="mt">getMessage</span>()           { <span class="kw">return</span> message; }
+}</pre>
+  </div>
+
+  <!-- USER -->
+  <div class="code-card">
+    <div class="code-header"><span class="code-fname">User.java</span><div class="code-meta"><span class="code-tag tag-solid">SRP — user data + channel prefs</span></div></div>
+    <pre><span class="kw">import</span> java.util.*;
+
+<span class="cm">// ── SOLID: Single Responsibility ──────────────────────────────────────────</span>
+<span class="cm">// User knows about itself — contact info and channel preferences.</span>
+<span class="cm">// It does NOT decide when or how to send — that's NotificationService's job.</span>
+<span class="cm">// ── Key design point: preferredChannels is a List, not a single Channel ───</span>
+<span class="cm">// Because a user can say "I want BOTH Email AND SMS for order updates".</span>
+
+<span class="kw">public class</span> <span class="ty">User</span> {
+    <span class="kw">private final</span> <span class="ty">String</span> userId;
+    <span class="kw">private final</span> <span class="ty">String</span> name;
+    <span class="kw">private final</span> <span class="ty">String</span> email;
+    <span class="kw">private final</span> <span class="ty">String</span> phone;
+    <span class="kw">private final</span> <span class="ty">String</span> deviceToken;          <span class="cm">// for push notifications</span>
+    <span class="kw">private final</span> <span class="ty">List</span>&lt;<span class="ty">Channel</span>&gt; preferredChannels;
+
+    <span class="kw">public</span> <span class="mt">User</span>(<span class="ty">String</span> userId, <span class="ty">String</span> name, <span class="ty">String</span> email,
+                <span class="ty">String</span> phone, <span class="ty">String</span> deviceToken, <span class="ty">List</span>&lt;<span class="ty">Channel</span>&gt; preferredChannels) {
+        <span class="kw">this</span>.userId            = userId;
+        <span class="kw">this</span>.name              = name;
+        <span class="kw">this</span>.email             = email;
+        <span class="kw">this</span>.phone             = phone;
+        <span class="kw">this</span>.deviceToken       = deviceToken;
+        <span class="kw">this</span>.preferredChannels = preferredChannels;
+    }
+
+    <span class="kw">public</span> <span class="ty">String</span> <span class="mt">getUserId</span>()               { <span class="kw">return</span> userId; }
+    <span class="kw">public</span> <span class="ty">String</span> <span class="mt">getName</span>()                 { <span class="kw">return</span> name; }
+    <span class="kw">public</span> <span class="ty">String</span> <span class="mt">getEmail</span>()                { <span class="kw">return</span> email; }
+    <span class="kw">public</span> <span class="ty">String</span> <span class="mt">getPhone</span>()                { <span class="kw">return</span> phone; }
+    <span class="kw">public</span> <span class="ty">String</span> <span class="mt">getDeviceToken</span>()          { <span class="kw">return</span> deviceToken; }
+    <span class="kw">public</span> <span class="ty">List</span>&lt;<span class="ty">Channel</span>&gt; <span class="mt">getPreferredChannels</span>() { <span class="kw">return</span> preferredChannels; }
+}</pre>
+  </div>
+
+  <!-- SENDER INTERFACE + IMPLS -->
+  <div class="code-card">
+    <div class="code-header"><span class="code-fname">NotificationSender.java + EmailSender + SmsSender + PushSender</span><div class="code-meta"><span class="code-tag tag-pattern">Strategy Pattern — the HOW axis</span><span class="code-tag tag-solid">SRP + ISP + OCP</span></div></div>
+    <pre><span class="cm">// ── Design Pattern: STRATEGY ──────────────────────────────────────────────</span>
+<span class="cm">// "How is the notification delivered?" varies by channel.</span>
+<span class="cm">// Each implementation encapsulates one delivery mechanism completely.</span>
+<span class="cm">// ── SOLID: Interface Segregation ──────────────────────────────────────────</span>
+<span class="cm">// One method only — send(). No sender is forced to implement channel-specific</span>
+<span class="cm">// methods it doesn't need (e.g. EmailSender doesn't implement getDeviceToken()).</span>
+<span class="cm">// ── SOLID: Open/Closed ────────────────────────────────────────────────────</span>
+<span class="cm">// Add WhatsAppSender → new class implementing this interface + factory case.</span>
+<span class="cm">// NotificationService.notify() — ZERO changes.</span>
+
+<span class="kw">public interface</span> <span class="ty">NotificationSender</span> {
+    <span class="kw">void</span> <span class="mt">send</span>(<span class="ty">User</span> user, <span class="ty">Notification</span> notification);
+}
+
+<span class="cm">// ── SOLID: SRP — EmailSender knows ONLY about email delivery ──────────────</span>
+<span class="kw">public class</span> <span class="ty">EmailSender</span> <span class="kw">implements</span> <span class="ty">NotificationSender</span> {
+    <span class="an">@Override</span>
+    <span class="kw">public void</span> <span class="mt">send</span>(<span class="ty">User</span> user, <span class="ty">Notification</span> notification) {
+        <span class="cm">// In production: integrate with SMTP / SendGrid / SES</span>
+        <span class="ty">System</span>.out.printf(<span class="st">"[EMAIL]  To: %s | Subject: %s | Body: %s%n"</span>,
+            user.getEmail(), notification.getTitle(), notification.getMessage());
+    }
+}
+
+<span class="cm">// ── SOLID: SRP — SmsSender knows ONLY about SMS delivery ──────────────────</span>
+<span class="kw">public class</span> <span class="ty">SmsSender</span> <span class="kw">implements</span> <span class="ty">NotificationSender</span> {
+    <span class="an">@Override</span>
+    <span class="kw">public void</span> <span class="mt">send</span>(<span class="ty">User</span> user, <span class="ty">Notification</span> notification) {
+        <span class="cm">// In production: integrate with Twilio / AWS SNS</span>
+        <span class="ty">System</span>.out.printf(<span class="st">"[SMS]    To: %s | %s: %s%n"</span>,
+            user.getPhone(), notification.getTitle(), notification.getMessage());
+    }
+}
+
+<span class="cm">// ── SOLID: SRP — PushSender knows ONLY about push notification delivery ───</span>
+<span class="kw">public class</span> <span class="ty">PushSender</span> <span class="kw">implements</span> <span class="ty">NotificationSender</span> {
+    <span class="an">@Override</span>
+    <span class="kw">public void</span> <span class="mt">send</span>(<span class="ty">User</span> user, <span class="ty">Notification</span> notification) {
+        <span class="cm">// In production: integrate with FCM (Firebase Cloud Messaging)</span>
+        <span class="ty">System</span>.out.printf(<span class="st">"[PUSH]   To device: %s | %s: %s%n"</span>,
+            user.getDeviceToken(), notification.getTitle(), notification.getMessage());
+    }
+}</pre>
+  </div>
+
+  <!-- FACTORY -->
+  <div class="code-card">
+    <div class="code-header"><span class="code-fname">NotificationSenderFactory.java</span><div class="code-meta"><span class="code-tag tag-pattern">Factory Pattern — the WHICH axis</span><span class="code-tag tag-solid">SRP + OCP + DIP</span></div></div>
+    <pre><span class="cm">// ── Design Pattern: FACTORY ───────────────────────────────────────────────</span>
+<span class="cm">// The NotificationService says "I need a sender for EMAIL" — it doesn't</span>
+<span class="cm">// say "new EmailSender()". The Factory encapsulates the creation decision.</span>
+<span class="cm">// WHY both Strategy AND Factory? Strategy defines the CONTRACT (interface).</span>
+<span class="cm">// Factory handles CREATION (instantiation). Different responsibilities.</span>
+<span class="cm">// ── SOLID: Single Responsibility ──────────────────────────────────────────</span>
+<span class="cm">// Factory's one job: map a Channel enum to the right NotificationSender.</span>
+<span class="cm">// ── SOLID: Open/Closed ────────────────────────────────────────────────────</span>
+<span class="cm">// Add WHATSAPP: add "case WHATSAPP: return new WhatsAppSender()". Done.</span>
+<span class="cm">// ── SOLID: Dependency Inversion ───────────────────────────────────────────</span>
+<span class="cm">// Returns NotificationSender (interface), never a concrete type to callers.</span>
+
+<span class="kw">public class</span> <span class="ty">NotificationSenderFactory</span> {
+    <span class="kw">public static</span> <span class="ty">NotificationSender</span> <span class="mt">getSender</span>(<span class="ty">Channel</span> channel) {
+        <span class="kw">switch</span> (channel) {
+            <span class="kw">case</span> EMAIL: <span class="kw">return new</span> <span class="ty">EmailSender</span>();
+            <span class="kw">case</span> SMS:   <span class="kw">return new</span> <span class="ty">SmsSender</span>();
+            <span class="kw">case</span> PUSH:  <span class="kw">return new</span> <span class="ty">PushSender</span>();
+            <span class="kw">default</span>: <span class="kw">throw new</span> <span class="ty">IllegalArgumentException</span>(<span class="st">"Unknown channel: "</span> + channel);
+        }
+    }
+}</pre>
+  </div>
+
+  <!-- NOTIFICATION SERVICE -->
+  <div class="code-card">
+    <div class="code-header"><span class="code-fname">NotificationService.java</span><div class="code-meta"><span class="code-tag tag-pattern">Observer Subject + Singleton</span><span class="code-tag tag-solid">SRP + DIP</span></div></div>
+    <pre><span class="kw">import</span> java.util.*;
+
+<span class="cm">// ── Design Pattern: OBSERVER ──────────────────────────────────────────────</span>
+<span class="cm">// NotificationService IS the "Subject" in Observer pattern.</span>
+<span class="cm">// Users are the "Observers" — they register interest in specific event types.</span>
+<span class="cm">// When an event fires, the subject notifies ALL registered observers for</span>
+<span class="cm">// that type. The event source doesn't know anything about its subscribers.</span>
+<span class="cm">// ── Design Pattern: SINGLETON ─────────────────────────────────────────────</span>
+<span class="cm">// One global service manages all subscriptions across the app.</span>
+<span class="cm">// ── SOLID: Single Responsibility ──────────────────────────────────────────</span>
+<span class="cm">// NotificationService manages subscriptions and routes notifications.</span>
+<span class="cm">// It does NOT know HOW to send — it delegates to Factory + Senders.</span>
+<span class="cm">// ── SOLID: Dependency Inversion ───────────────────────────────────────────</span>
+<span class="cm">// Calls NotificationSender (interface) — never a concrete sender directly.</span>
+
+<span class="kw">public class</span> <span class="ty">NotificationService</span> {
+
+    <span class="kw">private static volatile</span> <span class="ty">NotificationService</span> instance;
+
+    <span class="cm">// Observer registry: NotificationType → List of subscribed Users</span>
+    <span class="kw">private final</span> <span class="ty">Map</span>&lt;<span class="ty">NotificationType</span>, <span class="ty">List</span>&lt;<span class="ty">User</span>&gt;&gt; subscribers;
+
+    <span class="kw">private</span> <span class="mt">NotificationService</span>() {
+        subscribers = <span class="kw">new</span> <span class="ty">HashMap</span>&lt;&gt;();
+    }
+
+    <span class="kw">public static</span> <span class="ty">NotificationService</span> <span class="mt">getInstance</span>() {
+        <span class="kw">if</span> (instance == <span class="kw">null</span>) {
+            <span class="kw">synchronized</span> (<span class="ty">NotificationService</span>.<span class="kw">class</span>) {
+                <span class="kw">if</span> (instance == <span class="kw">null</span>) {
+                    instance = <span class="kw">new</span> <span class="ty">NotificationService</span>();
+                }
+            }
+        }
+        <span class="kw">return</span> instance;
+    }
+
+    <span class="cm">// ── OBSERVER: subscribe ──────────────────────────────────────────</span>
+    <span class="cm">// User says: "I want to receive ORDER_PLACED notifications."</span>
+    <span class="kw">public void</span> <span class="mt">subscribe</span>(<span class="ty">NotificationType</span> type, <span class="ty">User</span> user) {
+        subscribers
+            .computeIfAbsent(type, t -&gt; <span class="kw">new</span> <span class="ty">ArrayList</span>&lt;&gt;())
+            .add(user);
+        <span class="ty">System</span>.out.printf(<span class="st">"[SUBSCRIBE] %s subscribed to %s%n"</span>, user.getName(), type);
+    }
+
+    <span class="cm">// ── OBSERVER: unsubscribe ────────────────────────────────────────</span>
+    <span class="kw">public void</span> <span class="mt">unsubscribe</span>(<span class="ty">NotificationType</span> type, <span class="ty">User</span> user) {
+        <span class="ty">List</span>&lt;<span class="ty">User</span>&gt; list = subscribers.get(type);
+        <span class="kw">if</span> (list != <span class="kw">null</span>) list.remove(user);
+        <span class="ty">System</span>.out.printf(<span class="st">"[UNSUBSCRIBE] %s unsubscribed from %s%n"</span>, user.getName(), type);
+    }
+
+    <span class="cm">// ── OBSERVER: notify (the core fan-out method) ────────────────────</span>
+    <span class="cm">// 1. Find all users subscribed to this notification's type</span>
+    <span class="cm">// 2. For each user, loop through their preferred channels</span>
+    <span class="cm">// 3. Ask Factory for the right sender per channel</span>
+    <span class="cm">// 4. Delegate the actual sending to that sender (Strategy)</span>
+    <span class="kw">public void</span> <span class="mt">notify</span>(<span class="ty">Notification</span> notification) {
+        <span class="ty">List</span>&lt;<span class="ty">User</span>&gt; targets = subscribers.getOrDefault(
+            notification.getType(), <span class="ty">Collections</span>.emptyList());
+
+        <span class="kw">if</span> (targets.isEmpty()) {
+            <span class="ty">System</span>.out.println(<span class="st">"[NOTIFY] No subscribers for: "</span> + notification.getType());
+            <span class="kw">return</span>;
+        }
+
+        <span class="ty">System</span>.out.printf(<span class="st">"%n[NOTIFY] Sending '%s' to %d subscriber(s)...%n"</span>,
+            notification.getTitle(), targets.size());
+
+        <span class="kw">for</span> (<span class="ty">User</span> user : targets) {
+            <span class="kw">for</span> (<span class="ty">Channel</span> channel : user.getPreferredChannels()) {
+                <span class="cm">// Factory picks the right Strategy implementation</span>
+                <span class="ty">NotificationSender</span> sender = <span class="ty">NotificationSenderFactory</span>.getSender(channel);
+                sender.send(user, notification);  <span class="cm">// Strategy executes</span>
+            }
+        }
+    }
+}</pre>
+  </div>
+
+  <!-- MAIN -->
+  <div class="code-card">
+    <div class="code-header"><span class="code-fname">Main.java</span><div class="code-meta"><span class="code-tag tag-solid">Demo — prove Observer fan-out + per-user channel prefs</span></div></div>
+    <pre><span class="kw">import</span> java.util.*;
+
+<span class="kw">public class</span> <span class="ty">Main</span> {
+    <span class="kw">public static void</span> <span class="mt">main</span>(<span class="ty">String</span>[] args) {
+
+        <span class="ty">NotificationService</span> service = <span class="ty">NotificationService</span>.getInstance();
+
+        <span class="cm">// User 1: wants Email + SMS for orders, Email for promos</span>
+        <span class="ty">User</span> alice = <span class="kw">new</span> <span class="ty">User</span>(<span class="st">"u1"</span>, <span class="st">"Alice"</span>, <span class="st">"alice@mail.com"</span>, <span class="st">"+91-9999"</span>, <span class="st">"dev-token-A"</span>,
+            <span class="ty">Arrays</span>.asList(<span class="ty">Channel</span>.EMAIL, <span class="ty">Channel</span>.SMS));
+
+        <span class="cm">// User 2: wants only Push for orders</span>
+        <span class="ty">User</span> bob = <span class="kw">new</span> <span class="ty">User</span>(<span class="st">"u2"</span>, <span class="st">"Bob"</span>, <span class="st">"bob@mail.com"</span>, <span class="st">"+91-8888"</span>, <span class="st">"dev-token-B"</span>,
+            <span class="ty">Arrays</span>.asList(<span class="ty">Channel</span>.PUSH));
+
+        <span class="cm">// Subscribe both to ORDER_PLACED; only Alice to PROMO</span>
+        service.subscribe(<span class="ty">NotificationType</span>.ORDER_PLACED, alice);
+        service.subscribe(<span class="ty">NotificationType</span>.ORDER_PLACED, bob);
+        service.subscribe(<span class="ty">NotificationType</span>.PROMO, alice);
+
+        <span class="cm">// Fire an ORDER_PLACED event — both users notified, different channels</span>
+        service.notify(<span class="kw">new</span> <span class="ty">Notification</span>(
+            <span class="ty">NotificationType</span>.ORDER_PLACED,
+            <span class="st">"Order Confirmed!"</span>,
+            <span class="st">"Your order #1234 has been placed."</span>));
+
+        <span class="cm">// Fire a PROMO event — only Alice gets it</span>
+        service.notify(<span class="kw">new</span> <span class="ty">Notification</span>(
+            <span class="ty">NotificationType</span>.PROMO,
+            <span class="st">"50% Off Today!"</span>,
+            <span class="st">"Use code SAVE50 at checkout."</span>));
+
+        <span class="cm">// Bob unsubscribes from ORDER_PLACED</span>
+        service.unsubscribe(<span class="ty">NotificationType</span>.ORDER_PLACED, bob);
+
+        <span class="cm">// Fire another order — only Alice gets it now</span>
+        service.notify(<span class="kw">new</span> <span class="ty">Notification</span>(
+            <span class="ty">NotificationType</span>.ORDER_PLACED,
+            <span class="st">"Order Shipped!"</span>,
+            <span class="st">"Your order #1234 is on the way."</span>));
+    }
+}
+
+<span class="cm">/* Expected output:
+[SUBSCRIBE] Alice subscribed to ORDER_PLACED
+[SUBSCRIBE] Bob subscribed to ORDER_PLACED
+[SUBSCRIBE] Alice subscribed to PROMO
+
+[NOTIFY] Sending 'Order Confirmed!' to 2 subscriber(s)...
+[EMAIL]  To: alice@mail.com | Subject: Order Confirmed! | Body: Your order #1234 has been placed.
+[SMS]    To: +91-9999 | Order Confirmed!: Your order #1234 has been placed.
+[PUSH]   To device: dev-token-B | Order Confirmed!: Your order #1234 has been placed.
+
+[NOTIFY] Sending '50% Off Today!' to 1 subscriber(s)...
+[EMAIL]  To: alice@mail.com | Subject: 50% Off Today! | Body: Use code SAVE50 at checkout.
+
+[UNSUBSCRIBE] Bob unsubscribed from ORDER_PLACED
+
+[NOTIFY] Sending 'Order Shipped!' to 1 subscriber(s)...
+[EMAIL]  To: alice@mail.com | Subject: Order Shipped! | Body: Your order #1234 is on the way.
+[SMS]    To: +91-9999 | Order Shipped!: Your order #1234 is on the way.
+*/</span></pre>
+  </div>
+</div>
+
+<hr class="div">
+
+<!-- ── SOLID ── -->
+<div id="solid" class="section">
+  <div class="section-header">
+    <div class="section-badge" style="background:var(--teal-bg);border-color:var(--teal-border);color:var(--teal)">S</div>
+    <h2>SOLID Principles — where exactly in the code</h2>
+  </div>
+
+  <div class="callout callout-teal">
+    <strong>This problem shows SOLID most clearly across multiple patterns.</strong> Each principle maps to a specific design decision — not just a class. The Dependency Inversion principle in particular is visible in THREE places simultaneously.
+  </div>
+
+  <div class="solid-grid">
+    <div class="solid-card">
+      <div class="solid-letter">S</div>
+      <div class="solid-name">Single Responsibility</div>
+      <div class="solid-desc">Every class has exactly one reason to change.</div>
+      <div class="solid-where">EmailSender — only email I/O. SmsSender — only SMS I/O. Notification — only data. NotificationSenderFactory — only object creation. NotificationService — only routing/subscription management.</div>
+    </div>
+    <div class="solid-card">
+      <div class="solid-letter">O</div>
+      <div class="solid-name">Open / Closed</div>
+      <div class="solid-desc">Open for extension, closed for modification.</div>
+      <div class="solid-where">Add WhatsApp channel: new Channel.WHATSAPP enum value + WhatsAppSender class + one factory case. NotificationService.notify() — zero changes. Add new NotificationType: one enum value. Zero changes elsewhere.</div>
+    </div>
+    <div class="solid-card">
+      <div class="solid-letter">L</div>
+      <div class="solid-name">Liskov Substitution</div>
+      <div class="solid-desc">Any implementation can replace another without breaking callers.</div>
+      <div class="solid-where">sender.send(user, notification) in NotificationService works identically whether sender is EmailSender, SmsSender, or any future WhatsAppSender — all are substitutable without the service knowing the difference.</div>
+    </div>
+    <div class="solid-card">
+      <div class="solid-letter">I</div>
+      <div class="solid-name">Interface Segregation</div>
+      <div class="solid-desc">Don't force implementations to support unused methods.</div>
+      <div class="solid-where">NotificationSender has exactly ONE method — send(). EmailSender is not forced to implement getDeviceToken() for push, SmsSender is not forced to implement SMTP logic. Each knows only what it needs.</div>
+    </div>
+    <div class="solid-card" style="grid-column:1/-1">
+      <div class="solid-letter">D</div>
+      <div class="solid-name">Dependency Inversion</div>
+      <div class="solid-desc">High-level modules depend on abstractions, not concrete classes.</div>
+      <div class="solid-where">NotificationService (high-level) holds Map&lt;NotificationType, List&lt;User&gt;&gt; and calls NotificationSender (interface) — never Email/SMS/PushSender directly. NotificationSenderFactory returns NotificationSender (interface) — callers don't see concrete types. This is DIP in THREE layers at once.</div>
+    </div>
+  </div>
+</div>
+
+<hr class="div">
+
+<!-- ── PATTERNS ── -->
+<div id="patterns" class="section">
+  <div class="section-header">
+    <div class="section-badge" style="background:var(--blue-bg);border-color:var(--blue-border);color:var(--blue)">P</div>
+    <h2>Design Patterns — what's used, why, and the key distinction</h2>
+  </div>
+
+  <div class="callout callout-blue">
+    <strong>The most important thing to say in this problem:</strong> "I'm using Strategy AND Factory together, and they solve DIFFERENT problems — Strategy defines the interface (the contract for HOW to send), Factory handles object creation (the WHICH to instantiate). They're complementary, not redundant." This distinction alone separates good SDE-1 answers from great ones.
+  </div>
+
+  <div class="pattern-card">
+    <div class="pattern-head"><div class="pattern-icon">1</div><div class="pattern-name">Observer Pattern — the WHO axis</div></div>
+    <div class="pattern-why">Users (observers) register interest in specific event types (subjects). When an event fires, the subject fans out to all registered observers — without the event source knowing who they are. This decoupling is the entire point: a new order service can fire ORDER_PLACED without knowing anything about who subscribed or how many they are. Adding a new observer (e.g. an audit logger) requires zero changes to any existing code — just a subscribe() call.</div>
+    <div class="pattern-where">Used in: NotificationService (subject) + User (observer) + subscribe/unsubscribe/notify</div>
+  </div>
+
+  <div class="pattern-card">
+    <div class="pattern-head"><div class="pattern-icon">2</div><div class="pattern-name">Strategy Pattern — the HOW axis</div></div>
+    <div class="pattern-why">Email, SMS, and Push are three completely different delivery mechanisms — different APIs, different libraries, different failure modes. By defining NotificationSender as an interface, each mechanism is encapsulated independently. NotificationService doesn't care HOW Email is sent (SMTP? SendGrid? SES?) — it just calls send(). Swapping SendGrid for SES means changing only EmailSender — nothing else.</div>
+    <div class="pattern-where">Used in: NotificationSender interface + EmailSender, SmsSender, PushSender</div>
+  </div>
+
+  <div class="pattern-card">
+    <div class="pattern-head"><div class="pattern-icon">3</div><div class="pattern-name">Factory Pattern — the WHICH axis</div></div>
+    <div class="pattern-why">NotificationService shouldn't write <code>new EmailSender()</code> — that couples it to the concrete type. If EmailSender's constructor changes (e.g. needs an API key injected), every caller breaks. The Factory centralises this decision: "given Channel.EMAIL, create the right sender". One change in the factory fixes everything. Also note: the Factory returns the NotificationSender interface — callers never see the concrete type (DIP applied).</div>
+    <div class="pattern-where">Used in: NotificationSenderFactory.getSender(Channel)</div>
+  </div>
+
+  <div class="pattern-card">
+    <div class="pattern-head"><div class="pattern-icon">4</div><div class="pattern-name">Singleton Pattern</div></div>
+    <div class="pattern-why">One global subscription registry. If two parts of the app got different NotificationService instances, a subscribe() in one wouldn't be visible in the other — a user who subscribed would miss notifications. Same reasoning as every other Singleton in our series.</div>
+    <div class="pattern-where">Used in: NotificationService.getInstance()</div>
+  </div>
+
+  <div class="code-card">
+    <div class="code-header"><span class="code-fname">RetryNotificationSender.java — bonus: Decorator Pattern</span><div class="code-meta"><span class="code-tag tag-pattern">Decorator Pattern</span></div></div>
+    <pre><span class="cm">// ── Design Pattern: DECORATOR ─────────────────────────────────────────────</span>
+<span class="cm">// Wraps any NotificationSender and adds retry logic — without modifying</span>
+<span class="cm">// EmailSender, SmsSender, or any existing implementation.</span>
+<span class="cm">// If asked "how would you add retry on failure?" — this is the answer.</span>
+<span class="cm">// OCP: existing senders are closed for modification, open for wrapping.</span>
+
+<span class="kw">public class</span> <span class="ty">RetryNotificationSender</span> <span class="kw">implements</span> <span class="ty">NotificationSender</span> {
+    <span class="kw">private final</span> <span class="ty">NotificationSender</span> delegate;
+    <span class="kw">private final int</span> maxRetries;
+
+    <span class="kw">public</span> <span class="mt">RetryNotificationSender</span>(<span class="ty">NotificationSender</span> delegate, <span class="kw">int</span> maxRetries) {
+        <span class="kw">this</span>.delegate   = delegate;
+        <span class="kw">this</span>.maxRetries = maxRetries;
+    }
+
+    <span class="an">@Override</span>
+    <span class="kw">public void</span> <span class="mt">send</span>(<span class="ty">User</span> user, <span class="ty">Notification</span> notification) {
+        <span class="kw">for</span> (<span class="kw">int</span> attempt = <span class="nm">1</span>; attempt &lt;= maxRetries; attempt++) {
+            <span class="kw">try</span> {
+                delegate.send(user, notification);
+                <span class="kw">return</span>;  <span class="cm">// success — stop retrying</span>
+            } <span class="kw">catch</span> (<span class="ty">Exception</span> e) {
+                <span class="ty">System</span>.out.printf(<span class="st">"[RETRY] Attempt %d failed: %s%n"</span>, attempt, e.getMessage());
+                <span class="kw">if</span> (attempt == maxRetries) <span class="kw">throw</span> e;
+            }
+        }
+    }
+}
+<span class="cm">// Usage in factory: return new RetryNotificationSender(new EmailSender(), 3);</span></pre>
+  </div>
+</div>
+
+<hr class="div">
+
+<!-- ── TIPS ── -->
+<div id="tips" class="section">
+  <div class="section-header">
+    <div class="section-badge" style="background:var(--amber-bg);border-color:var(--amber-border);color:var(--amber)">!</div>
+    <h2>Interview Tips — what separates good from great</h2>
+  </div>
+
+  <div style="display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-bottom:24px">
+    <div>
+      <div style="font-size:13px;font-weight:600;color:var(--green);margin-bottom:10px">Things to DO</div>
+      <div class="tip-row"><span class="tip-icon check">✓</span><span style="color:var(--text2);font-size:13.5px">Name all 3 patterns in your requirements summary</span></div>
+      <div class="tip-row"><span class="tip-icon check">✓</span><span style="color:var(--text2);font-size:13.5px">Explain WHY Strategy + Factory are both needed (different jobs)</span></div>
+      <div class="tip-row"><span class="tip-icon check">✓</span><span style="color:var(--text2);font-size:13.5px">Model preferredChannels as a List on User — not a single value</span></div>
+      <div class="tip-row"><span class="tip-icon check">✓</span><span style="color:var(--text2);font-size:13.5px">Demo with 2 users + different channels — proves fan-out works</span></div>
+      <div class="tip-row"><span class="tip-icon check">✓</span><span style="color:var(--text2);font-size:13.5px">Show unsubscribe working — proves Observer completeness</span></div>
+      <div class="tip-row"><span class="tip-icon check">✓</span><span style="color:var(--text2);font-size:13.5px">Mention Decorator (retry) as bonus when asked about resilience</span></div>
+    </div>
+    <div>
+      <div style="font-size:13px;font-weight:600;color:var(--red);margin-bottom:10px">Things to AVOID</div>
+      <div class="tip-row"><span class="tip-icon cross">✗</span><span style="color:var(--text2);font-size:13.5px">Using a single Channel field instead of List&lt;Channel&gt; on User</span></div>
+      <div class="tip-row"><span class="tip-icon cross">✗</span><span style="color:var(--text2);font-size:13.5px">Putting send logic inside NotificationService (violates SRP)</span></div>
+      <div class="tip-row"><span class="tip-icon cross">✗</span><span style="color:var(--text2);font-size:13.5px">Writing new EmailSender() inside NotificationService (skip Factory)</span></div>
+      <div class="tip-row"><span class="tip-icon cross">✗</span><span style="color:var(--text2);font-size:13.5px">Giant if/else chain for channels inside a single send method</span></div>
+      <div class="tip-row"><span class="tip-icon cross">✗</span><span style="color:var(--text2);font-size:13.5px">Confusing Observer (who) with Strategy (how) — keep them separate</span></div>
+      <div class="tip-row"><span class="tip-icon cross">✗</span><span style="color:var(--text2);font-size:13.5px">Forgetting unsubscribe — interviewers always check it's there</span></div>
+    </div>
+  </div>
+
+  <div class="callout callout-purple">
+    <strong>Bonus questions to prepare for:</strong><br>
+    <strong>"How would you add retry on failure?"</strong> → Decorator pattern wrapping any NotificationSender — shown in code above. New behaviour without touching existing classes.<br>
+    <strong>"How would you make sends asynchronous?"</strong> → NotificationService.notify() pushes Notification + User pairs onto a BlockingQueue; a thread pool consumes from the queue and calls sender.send(). The Observer fan-out still happens synchronously (finding subscribers), only the actual sending is async.<br>
+    <strong>"How would you handle user preferences changing at runtime?"</strong> → User.preferredChannels would be mutable (or User becomes a mutable entity with setPreferredChannels()); no changes needed to NotificationService — it reads preferences at notification time, not at subscribe time.<br>
+    <strong>"What if EmailSender is slow and blocks others?"</strong> → Per-channel thread pool: one executor for Email, one for SMS, one for Push. Each sender submits to its own executor so a slow email doesn't delay an SMS.<br>
+    <strong>"How would you add notification templates per channel?"</strong> → Add a NotificationFormatter interface (another Strategy) — EmailFormatter returns HTML, SmsFormatter returns short text. Each Sender gets a Formatter injected at construction via Factory.
+  </div>
+
+  <div class="callout callout-amber">
+    <strong>The full series you now have:</strong><br>
+    ✅ Parking Lot — entities + Singleton + Factory<br>
+    ✅ Rate Limiter — algorithm + Strategy + Factory + Singleton<br>
+    ✅ Logging Framework — Strategy (×2) + Singleton + Chain of Responsibility<br>
+    ✅ Elevator System — State + Strategy + Singleton + Observer<br>
+    ✅ Notification System — Observer + Strategy + Factory + Singleton + Decorator<br><br>
+    <strong>Next to practice:</strong> LRU Cache (pure data structure driven LLD), Splitwise (graph + settlement), Tic-Tac-Toe/Chess (State pattern in depth), Vending Machine (State heavy)
+  </div>
+</div>
+
+<script>
+const sections=document.querySelectorAll('[id]');
+const navLinks=document.querySelectorAll('.nav a');
+const observer=new IntersectionObserver(entries=>{
+  entries.forEach(e=>{
+    if(e.isIntersecting){navLinks.forEach(a=>a.classList.toggle('active',a.getAttribute('href')==='#'+e.target.id))}
+  });
+},{rootMargin:'-20% 0px -70% 0px'});
+sections.forEach(s=>observer.observe(s));
+</script>
+</body>
+</html>
