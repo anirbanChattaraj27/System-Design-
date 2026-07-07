@@ -166,6 +166,8 @@ class Expense {
 // SOLID: Open/Closed — add a new notifier without touching
 // ExpenseManager. SOLID: DIP — ExpenseManager depends on the
 // ExpenseObserver interface, not concrete notifiers.
+
+// no need to create unless interviewr asks explicitly for notifications. If they don't, you can skip this part and just have ExpenseManager update the balance sheet silently.
 // ============================================================
 interface ExpenseObserver {
     void onExpenseAdded(Expense expense);
@@ -183,6 +185,7 @@ class NotificationService implements ExpenseObserver {
 
 // ============================================================
 // 7. GROUP
+// If interviewer says Only expense sharing Then don't even create Group class. But if they say "I want to create groups of friends and share expenses within a group" then you can create this class.
 // ============================================================
 class Group {
     private final String groupId;
@@ -274,8 +277,7 @@ class ExpenseManager {
 
     public void addObserver(ExpenseObserver observer) { observers.add(observer); }
 
-    public Expense addExpense(double amount, User paidBy, List<User> involvedUsers,
-                               SplitType type, Map<String, Double> shareInputs) {
+    public Expense addExpense(double amount, User paidBy, List<User> involvedUsers, SplitType type, Map<String, Double> shareInputs) {
         SplitStrategy strategy = SplitFactory.getStrategy(type);
         List<Split> splits = strategy.calculate(involvedUsers, amount, shareInputs);
         strategy.validate(splits, amount);
@@ -313,5 +315,6 @@ public class Main {
         manager.addExpense(100, bob, Arrays.asList(alice, bob, carol), SplitType.EXACT, exact);
 
         manager.showBalance("u1");
+
     }
 }
