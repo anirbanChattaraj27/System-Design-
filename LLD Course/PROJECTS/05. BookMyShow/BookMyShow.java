@@ -132,7 +132,7 @@ interface PaymentStrategy {
 }
 
 class CreditCardPayment implements PaymentStrategy {
-    @Override
+    @Override 
     public boolean pay(double amount) {
         System.out.println("Paid Rs." + amount + " via Credit Card");
         return true;
