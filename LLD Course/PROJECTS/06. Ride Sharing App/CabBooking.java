@@ -4,7 +4,7 @@ import java.util.*;
 // ============================================================
 // 1. ENUMS
 // ============================================================
-enum RideStatus {
+enum RideStatus { 
     REQUESTED, ACCEPTED, ONGOING, COMPLETED, CANCELLED
 }
 
