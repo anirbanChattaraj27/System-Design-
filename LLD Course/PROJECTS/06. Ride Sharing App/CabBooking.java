@@ -16,11 +16,22 @@ enum DriverStatus {
     AVAILABLE, ON_TRIDE, OFFLINE
 }
 
-// ============================================================
+/* ============================================================
 // 2. VALUE OBJECT — Location
 // SOLID (SRP): only responsible for representing a point + distance math.
 // Kept immutable — value objects should never mutate.
-// ============================================================
+Imagine a classic right-angled triangle on a graph:
+Point A (This Location): 
+(Latitude: 1, Longitude: 1)Point B (Other Location): 
+(Latitude: 4, Longitude: 5)
+dx = 1 - 4 = -3
+dy = 1 - 5 = -4
+dx * dx = 9
+dy * dy = 16
+Sum = 9 + 16 = 25
+Math.sqrt(25) = 5.0 
+(The distance between them is 5 units)
+============================================================*/
 class Location {
 
     private final double lat;
@@ -33,10 +44,11 @@ class Location {
 
     // Simple Euclidean distance (say out loud: "in reality I'd use Haversine
     // formula for lat/lng, but keeping this simple for interview scope")
+    // Pythagorean Theorem ((a^2 + b^2 = c^2)) on a flat 2D grid.
     public double distanceTo(Location other) {
-        double dx = this.lat - other.lat;
-        double dy = this.lng - other.lng;
-        return Math.sqrt(dx * dx + dy * dy);
+        double dx = this.lat - other.lat; //  Find the Horizontal Distance (dx)
+        double dy = this.lng - other.lng; // double dy = this.lng - other.lng;
+        return Math.sqrt(dx * dx + dy * dy); //  Find the Square Root
     }
 
     public double getLat() {
