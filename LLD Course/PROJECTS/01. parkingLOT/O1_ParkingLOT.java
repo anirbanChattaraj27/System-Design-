@@ -1,7 +1,6 @@
 
-import java.util.*;
-
 import java.time.LocalDateTime;
+import java.util.*;
 // import java.util.UUID;
 
 // Enums first — always. Prevents magic strings like "CAR" or "COMPACT".
@@ -202,6 +201,9 @@ class ParkingLot {
     private static volatile ParkingLot instance;
     // volatile = ensures visibility across threads (double-checked locking)
 
+    private List<ParkingFloor> floors;
+    private Map<String, ParkingTicket> activeTickets;  // ticketId → ticket
+    
     // ── Singleton: step 2 — private constructor ────────────────────
     private ParkingLot() {
         floors = new ArrayList<>();
@@ -220,8 +222,6 @@ class ParkingLot {
         return instance;
     }
 
-    private List<ParkingFloor> floors;
-    private Map<String, ParkingTicket> activeTickets;  // ticketId → ticket
 
     public void addFloor(ParkingFloor floor) {
         floors.add(floor);
@@ -236,11 +236,14 @@ class ParkingLot {
             ParkingSpot spot = floor.getAvailableSpot(vehicle);
             if (spot != null) {
                 spot.parkVehicle(vehicle);
+                // skip
                 ParkingTicket ticket = new ParkingTicket(vehicle, spot);
+                // skip
                 activeTickets.put(ticket.getTicketId(), ticket);
                 System.out.printf("[PARKED]  %s → Spot %s (Floor %d)%n",
                         vehicle.getLicensePlate(), spot.getSpotNumber(), floor.getFloorNumber());
-                return ticket;
+                // skip // and change return type to void
+                return ticket; 
             }
         }
         System.out.printf("[FULL]    No spot for %s (%s)%n",
