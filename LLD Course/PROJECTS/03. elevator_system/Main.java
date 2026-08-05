@@ -13,7 +13,7 @@ enum ElevatorState {
     IDLE,         // no pending requests, doors closed, not moving
     MOVING,       // travelling toward next stop
     DOORS_OPEN    // stopped at a floor, doors open
-}
+}+
 
 // ── SOLID: Single Responsibility ──────────────────────────────────────────
 // Represents ONE request — either:

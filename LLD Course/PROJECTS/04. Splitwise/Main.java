@@ -53,70 +53,48 @@ class Split {
 // directly.
 // ============================================================
 interface SplitStrategy {
-    
-    void validate(List<Split> splits, double totalAmount);
 
-    List<Split> calculate(List<User> involvedUsers, double totalAmount, Map<String, Double> shareInputs);
+    void calculate(double totalAmount, double[] shares);
 }
 
 class EqualSplitStrategy implements SplitStrategy {
-    @Override
-    public void validate(List<Split> splits, double totalAmount) {
-        // no upfront validation needed for equal split
-    }
 
     @Override
-    public List<Split> calculate(List<User> users, double totalAmount, Map<String, Double> shareInputs) {
-        List<Split> result = new ArrayList<>();
-        double share = totalAmount / users.size();
-        for (User u : users) {
-            result.add(new Split(u, share));
+    public void calculate(double totalAmount, double[] shares) {
+
+        double sum = 0;
+
+        for (double share : shares) {
+            sum += share;
         }
-        return result;
+
+        if (sum == totalAmount)
+            System.out.println("Valid Split");
+        else
+            System.out.println("Invalid Split");
     }
 }
 
 class ExactSplitStrategy implements SplitStrategy {
-    @Override
-    public void validate(List<Split> splits, double totalAmount) {
-        double sum = splits.stream().mapToDouble(Split::getAmount).sum();
-        if (Math.abs(sum - totalAmount) > 0.01) {
-            throw new IllegalArgumentException("Exact split amounts don't add up to total");
-        }
-    }
 
     @Override
-    public List<Split> calculate(List<User> users, double totalAmount, Map<String, Double> shareInputs) {
-        List<Split> result = new ArrayList<>();
-        for (User u : users) {
-            result.add(new Split(u, shareInputs.get(u.getUserId())));
+    public void calculate(double totalAmount, double[] shares) {
+
+        double sum = 0;
+
+        for (double share : shares) {
+            sum += share;
         }
-        validate(result, totalAmount);
-        return result;
+
+        if (sum == totalAmount)
+            System.out.println("Valid Split");
+        else
+            System.out.println("Invalid Split");
     }
 }
 
 class PercentSplitStrategy implements SplitStrategy {
-    @Override
-    public void validate(List<Split> splits, double totalAmount) {
-        double sumPercent = splits.stream()
-                .mapToDouble(s -> (s.getAmount() / totalAmount) * 100)
-                .sum();
-        if (Math.abs(sumPercent - 100.0) > 0.01) {
-            throw new IllegalArgumentException("Percentages don't add up to 100");
-        }
-    }
-
-    @Override
-    public List<Split> calculate(List<User> users, double totalAmount, Map<String, Double> shareInputs) {
-        List<Split> result = new ArrayList<>();
-        for (User u : users) {
-            double percent = shareInputs.get(u.getUserId());
-            result.add(new Split(u, (percent / 100.0) * totalAmount));
-        }
-        validate(result, totalAmount);
-        return result;
-    }
+    
 }
 
 // ============================================================
